@@ -1,3 +1,7 @@
+# 去掉Idea和Eclipse编辑器的文件
+.idea
+.peoject
+
 # Compiled class file
 *.class
 
