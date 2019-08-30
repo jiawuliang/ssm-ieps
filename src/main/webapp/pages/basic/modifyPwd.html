@@ -1,0 +1,226 @@
+<html>
+<head>
+    <title>修改密码</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+    <style>
+        .password {
+            width: 40%;
+        }
+        @media screen and (max-width: 1250px){
+            .password {
+                width: 50%;
+            }
+        }
+        @media screen and (max-width: 1000px){
+            .password {
+                width: 60%;
+            }
+        }
+        @media screen and (max-width: 750px){
+            .password {
+                width: 70%;
+            }
+        }
+        @media screen and (max-width: 500px){
+            .password {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<form class="layui-form" action="" style="margin-top: 30px; ">
+    <div class="layui-form-item password">
+        <label class="layui-form-label">原始密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="oldPassword" required lay-verify="required" placeholder="请输入原始密码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item password">
+        <label class="layui-form-label">新密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="newPassword" required lay-verify="required" placeholder="请输入新密码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item password">
+        <label class="layui-form-label">确认新密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="reNewPassword" required lay-verify="required" placeholder="请再次输入新密码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="button" class="layui-btn layui-btn-normal layui-btn-disabled" name="reUpdate" value="确认修改"/>
+        </div>
+    </div>
+</form>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<!-- 获取url参数 -->
+<script src="../../static/js/getParam.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<script>
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form,
+            layer = layui.layer;
+    });
+</script>
+
+<script>
+    var userNumAdmin = decrypt(getUrlParam("userNum"), "abcd1234abcd1234");
+    var roleIdAdmin = decrypt(getUrlParam("roleId"), "abcd1234abcd1234");
+
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) {
+            return encodeURI(r[2]);
+        }
+        return null; //返回参数值
+    }
+
+    var oldPassword = $("input[name='oldPassword']");
+    var newPassword = $("input[name='newPassword']");
+    var reNewPassword = $("input[name='reNewPassword']");
+    var reUpdate = $("input[name='reUpdate']");
+
+    $(function () {
+        oldPassword = $("input[name='oldPassword']");
+        newPassword = $("input[name='newPassword']");
+        reNewPassword = $("input[name='reNewPassword']");
+        reUpdate = $("input[name='reUpdate']");
+
+        $('input:lt(3)').css("background-color", "red").attr("autocomplete", "off");;
+    });
+
+</script>
+
+<script>
+    newPassword.focus(function () {
+        checkUserPwdWithUserNum();
+    });
+
+    reNewPassword.focus(function () {
+        $(this).on("mouseleave", function () {
+            $(this).off("mouseleave");
+            if (newPassword.val() == "" || oldPassword.val() == "") {
+                return;
+            }
+            if (reNewPassword.val() != "") {
+                if (oldPassword.val() == "") {
+                    $("input:lt(3)").val('');
+                    return layer.msg("请先输入原始密码！");
+                }
+
+                if (newPassword.val() == "") {
+                    $("input[name='reNewPassword']").val('');
+                    return layer.msg("请先输入新密码！");
+                }
+            }
+            if (newPassword.val() != reNewPassword.val()) {
+                $("input:gt(0)").val('');
+                return layer.msg('前后两次密码不一致，请重新输入！');
+            }
+            if (newPassword.val() == reNewPassword.val()) {
+                reUpdate.removeClass("layui-btn-disabled").on("click", reUpdatePwd);
+            }
+        });
+    });
+//    reNewPassword.focus(function () {
+//        reNewPassword.mouseleave(function () {
+//            if (newPassword.val() == "" || oldPassword.val() == "") {
+//                return;
+//            }
+//            if (reNewPassword.val() != "") {
+//                if (oldPassword.val() == "") {
+//                    $("input:lt(3)").val('');
+//                    return layer.msg("请先输入原始密码！");
+//                }
+//
+//                if (newPassword.val() == "") {
+//                    $("input[name='reNewPassword']").val('');
+//                    return layer.msg("请先输入新密码！");
+//                }
+//            }
+//            if (newPassword.val() != reNewPassword.val()) {
+//                $("input:gt(0)").val('');
+//                return layer.msg('前后两次密码不一致，请重新输入！');
+//            }
+//            if (newPassword.val() == reNewPassword.val()) {
+//                reUpdate.removeAttribute("disabled", "disabled").on("click", reUpdatePwd);
+//            }
+//        });
+//    });
+
+</script>
+
+<script>
+    function checkUserPwdWithUserNum() {
+        if ($("input[name='oldPassword']").val() == "" || $("input[name='oldPassword']").val() == null) {
+            return layer.msg("原始密码不能为空！", {icon: 2});
+        }
+
+        var param = {
+            userNum: userNumAdmin,
+            userPwd: $("input[name='oldPassword']").val()
+        };
+
+        $.get("/checkUserPwdWithUserNum.do", param, function (result) {
+            if (result.status != 0) {
+                $("input[name='oldPassword']").val("");
+                return layer.msg(result.msg, {icon: 2});
+            }
+
+            layer.msg(result.msg, {icon: 1});
+        })
+
+    }
+
+    function reUpdatePwd() {
+        var param = {
+            userNum: userNumAdmin,
+            userPwd: oldPassword.val(),
+            newPassword: newPassword.val(),
+            rePassword: reNewPassword.val()
+        };
+
+        $.post("/modifyPwd.do", param, function (result) {
+            if (result.status != 0) {
+                return layer.msg(result.msg, {icon: 2});
+            }
+            layer.msg(result.msg, {icon: 1});
+
+            reUpdate.addClass("layui-btn-disabled").off("click", reUpdatePwd);
+//            "window.location.href"、"location.href"是本页面跳转
+//            "parent.location.href"是上一层页面跳转
+//            "top.location.href"是最外层的页面跳转
+
+            window.sessionStorage.removeItem("menu");
+            menu = [];
+            window.sessionStorage.removeItem("curmenu");
+
+            setTimeout(function () {
+                $(parent).attr('location', '/goHome.do');
+            }, 1000);
+        })
+    }
+</script>
+
+</body>
+</html>

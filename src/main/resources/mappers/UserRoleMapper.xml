@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.UserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.UserRole">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_num, role_id, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_user_role
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_user_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.UserRole">
+    insert into ieps_user_role (user_num, role_id, create_time, update_time)
+    values (#{userNum,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.UserRole">
+        insert into ieps_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                user_num,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                #{userNum,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.UserRole">
+        update ieps_user_role
+        <set>
+            <if test="userNum != null">
+                user_num = #{userNum,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.UserRole">
+    update ieps_user_role
+    set user_num = #{userNum,jdbcType=VARCHAR},
+      role_id = #{roleId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <delete id="deleteUserRoleByUserNum" parameterType="string">
+        DELETE FROM ieps_user_role
+        WHERE user_num IN
+        (
+        <foreach collection="array" item="userNum" separator="," open="(" close=")">
+            #{userNum}
+        </foreach>
+        )
+    </delete>
+
+
+    <select id="selectRoleWithUserNum" resultType="UserRole" parameterType="string">
+        SELECT user_num AS userNum, role_id AS roleId
+        FROM ieps_user_role
+        WHERE user_num = #{userNum}
+    </select>
+
+
+</mapper>

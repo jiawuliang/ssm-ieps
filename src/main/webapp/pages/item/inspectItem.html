@@ -1,0 +1,2963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>大学生创新创业项目管理系统 - 中期检查</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+
+    <link rel="stylesheet" type="text/css" href="../../static/font-awesome-4.7.0/css/font-awesome.css">
+
+    <style>
+        /* 防止下拉框的下拉列表被隐藏---必须设置--- */
+        .layui-table-cell {
+            overflow: visible !important;
+        }
+
+        /* 使得下拉框与单元格刚好合适 */
+        td .layui-form-select {
+            margin-top: -10px;
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: grey;
+        }
+
+        a:hover {
+            color: red;
+        }
+
+    </style>
+
+</head>
+
+<body style="margin: 20px 20px 0 20px;">
+
+<!-- 中期检查搜索框  -->
+<div class="inspectItem-top" style="margin-bottom: 10px;">
+    <form class="layui-form" action="" style="width: 80%;">
+        <div class="layui-form-item" style="width: 100%;">
+            <div class="layui-input-inline" style="width: 25%;">
+                <select class="layui-input" name="itemDate" id="getItemDateSelect" lay-fliter="getItemDateSelect">
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 50%;">
+                <input type="text" name="searchKeyWord" autocomplete="off" placeholder="请输入关键词"
+                       class="layui-input" style="float: left; width: 70%">
+
+                <input type="button" name="searchBtn" class="layui-btn"
+                       value="搜索" style="float: left; widows: 25%; margin-left: 5%;background-color: #01AAED;">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 数据表格 -->
+<table class="layui-hide" id="inspectItem-table" lay-filter="inspectItem-table"></table>
+
+<!-- 中期检查 一键更改类型弹窗页面 -->
+<!-- 项目类型：1：创新训练；2：创业训练；3：创业实践-->
+<div id="onekeyModify-Type" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <span>请选择更改后的项目类型：</span>
+        </div>
+        <div class="layui-form-item">
+            <input type="radio" name="itemType" value="1" title="创新训练">
+            <input type="radio" name="itemType" value="2" title="创业训练">
+            <input type="radio" name="itemType" value="3" title="创业实践">
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 一键更改状态弹窗页面 -->
+<!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+<div id="onekeyModify-Status" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <span>请选择更改后的项目状态：</span>
+        </div>
+        <div class="layui-form-item">
+            <select name="itemStatus" class="layui-select">
+                <option value="1">申请中</option>
+                <option value="2">立项评审</option>
+                <option value="3">已立项</option>
+                <option value="4">立项失败</option>
+                <option value="5">中期检查</option>
+                <option value="6">待结题</option>
+                <option value="7">结题评审</option>
+                <option value="8">结题成功</option>
+                <option value="9">结题失败</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 一键更改级别弹窗页面 -->
+<!-- 项目级别：-1: 无；1：校级；2：省区级；3：国家级-->
+<div id="onekeyModify-Level" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <span>请选择更改后的项目级别：</span>
+        </div>
+        <div class="layui-form-item">
+            <select name="itemLevel" class="layui-select">
+                <option value="1">无</option>
+                <option value="2">校级</option>
+                <option value="3">省区级</option>
+                <option value="4">国家级</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 学校管理员  一键指派评审弹窗页面 -->
+<div id="inspectItem-college-onekeyPoint" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审组长</label>
+            <div class="layui-input-block">
+                <select name="userName" lay-verify="required" id="addReviewLeaderByCollegeWithOnekeyPoint"
+                        lay-fliter="addReviewLeaderFilter">
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 学院管理员  一键指派评审弹窗页面 -->
+<div id="inspectItem-academy-onekeyPoint" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审组长</label>
+            <div class="layui-input-block">
+                <select name="userName" lay-verify="required" id="addReviewLeaderByAcademyWithOnekeyPoint"
+                        lay-fliter="addReviewLeaderFilter">
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 评审结果-->
+<div id="inspectItem-reviewProcess" style="display: none;">
+    <div class="layui-container" style="margin: 0 15px; width: 920px; ">
+        <table class="layui-hide" id="reviewProcess" lay-filter="reviewProcess"></table>
+    </div>
+</div>
+
+<!-- 中期检查 评审结果头工具栏 -->
+<script type="text/html" id="reviewToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-radius layui-btn-sm" lay-event="onekeyDownload-File">
+            <i class="layui-icon">&#xe601;</i> 一键下载文件
+        </button>
+    </div>
+</script>
+
+<!-- 中期检查 详情弹窗页面 -->
+<div id="inspectItem-detail" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">项目级别</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemLevel" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <input type="text" name="itemName" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目负责人</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="leaderName" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">指导老师</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tutorName" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemType" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">项目状态</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemStatus" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">校拨经费</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="collegeFunds" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">财政补贴</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="governFunds" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目简介</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <textarea name="summary" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- 中期检查 评委评审弹窗页面 -->
+<div id="inspectItem-review" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">评审分数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="reviewScore" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <input type="text" name="itemName" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目负责人</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="leaderName" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">指导老师</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tutorName" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目级别</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemLevel" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">项目状态</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemStatus" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <!--评审类型：1：立项评审；2：中期检查；3：结题评审-->
+            <div class="layui-inline">
+                <label class="layui-form-label">评审类型</label>
+                <div class="layui-input-inline">
+                    <select name="reviewType" lay-filter="reviewType">
+                        <option value="1">立项评审</option>
+                        <option value="2">中期检查</option>
+                        <option value="3">结题评审</option>
+                    </select>
+                </div>
+            </div>
+            <!--评审级别： 1：院级评审；2：校级评审；3：省区级评审；4：国家级评审-->
+            <div class="layui-inline">
+                <label class="layui-form-label">评审级别</label>
+                <div class="layui-input-inline">
+                    <select name="reviewLevel" lay-filter="reviewLevel">
+                        <option value="1">院级评审</option>
+                        <option value="2">校级评审</option>
+                        <option value="3">省区级评审</option>
+                        <option value="4">国家级评审</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审意见</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <textarea name="reviewOption" class="layui-textarea" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <table class="layui-table" style="margin-left: 110px; width: 515px;">
+                <caption>评审结果附件一览</caption>
+                <thead>
+                <tr>
+                    <th style="text-align: center;">文件名</th>
+                    <th style="text-align: center;">大小</th>
+                    <th style="text-align: center;">状态</th>
+                    <th style="text-align: center;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="reviewBodyList"></tbody>
+            </table>
+        </div>
+
+        <div class="layui-form-item" style="float: right; margin-right: 35px;">
+            <button type="button" class="layui-btn layui-btn-normal" id="reviewList">选择文件</button>
+            <button type="button" class="layui-btn" id="reviewListAction" style="display: none;">上传附件</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- 中期检查 申请弹窗页面 -->
+<div id="inspectItem-apply" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px 20px 0 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding: 9px 15px 0 0;">项目名称</label>
+            <div class="layui-input-block" style="margin-left: 95px;">
+                <input type="text" name="itemName" lay-verify="" placeholder="请输入项目名称" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="padding: 9px 15px 0 0;">项目类型</label>
+            <div class="layui-input-block" style="margin-left: 95px;">
+                <!--项目类型：1：创新训练；2：创业训练；3：创业实践-->
+                <input type="radio" name="itemType" value="1" title="创新训练" checked>
+                <input type="radio" name="itemType" value="2" title="创业训练">
+                <input type="radio" name="itemType" value="3" title="创业实践">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="padding: 9px 15px 0 0;">负责人姓名</label>
+                <div class="layui-input-inline" style="width: 160px;">
+                    <input type="text" name="leaderName" placeholder="请输入负责人姓名"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="padding: 9px 15px 0 0;">负责人学号</label>
+                <div class="layui-input-inline" style="width: 160px;">
+                    <input type="text" name="leaderNum" placeholder="请输入负责人学号"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="padding: 9px 15px 0 0;">教师姓名</label>
+                <div class="layui-input-inline" style="width: 160px;">
+                    <input type="text" name="tutorName" placeholder="请输入指导教师姓名"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="padding: 9px 15px 0 0;">教师职工号</label>
+                <div class="layui-input-inline" style="width: 160px;">
+                    <input type="text" name="tutorNum" placeholder="请输入指导教师职工号"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left: 95px;">
+                <table class="layui-table" style="width: 100%; border-collapse: collapse; padding: 10px 5px; text-align: center;
+                border-color: white; font-family: 黑体;">
+                    <caption style="margin: 10px 0 20px 0;">项目成员信息一览表</caption>
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">姓名</th>
+                        <th style="text-align: center;">学号</th>
+                        <th style="text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+                <div class="layui-btn" onclick="addItemMemory();">添加成员</div>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" style="padding: 9px 15px 0 0;">项目摘要</label>
+            <div class="layui-input-block" style="margin-left: 95px;">
+                <textarea name="summary" placeholder="请输入项目摘要" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left: 95px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="uploadFile"><i class="layui-icon"></i>上传附件
+                </button>
+                <input type="button" class="layui-btn" id="applyItemList" value="立即申请" style="display: none;"/>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 学校管理员指派弹窗页面 -->
+<div id="inspectItem-college-point" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审组长</label>
+            <div class="layui-input-block">
+                <select name="userName" lay-verify="required" id="addReviewLeaderByCollege"
+                        lay-fliter="addReviewLeaderFilter">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="itemName" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目负责人</label>
+            <div class="layui-input-block">
+                <input type="text" name="leaderName" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">指导教师</label>
+            <div class="layui-input-block">
+                <input type="text" name="tutorName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 学院管理员指派弹窗页面 -->
+<div id="inspectItem-academy-point" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审组长</label>
+            <div class="layui-input-block">
+                <select name="userName" lay-verify="required" id="addReviewLeaderByAcademy"
+                        lay-fliter="addReviewLeaderFilter">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="itemName" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目负责人</label>
+            <div class="layui-input-block">
+                <input type="text" name="leaderName" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">指导教师</label>
+            <div class="layui-input-block">
+                <input type="text" name="tutorName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 中期检查 编辑弹窗页面 -->
+<div id="inspectItem-edit" style="display: none;">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="itemNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <input type="text" name="itemName" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目负责人</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="leaderName" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">指导老师</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tutorName" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">校拨经费</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="collegeFunds" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">财政补贴</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="governFunds" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目简介</label>
+            <div class="layui-input-block" style="width: 515px;">
+                <textarea name="summary" class="layui-textarea" rows="7"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- 中期检查 相关人信息详情弹窗页面 -->
+<div id="inspectItem-userName" style="display: none">
+    <form class="layui-form" action="" style="margin: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="userNum" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="birthDate" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">学院</label>
+            <div class="layui-input-block">
+                <input type="text" name="academy" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">年级</label>
+            <div class="layui-input-block">
+                <input type="text" name="grade" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">专业</label>
+            <div class="layui-input-block">
+                <input type="text" name="major" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="photoNum" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- 中期检查 上传文件弹窗页面 -->
+<div id="inspectItem-uploadFile" style="display: none;">
+    <form class="layui-form" style="margin: 10px;">
+        <div class="layui-form-item">
+            <!--// -1：普通文件；0：重要通知文件；1：常用下载文件；2：申请项目文件；3：立项评审结果附件；4：中期检查评审结果附件；5：结题评审结果附件。-->
+            <label class="layui-form-label">文件类型</label>
+            <div class="layui-input-block" style="width: 450px;">
+                <select name="fileKind" lay-filter="findKindFilter">
+                    <option value="2">请选择上传的文件类型</option>
+                    <option value="2">立项申请文件</option>
+                    <option value="3">立项评审文件</option>
+                    <option value="4">中期检查文件</option>
+                    <option value="5">结题评审文件</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    <div class="layui-upload" style="margin: 10px;">
+        <div class="layui-upload-list" style="margin: 20px;">
+            <table class="layui-table">
+                <caption>文件信息一览表</caption>
+                <thead>
+                <tr>
+                    <th style="text-align: center;">文件名</th>
+                    <th style="text-align: center;">大小</th>
+                    <th style="text-align: center;">状态</th>
+                    <th style="text-align: center;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="uploadBodyList"></tbody>
+            </table>
+            <div class="layui-form-item" style="float: right; margin-right: 3px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="uploadList">选择文件</button>
+                <button type="button" class="layui-btn" id="uploadListAction" style="display: none;">开始上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<!-- 用户名和角色解密  -->
+<script>
+    var userNumAdmin = decrypt(getUrlParam("userNum"), "abcd1234abcd1234");
+    var roleIdAdmin = decrypt(getUrlParam("roleId"), "abcd1234abcd1234");
+
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+</script>
+
+<!-- 头工具栏inspectItem-apply -->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        {{# if (roleIdAdmin == '200001') { }}
+        <!--<button class="layui-btn layui-btn-radius layui-bg-gray layui-btn-sm" lay-event="applyItem">-->
+            <!--<i class="layui-icon">&#xe61f;</i> 立即申请项目-->
+        <!--</button>-->
+        {{# } if (roleIdAdmin == '200004' || roleIdAdmin == '200006') { }}
+        <!--<button class="layui-btn layui-btn-radius layui-bg-gray layui-btn-sm" lay-event="applyItem">-->
+            <!--<i class="layui-icon">&#xe61f;</i> 立即申请项目-->
+        <!--</button>-->
+        <button class="layui-btn layui-btn-radius layui-btn-sm" lay-event="onekeyPoint-Review">
+            一键指派评审
+        </button>
+        <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm" lay-event="onekeyModify-Type">
+            一键更改类型
+        </button>
+        <button class="layui-btn layui-btn-radius layui-bg-orange layui-btn-sm" lay-event="onekeyModify-Status">
+            一键更改状态
+        </button>
+        {{# if (roleIdAdmin == '200006') { }}
+        <button class="layui-btn layui-btn-radius layui-bg-blue layui-btn-sm" lay-event="onekeyModify-Level">
+            一键更改级别
+        </button>
+        {{# } }}
+        <button class="layui-btn layui-btn-radius layui-btn-sm layui-btn-danger" lay-event="batchRemoveItem">
+            <i class="layui-icon">&#xe640;</i> 批量删除
+        </button>
+        {{# } }}
+    </div>
+</script>
+
+<!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+<!-- 每一条记录最后的操作栏-->
+<script type="text/html" id="barDemo">
+    <div class="layui-btn-group">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" title="详情" lay-event="detail">
+            <i class="layui-icon">&#xe641;</i>
+        </a>
+        <a class="layui-btn layui-bg-gray layui-btn-xs" title="评审结果" lay-event="process">
+            <i class="layui-icon">&#xe66e;</i>
+        </a>
+        <a class="layui-btn layui-bg-black layui-btn-xs" title="下载"
+           href="javascript:void(0)" onclick="chooseFileMethod('{{ d.fileName }}')">
+            <i class="layui-icon">&#xe601;</i>
+        </a>
+        <!--<a class="layui-btn layui-bg-black layui-btn-xs" title="下载"-->
+        <!--href="/downloadFile.do?fileName={{ d.fileName }}">-->
+        <!--<i class="layui-icon">&#xe601;</i>-->
+        <!--</a>-->
+        <!--普通学生-->
+        {{# if ( roleIdAdmin == '200001') { }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" title="上传" lay-event="uploadFile" id="{{ d.itemNum}}">
+            <i class="layui-icon">&#xe681;</i>
+        </a>
+        <!--在申请中可以编辑-->
+        {{# if ( d.itemStatus == 1) { }}
+        <a class="layui-btn layui-btn-xs" title="编辑" lay-event="edit">
+            <i class="layui-icon">&#xe642;</i>
+        </a>
+        {{# } if ( d.itemStatus == 1 || d.itemStatus == 4 || d.itemStatus == 8 || d.itemStatus == 9) { }}
+        <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+            <i class="layui-icon">&#xe640;</i>
+        </a>
+        {{# } }}
+        <!--院内专家/校内专家-->
+        {{# } else if (roleIdAdmin == '200003' || roleIdAdmin == '200005') { }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" title="上传" lay-event="uploadFile" id="{{ d.itemNum}}">
+            <i class="layui-icon">&#xe681;</i>
+        </a>
+        <a class="layui-btn layui-btn-xs" title="评审" lay-event="review">
+            <i class="layui-icon">&#xe6b2;</i>
+        </a>
+        <!--学院管理员 / 学校管理员-->
+        <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+        {{# } else if (( roleIdAdmin == '200004') || (roleIdAdmin == '200006')) { }}
+        {{# if (d.itemStatus != 4 && d.itemStatus != 8 && d.itemStatus != 9) { }}
+        {{# if (roleIdAdmin == '200004') { }}
+        {{# if (d.itemStatus == 1 || d.itemStatus == 3 || d.itemStatus == 6) { }}
+        <a class="layui-btn layui-btn-warm layui-btn-xs" title="指派" lay-event="point">
+            <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+        </a>
+        {{# } }}
+        {{# } else if (roleIdAdmin == '200006') { }}
+        <a class="layui-btn layui-btn-warm layui-btn-xs" title="指派" lay-event="point">
+            <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+        </a>
+        {{# } }}
+        {{# } }}
+        <!--立项失败 \ 申请中 \ 结题成功 \ 结题失败-->
+        {{# if ( d.itemStatus == 1 || d.itemStatus == 4 || d.itemStatus == 8 || d.itemStatus == 9) { }}
+        <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+            <i class="layui-icon">&#xe640;</i>
+        </a>
+        {{# } }}
+        {{# } }}
+    </div>
+</script>
+
+<!-- 申请单的流水号 -->
+<script>
+    function getFormatDate() {
+        var nowDate = new Date();
+        var year = nowDate.getFullYear();
+        var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;
+//        var date = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();
+//        var hour = nowDate.getHours() < 10 ? "0" + nowDate.getHours() : nowDate.getHours();
+//        var minute = nowDate.getMinutes() < 10 ? "0" + nowDate.getMinutes() : nowDate.getMinutes();
+//        var second = nowDate.getSeconds() < 10 ? "0" + nowDate.getSeconds() : nowDate.getSeconds();
+
+//        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+        return year + "" + month;
+    }
+
+    // 长度 + 进制
+    function uuid(len, radix) {
+
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+
+        var uuid = [], i;
+        radix = radix || chars.length;
+
+        if (len) {
+            // Compact form
+            for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+        } else {
+            // rfc4122, version 4 form
+            var r;
+            // rfc4122 requires these characters
+            uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+            uuid[14] = '4';
+            // Fill in random data.  At i==19 set the high bits of clock sequence as
+            // per rfc4122, sec. 4.1.5
+            for (i = 0; i < 36; i++) {
+                if (!uuid[i]) {
+                    r = 0 | Math.random() * 16;
+                    uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+                }
+            }
+        }
+        return uuid.join('');
+    }
+
+    var applyItemNum = getFormatDate() + uuid(8, 10);
+
+    function addItemMemory() {
+        var tbody = $("#tbody");
+        var tr = $("<tr></tr>");
+        var tdName = $("<td></td>");
+        var tdNameInput = $("<input type='text' name='leaderMemoryName' class='layui-input' placeholder='请输入成员姓名'/>");
+        tdName.append(tdNameInput);
+        var tdNum = $("<td></td>");
+        var tdNumInput = $("<input type='text' name='leaderMemoryNum' class='layui-input' placeholder='请输入成员学号'/>");
+        tdNum.append(tdNumInput);
+        var tdAction = $("<td></td>");
+        var tdActionModify = $("<a></a>");
+        var tdActionDel = $("<a></a>");
+        tdActionModify.addClass("modify");
+        tdActionModify.text(" 修改 ");
+        tdActionDel.addClass("remove");
+        tdActionDel.text(" 删除 ");
+
+        tbody.append(tr.append(tdName).append(tdNum)
+            .append(tdAction.append(tdActionModify).append(tdActionDel)));
+    }
+
+    $("#inspectItem-apply").on("click", ".modify", modifyInfo);
+    $("#inspectItem-apply").on("click", ".remove", removeInfo);
+
+    function modifyInfo() {
+        $(this).parent().siblings("td").each(function ()//找同类元素td
+        {
+            var is_text = $(this).find("input:text");//判断单元格下是否含有文本框
+            if (!is_text.length) {
+                $(this).html("<input type='text'  class='layui-input' value=' " + $(this).text() + " '/>");
+            }
+            else
+                $(this).html(is_text.val());
+        })
+    }
+
+    function removeInfo() {
+        $(this).parent().parent().remove();
+    }
+
+
+</script>
+
+<!-- 项目级别模板脚本-->
+<script id="itemLevelTpl" type="text/html">
+    <select name="itemLevel" id="{{ d.itemNum }}" lay-filter="itemLevel">
+        {{# if (d.itemLevel === 1) { }}
+        <option value="1" selected="selected">无</option>
+        <option value="2">校级</option>
+        <option value="3">省区级</option>
+        <option value="4">国家级</option>
+        {{# } else if (d.itemLevel === 2) { }}
+        <option value="1">无</option>
+        <option value="2" selected="selected">校级</option>
+        <option value="3">省区级</option>
+        <option value="4">国家级</option>
+        {{# } else if (d.itemLevel === 3) { }}
+        <option value="1">无</option>
+        <option value="2">校级</option>
+        <option value="3" selected="selected">省区级</option>
+        <option value="4">国家级</option>
+        {{# } else if (d.itemLevel === 4) { }}
+        <option value="1">无</option>
+        <option value="2">校级</option>
+        <option value="3">省区级</option>
+        <option value="4" selected="selected">国家级</option>
+        {{# } }}
+    </select>
+</script>
+
+<!-- 项目类型模板脚本-->
+<script id="itemTypeTpl" type="text/html">
+    <select name="itemType" id="{{ d.itemNum }}" lay-filter="itemType">
+        {{# if (d.itemType === 1) { }}
+        <option value="1" selected="selected">创新训练</option>
+        <option value="2">创业训练</option>
+        <option value="3">创业实践</option>
+        {{# } else if (d.itemType === 2) { }}
+        <option value="1">创新训练</option>
+        <option value="2" selected="selected">创业训练</option>
+        <option value="3">创业实践</option>
+        {{# } else if (d.itemType === 3) { }}
+        <option value="1">创新训练</option>
+        <option value="2">创业训练</option>
+        <option value="3" selected="selected">创业实践</option>
+        {{# } }}
+    </select>
+</script>
+
+<!-- 项目状态模板脚本-->
+<!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+<script id="itemStatusTpl" type="text/html">
+    <select name="itemStatus" id="{{ d.itemNum }}" lay-filter="itemStatus">
+        {{# if (d.itemStatus === 1) { }}
+        <option value="1" selected="selected">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 2) { }}
+        <option value="1">申请中</option>
+        <option value="2" selected="selected">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 3) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3" selected="selected">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 4) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4" selected="selected">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 5) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5" selected="selected">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 6) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6" selected="selected">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 7) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7" selected="selected">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 8) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8" selected="selected">结题成功</option>
+        <option value="9">结题失败</option>
+        {{# } else if (d.itemStatus === 9) { }}
+        <option value="1">申请中</option>
+        <option value="2">立项评审</option>
+        <option value="3">已立项</option>
+        <option value="4">立项失败</option>
+        <option value="5">中期检查</option>
+        <option value="6">待结题</option>
+        <option value="7">结题评审</option>
+        <option value="8">结题成功</option>
+        <option value="9" selected="selected">结题失败</option>
+        {{# } }}
+    </select>
+</script>
+
+<!-- 文件名链接下载模板 -->
+<script type="text/html" id="fileNameTpl">
+    {{# if(d.fileName != "" && d.fileName != null) { }}
+    {{# if (d.fileName.indexOf("-") != -1) { }}
+    <a href="javascript:void(0)" class="layui-table-link" onclick="chooseFileMethod('{{ d.fileName }}')">{{
+        d.fileName.substring(d.fileName.indexOf("-") + 1) }}</a>
+    {{# } else { }}
+    <a href="/downloadFile.do?fileName={{d.fileName}}" class="layui-table-link">{{ d.fileName }}</a>
+    {{# } }}
+    {{# } else { }}
+    <span>未上传相关文件</span>
+    {{# } }}
+</script>
+
+<!-- 评审文件名下载链接 -->
+<script type="text/html" id="reviewFileNameTpl">
+    {{# if (d.reviewFileName.indexOf("-") != -1) { }}
+    <a href="javascript:void(0)" class="layui-table-link" onclick="chooseFileMethod('{{ d.fileName }}')">{{
+        d.reviewFileName.substring(d.reviewFileName.indexOf("-") + 1) }}</a>
+    {{# } else { }}
+    <a href="javascript:void(0)" class="layui-table-link" onclick="chooseFileMethod('{{ d.fileName }}')">{{ d.fileName
+        }}</a>
+    {{# } }}
+</script>
+
+
+<!-- 表格脚本代码 -->
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['form', 'layer', 'table', 'laytpl', 'laydate', 'upload', 'element'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var laytpl = layui.laytpl;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        var element = layui.element;
+
+        <!--选择历届项目年份-->
+        $.get("/getItemDate.do", function (result) {
+            console.log(result);
+            $("#getItemDateSelect").prepend("<option value='20'>请选择项目年份</option>");//添加第一个option值
+            $.each(result.data, function (index, value) {
+                $("#getItemDateSelect").append("<option value='" + value + "'>" + value + "</option>");
+            });
+            /* 渲染表单 */
+            form.render();
+        });
+
+        // 表格初始化重载
+        var tableIns = table.render({
+            elem: '#inspectItem-table',
+            url: '/getItemListByUserNum.do',
+            title: '中期检查表',
+            toolbar: '#toolbarDemo',
+            limit: 10,
+            height: 'full-90',
+            limits: [10, 20, 50, 100],
+            page: true,
+            where: {
+                itemStatusF: 3,
+                itemStatusS: 5,
+                userNumAdmin: userNumAdmin,
+                roleId: roleIdAdmin
+            },
+            cols: [
+                [{
+                    type: 'checkbox',
+                    fixed: 'left',
+                    unresize: true
+                }, {
+                    field: 'itemNum',
+                    title: '项目编号',
+                    fixed: 'left',
+                    sort: true,
+                    width: 135
+                }, {
+                    field: 'itemName',
+                    title: '项目名称',
+                    sort: true,
+                    width: 280,
+                    style: 'overflow: hidden;'
+                }, {
+                    field: 'leaderName',
+                    title: '项目负责人',
+                    sort: true,
+                    width: 115,
+                    style: 'color: #F581B1',
+                    event: 'itemLeaderEvent'
+                }, {
+                    field: 'tutorName',
+                    title: '指导老师',
+                    sort: true,
+                    width: 105,
+                    style: 'color: #0e6ec2',
+                    event: 'tutorNameEvent'
+                }, {
+                    field: 'itemDate',
+                    title: '申报时间',
+                    sort: true,
+                    width: 110
+                }, {
+                    field: 'itemLevel',
+                    title: '项目级别',
+                    width: 110,
+                    templet: '#itemLevelTpl'
+                }, {
+                    field: 'itemType',
+                    title: '项目类型',
+                    sort: true,
+                    width: 115,
+                    templet: '#itemTypeTpl'
+                }, {
+                    field: 'itemStatus',
+                    title: '项目状态',
+                    sort: true,
+                    width: 115,
+                    templet: '#itemStatusTpl'
+                }, {
+                    field: 'academyScore',
+                    title: '院级总分',
+                    sort: true,
+                    width: 120,
+                    style: 'color: #800080'
+                }, {
+                    field: 'collegeScore',
+                    title: '校级总分',
+                    sort: true,
+                    width: 120,
+                    style: 'color: #800080'
+                }, {
+                    field: 'governScore',
+                    title: '省区级总分',
+                    sort: true,
+                    width: 120,
+                    style: 'color: #800080'
+                }, {
+                    field: 'fileName',
+                    title: '申请文件',
+                    width: 140,
+                    style: 'overflow: hidden;',
+                    templet: '#fileNameTpl'
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    toolbar: '#barDemo',
+                    unresize: true,
+                    width: 170
+                }]
+            ],
+            done: function () {
+
+            },
+            parseData: function (result) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": result.status, //解析接口状态
+                    "count": result.data.total, //解析数据长度
+                    "data": result.data.list //解析数据列表
+                };
+            }
+        });
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // 评审结果头工具栏事件
+        table.on('toolbar(reviewProcess)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var data = checkStatus.data;
+            console.log(data);
+
+            switch (obj.event) {
+                case 'onekeyDownload-File':
+                    // 全不选禁止弹窗
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!");
+                    }
+
+                    var fileNames = new Array();
+
+                    $.each(data, function (index, item) {
+                        fileNames[index] = item.fileName;
+                    });
+
+                    $.ajax({
+                        url: "/onekeyDownloadFile.do",
+                        type: "POST",
+                        data: {
+                            fileNames: fileNames,
+                            userNum: userNumAdmin,
+                            roleId: roleIdAdmin
+                        },
+                        traditional: true,
+                        success: function (result) {
+                            if (result.status != 0) {
+                                return layer.msg(result.msg, {icon: 2});
+                            }
+                            layer.msg(result.msg, {icon: 1});
+                        }
+                    });
+                    break;
+            }
+        });
+
+        // 主表头工具栏事件
+        table.on('toolbar(inspectItem-table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var data = checkStatus.data;
+            console.log(data);
+
+            var itemNums = new Array();
+
+            switch (obj.event) {
+                case 'onekeyModify-Type':
+                    // 全不选禁止弹窗
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!", {icon: 2});
+                    }
+
+                    var isFlag = false;
+                    for (var i = 0; i < data.length; i++) {
+                        for (var j = i + 1; j < data.length; j++) {
+                            if (data[i].itemType != data[j].itemType) {
+                                isFlag = true;
+                            }
+                        }
+                    }
+
+                    if (isFlag) {
+                        return layer.msg("对不起，你选择的项目中，项目的类型不一致。请按关键词搜索后，再一键修改类型", {icon: 2});
+                    }
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-一键更改类型',
+                        content: $('#onekeyModify-Type'),
+                        area: ['300px', '300px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+
+                        },
+                        yes: function (index) {
+                            $.each(data, function (index, value) {
+                                itemNums[index] = value.itemNum;
+                            });
+                            console.log(itemNums);
+                            var itemType = $("#onekeyModify-Type input[name=itemType]:checked").val();
+                            console.log(itemType);
+
+                            $.ajax({
+                                url: "/onekeyModifyItemTypeWithItemNums.do",
+                                type: "POST",
+                                data: {
+                                    itemNums: itemNums,
+                                    itemType: itemType,
+                                    userNum: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                },
+                                traditional: true,
+                                success: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    window.location.reload();
+                                    layer.msg(result.msg, {icon: 1});
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'onekeyModify-Status':
+                    // 全不选禁止弹窗
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!", {icon: 2});
+                    }
+
+                    console.log(data);
+
+                    var isFlag = false;
+                    for (var i = 0; i < data.length; i++) {
+                        for (var j = i + 1; j < data.length; j++) {
+                            if (data[i].itemStatus != data[j].itemStatus) {
+                                isFlag = true;
+                            }
+                        }
+                    }
+
+                    if (isFlag) {
+                        return layer.msg("对不起，你选择的项目中，项目状态不一致，请按关键词搜索后，再一键修改状态", {icon: 2});
+                    }
+
+                    var itemStatusTmp = data[0].itemStatus;
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-一键更改状态',
+                        content: $('#onekeyModify-Status'),
+                        area: ['350px', '350px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+
+                        },
+                        yes: function (index) {
+                            $.each(data, function (index, value) {
+                                itemNums[index] = value.itemNum;
+                            });
+                            var itemStatus = $("#onekeyModify-Status select[name='itemStatus'] > option:selected").val();
+
+                            if (itemStatusTmp > itemStatus) {
+                                return layer.msg("对不起,项目的流程不能后退,请重新选择!", {icon: 2});
+                            }
+
+                            if (itemStatusTmp == itemStatus) {
+                                return layer.msg("对不起,目前项目的流程没有改变,请重新选择!", {icon: 2});
+                            }
+
+                            if (itemStatus - itemStatusTmp > 2) {
+                                return layer.msg("对不起, 目前项目的状态不能跨三级修改,请重新选择!", {icon: 2});
+                            }
+
+                            if (itemStatusTmp != 2 && itemStatusTmp != 3 && itemStatusTmp != 7) {
+                                if (itemStatus - itemStatusTmp == 2) {
+                                    return layer.msg("对不起, 目前项目的状态不能跨两级修改,请重新选择!", {icon: 2});
+                                }
+                            }
+
+                            $.ajax({
+                                url: "/onekeyModifyItemStatusWithItemNums.do",
+                                type: "POST",
+                                data: {
+                                    itemNums: itemNums,
+                                    itemStatus: itemStatus,
+                                    userNum: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                },
+                                traditional: true,
+                                success: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    layer.msg(result.msg, {icon: 1});
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 3000);
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'onekeyModify-Level':
+                    // 全不选禁止弹窗
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!", {icon: 2});
+                    }
+
+                    var isFlag = false;
+                    for (var i = 0; i < data.length; i++) {
+                        for (var j = i + 1; j < data.length; j++) {
+                            if (data[i].itemLevel != data[j].itemLevel) {
+                                isFlag = true;
+                            }
+                        }
+                    }
+
+                    if (isFlag) {
+                        return layer.msg("对不起，你所选择的项目中，项目的级别不一致。请按关键词搜索后，再一键修改级别", {icon: 2});
+                    }
+
+                    var itemLevelTmp = data[0].itemLevel;
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-一键更改级别',
+                        content: $('#onekeyModify-Level'),
+                        area: ['350px', '350px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+
+                        },
+                        yes: function (index) {
+                            $.each(data, function (index, value) {
+                                itemNums[index] = value.itemNum;
+                            });
+                            console.log(itemNums);
+                            var itemLevel = $("#onekeyModify-Level select[name='itemLevel'] > option:selected").val();
+                            console.log(itemLevel);
+
+                            if (itemLevelTmp > itemLevel) {
+                                return layer.msg("对不起,项目的级别不能后退,请重新选择!");
+                            }
+
+                            if (itemLevelTmp == itemLevel) {
+                                return layer.msg("对不起,目前项目的级别没有改变,请重新选择!");
+                            }
+
+                            $.ajax({
+                                url: "/onekeyModifyItemLevelWithItemNums.do",
+                                type: "POST",
+                                data: {
+                                    itemNums: itemNums,
+                                    itemLevel: itemLevel,
+                                    userNum: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                },
+                                traditional: true,
+                                success: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    window.location.reload();
+                                    layer.msg(result.msg, {icon: 1});
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'onekeyPoint-Review':
+                    // 全不选禁止弹窗
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!", {icon: 2});
+                    }
+
+                    var isFlag = false;
+                    for (var i = 0; i < data.length; i++) {
+                        for (var j = i + 1; j < data.length; j++) {
+                            if (data[i].itemStatus != data[j].itemStatus) {
+                                isFlag = true;
+                            }
+                        }
+                    }
+
+                    if (isFlag) {
+                        return layer.msg("对不起，你所选择的项目中，项目所处状态不一致。请按关键词搜索后，再一键指派评审", {icon: 2});
+                    }
+
+                    ///////////////////////////////////////////////
+                    ///////////////////////////////////////////////
+                    ///////////////////////////////////////////////
+
+                    var itemStatus = data[0].itemStatus;
+                    console.log("itemStatus：" + itemStatus);
+
+                    <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+                    // 学校管理员指派校内专家组长评审
+                    if (roleIdAdmin == "200006") {
+
+                        if (itemStatus == 4 || itemStatus == 8 || itemStatus == 9) {
+                            return layer.msg("对不起，目前项目已经结束了，不允许再指派评委评审了！", {icon: 2});
+                        }
+
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            title: '中期检查-指派',
+                            content: $('#inspectItem-college-onekeyPoint'),
+                            area: ['350px', '340px'],
+                            shadeClose: true,
+                            maxmin: true,
+                            btn: ['确定', '关闭'],
+                            moveType: 1, //拖拽模式，0或者1
+                            success: function () {
+                                var param = {
+                                    roleId: roleIdAdmin,
+                                    userNum: userNumAdmin
+                                };
+                                $("#addReviewLeaderByCollegeWithOnekeyPoint").empty();//清空select列表数据
+                                $.get("/getReviewLeaderByRoleIdAndUserNum.do", param, function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg);
+                                    }
+                                    $("#addReviewLeaderByCollegeWithOnekeyPoint").prepend("<option value='-1'>请选择评委组长</option>");//添加第一个option值
+                                    $.each(result.data, function (index, value) {
+                                        $("#addReviewLeaderByCollegeWithOnekeyPoint").append("<option value='" + value.userNum + "'>" + value.userName + "</option>");
+                                    });
+                                    /* 渲染表单 */
+                                    form.render();
+                                });
+                            },
+                            yes: function (index) {
+                                if ($("#inspectItem-college-onekeyPoint select[name='userName'] > option:selected").val() == "-1") {
+                                    return layer.msg("请先选择评审组长！", {icon: 2});
+                                }
+
+
+                                var itemNums = new Array();
+
+                                $.each(data, function(index, value) {
+                                    itemNums.push(value.itemNum);
+                                });
+
+                                var param = {
+                                    itemNums: itemNums,
+                                    userNum: $("#inspectItem-college-onekeyPoint select[name='userName'] > option:selected").val(),
+                                    userName: $("#inspectItem-college-onekeyPoint select[name='userName'] > option:selected").text(),
+                                    itemStatus: itemStatus,
+                                    userNumAdmin: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                };
+
+                                console.log(param);
+
+                                $.ajax({
+                                    url: "/batchAddReviewTeam.do",
+                                    type: "POST",
+                                    data: param,
+                                    traditional: true,
+                                    success: function (result) {
+                                        if (result.status != 0) {
+                                            return layer.msg(result.msg, {icon: 2});
+                                        }
+                                        layer.msg(result.msg, {icon: 1});
+
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 3000);
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        });
+                    }
+                    // 学院管理员指派院内专家组长
+                    else if (roleIdAdmin == "200004") {
+                        if (itemStatus == 2 || itemStatus == 5 || itemStatus == 7) {
+                            return layer.msg("对不起，目前的项目正在评审中，不允许再指派学院评委评审！", {icon: 2});
+                        }
+
+                        if (itemStatus == 4 || itemStatus == 8 || itemStatus == 9) {
+                            return layer.msg("对不起，目前项目已经结束了，不允许再指派评委评审了！", {icon: 2});
+                        }
+
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            title: '中期检查-指派',
+                            content: $('#inspectItem-academy-onekeyPoint'),
+                            area: ['350px', '340px'],
+                            shadeClose: true,
+                            maxmin: true,
+                            btn: ['确定', '关闭'],
+                            moveType: 1, //拖拽模式，0或者1
+                            success: function () {
+                                var param = {
+                                    roleId: roleIdAdmin,
+                                    userNum: userNumAdmin
+                                };
+                                $("#addReviewLeaderByAcademyWithOnekeyPoint").empty();//清空select列表数据
+                                $.get("/getReviewLeaderByRoleIdAndUserNum.do", param, function (result) {
+                                    console.log(result);
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    $("#addReviewLeaderByAcademyWithOnekeyPoint").prepend("<option value='-1'>请选择评委组长</option>");//添加第一个option值
+                                    $.each(result.data, function (index, value) {
+                                        $("#addReviewLeaderByAcademyWithOnekeyPoint").append("<option value='" + value.userNum + "'>" + value.userName + "</option>");
+                                    });
+                                    /* 渲染表单 */
+                                    form.render();
+                                });
+                            },
+                            yes: function (index) {
+                                if ($("#inspectItem-academy-onekeyPoint select[name='userName'] > option:selected").val() == "-1") {
+                                    return layer.msg("请先选择评审组长！", {icon: 2});
+                                }
+                                itemStatus += 1;
+
+                                var itemNums = new Array();
+                                $.each(data, function(index, value) {
+                                    itemNums.push(value.itemNum);
+                                });
+
+                                var param = {
+                                    itemNums: itemNums,
+                                    userNum: $("#inspectItem-academy-onekeyPoint select[name='userName'] > option:selected").val(),
+                                    userName: $("#inspectItem-academy-onekeyPoint select[name='userName'] > option:selected").text(),
+                                    itemStatus: itemStatus,
+                                    userNumAdmin: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                };
+
+                                $.ajax({
+                                    url: "/batchAddReviewTeam.do",
+                                    type: "POST",
+                                    data: param,
+                                    traditional: true,
+                                    success: function (result) {
+                                        if (result.status != 0) {
+                                            return layer.msg(result.msg, {icon: 2});
+                                        }
+                                        layer.msg(result.msg, {icon: 1});
+
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 3000);
+                                    }
+                                });
+                                layer.close(index);
+                            }
+
+                        });
+                    }
+                    break;
+                case 'applyItem':
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-立即申请项目',
+                        content: $('#inspectItem-apply'),
+                        area: ['620px', '500px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+                            console.log(applyItemNum + "   applyItemNum");
+                            //选完文件后不自动上传   申请项目附件上传
+                            upload.render({
+                                elem: '#uploadFile',
+                                url: '/batchUploadFile.do',
+                                auto: false,
+                                bindAction: '#applyItemList',
+                                accept: 'file',
+                                data: {
+                                    fileKind: 2,
+                                    userNum: userNumAdmin,
+                                    itemNum: applyItemNum
+                                },
+                                field: 'files',
+                                number: 1,
+                                done: function (res) {
+                                    console.log(res)
+                                }
+                            });
+                        },
+                        yes: function (index) {
+                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                            // 模拟点击按钮事件
+                            $("#applyItemList").click();
+
+                            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                            var set = getTableContent();
+
+                            var userNums = new Array();
+                            var userNames = new Array();
+
+                            var indexNum = 0;
+                            var indexName = 0;
+
+                            console.log(applyItemNum + "   applyItemNum");
+
+                            var userNumTmp = userNumAdmin;
+                            var roleIdTmp = roleIdAdmin;
+
+                            var isFlag = false;
+
+                            $.each(set, function (index, item) {
+                                $.each(item, function (i, j) {
+                                    $.each(j, function (k, t) {
+                                        if (k == 1) {
+                                            userNums[indexNum++] = t;
+                                            if (t == userNumTmp) {
+                                                isFlag = true;
+                                            }
+                                        }
+                                        else if (k == 0) {
+                                            userNames[indexName++] = t;
+                                        }
+                                    })
+                                })
+                            });
+
+                            if (roleIdTmp == $("#inspectItem-apply input[name='leaderNum']").val()
+                                || roleIdTmp == $("#inspectItem-apply input[name='tutorNum']").val()) {
+                                isFlag = true;
+                            }
+
+                            if (roleIdTmp != 200004 && roleIdTmp != 200006) {
+                                if (!isFlag) {
+                                    return layer.msg("对不起，该申请名单中没有你的信息，请重新填写！", {icon: 2});
+                                }
+                            }
+
+                            var param = {
+                                itemNum: applyItemNum,
+                                itemName: $("#inspectItem-apply input[name='itemName']").val(),
+                                leaderName: $("#inspectItem-apply input[name='leaderName']").val(),
+                                leaderNum: $("#inspectItem-apply input[name='leaderNum']").val(),
+                                itemType: $("#inspectItem-apply input[name='itemType']:checked").val(),
+                                tutorName: $("#inspectItem-apply input[name='tutorName']").val(),
+                                tutorNum: $("#inspectItem-apply input[name='tutorNum']").val(),
+                                summary: $("#inspectItem-apply textarea[name='summary']").val(),
+                                userNums: userNums,
+                                userNames: userNames,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            };
+
+                            $.ajax({
+                                url: '/addItemAndUserInfo.do',
+                                type: 'post',
+                                data: param,
+                                //通过设置traditional属性为true直接传递数组 */
+                                traditional: true,//用传统方式序列化数据
+                                success: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    layer.msg(result.msg, {icon: 1});
+
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 3000);
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'batchRemoveItem':
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!");
+                    }
+
+                    var itemStatus = data.itemStatus;
+                    if (itemStatus != -1 && itemStatus != 1) {
+                        return layer.msg("对不起，目前项目正在流程之中，不能删除！");
+                    }
+
+                    var itemNums = new Array();
+                    layer.confirm('真的删除选中行吗？', function (index) {
+                        $.each(data, function (index, value) {
+                            itemNums[index] = value.itemNum;
+                        });
+                        $.ajax({
+                            url: "/batchRemoveItem.do",
+                            type: "POST",
+                            data: {
+                                itemNums: itemNums,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            }
+                        });
+                        layer.close(index);
+                    });
+            }
+        });
+
+        // 主表监听每一行的工具事件
+        table.on('tool(inspectItem-table)', function (obj) {
+            var data = obj.data;
+
+            console.log(data);
+
+            if (obj.event === 'edit') {
+
+                var collegeFunds = data.collegeFunds;
+                var governFunds = data.governFunds;
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    title: '中期检查编辑',
+                    content: $('#inspectItem-edit'),
+                    area: ['720px', '530px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    btn: ['确定', '取消'],
+                    moveType: 1, //拖拽模式，0或者1
+                    success: function (index) {
+                        // 赋初值，还原数据
+                        $("#inspectItem-edit input[name='itemNum']").val(data.itemNum);
+                        $("#inspectItem-edit input[name='itemName']").val(data.itemName);
+
+                        $("#inspectItem-edit input[name='leaderName']").val(data.leaderName);
+                        $("#inspectItem-edit input[name='tutorName']").val(data.tutorName);
+
+                        $("#inspectItem-edit input[name='collegeFunds']").val(data.collegeFunds);
+                        $("#inspectItem-edit input[name='governFunds']").val(data.governFunds);
+                        $("#inspectItem-edit textarea[name='summary']").val(data.summary);
+                    },
+                    yes: function (index) {
+
+                        if (userNumAdmin == "200006") {
+                            collegeFunds = $("#inspectItem-edit input[name='collegeFunds']").val();
+                            governFunds = $("#inspectItem-edit input[name='governFunds']").val();
+                        }
+
+                        var param = {
+                            itemNum: data.itemNum,
+                            leaderName: $("#inspectItem-edit input[name='leaderName']").val(),
+                            tutorName: $("#inspectItem-edit input[name='tutorName']").val(),
+                            collegeFunds: collegeFunds,
+                            governFunds: governFunds,
+                            summary: $("#inspectItem-edit textarea[name='summary']").val(),
+                            userNum: userNumAdmin,
+                            roleId: roleIdAdmin
+                        };
+                        layer.close(index);
+                        $.get("/modifyItemByItemNum.do", param, function (result) {
+                            if (result.status != 0) {
+                                return later.msg(result.msg, {icon: 2});
+                            }
+                            layer.msg(result.msg, {icon: 1});
+                            // 同步更新缓存对应的值
+                            obj.update({
+                                itemNum: data.itemNum,
+                                leaderName: $("#inspectItem-edit input[name='itemName']").val(),
+                                tutorName: $("#inspectItem-edit input[name='tutorName']").val(),
+                                itemLevel: itemLevel,
+                                itemType: itemType,
+                                itemStatus: itemStatus,
+                                collegeFunds: $("#inspectItem-edit input[name='collegeFunds']").val(),
+                                governFunds: $("#inspectItem-edit input[name='governFunds']").val(),
+                                summary: $("#inspectItem-edit textarea[name='summary']").val()
+                            });
+                        });
+                    }
+
+                });
+            }
+            else if (obj.event === 'point') {
+                var param = {
+                    roleId: roleIdAdmin,
+                    userNum: userNumAdmin
+                };
+
+                var itemStatus = data.itemStatus;
+
+                <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+                // 学校管理员指派校内专家组长评审
+                if (roleIdAdmin == "200006") {
+
+                    if (itemStatus == 4 || itemStatus == 8 || itemStatus == 9) {
+                        return layer.msg("对不起，目前项目已经结束了，不允许再指派评委评审了！", {icon: 2});
+                    }
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-指派',
+                        content: $('#inspectItem-college-point'),
+                        area: ['350px', '340px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        btn: ['确定', '关闭'],
+                        moveType: 1, //拖拽模式，0或者1
+                        success: function () {
+                            $("#addReviewLeaderByCollege").empty();//清空select列表数据
+                            $.get("/getReviewLeaderByRoleIdAndUserNum.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg);
+                                }
+                                $("#addReviewLeaderByCollege").prepend("<option value='-1'>请选择评委组长</option>");//添加第一个option值
+                                $.each(result.data, function (index, value) {
+                                    $("#addReviewLeaderByCollege").append("<option value='" + value.userNum + "'>" + value.userName + "</option>");
+                                });
+                                /* 渲染表单 */
+                                form.render();
+                            });
+                            $("#inspectItem-college-point input[name='itemName']").val(data.itemName);
+                            $("#inspectItem-college-point input[name='leaderName']").val(data.leaderName);
+                            $("#inspectItem-college-point input[name='tutorName']").val(data.tutorName);
+                        },
+                        yes: function (index) {
+                            if ($("#inspectItem-college-point select[name='userName'] > option:selected").val() == "-1") {
+                                return layer.msg("请先选择评审组长！", {icon: 2});
+                            }
+                            var param = {
+                                itemNum: data.itemNum,
+                                userNum: $("#inspectItem-college-point select[name='userName'] > option:selected").val(),
+                                userName: $("#inspectItem-college-point select[name='userName'] > option:selected").text(),
+                                itemStatus: data.itemStatus,
+                                userNumAdmin: userNumAdmin,
+                                roleId: roleIdAdmin
+                            };
+
+                            console.log(param);
+
+                            $.get("/chooseUserItemWithLeader.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            });
+                        }
+                    });
+                }
+                // 学院管理员指派院内专家组长
+                else if (roleIdAdmin == "200004") {
+                    if (itemStatus == 2 || itemStatus == 5 || itemStatus == 7) {
+                        return layer.msg("对不起，目前的项目正在评审中，不允许再指派学院评委评审！", {icon: 2});
+                    }
+
+                    if (itemStatus == 4 || itemStatus == 8 || itemStatus == 9) {
+                        return layer.msg("对不起，目前项目已经结束了，不允许再指派评委评审了！", {icon: 2});
+                    }
+
+                    console.log(param);
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '中期检查-指派',
+                        content: $('#inspectItem-academy-point'),
+                        area: ['350px', '340px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        btn: ['确定', '关闭'],
+                        moveType: 1, //拖拽模式，0或者1
+                        success: function (index) {
+                            $("#addReviewLeaderByAcademy").empty();//清空select列表数据
+                            $.get("/getReviewLeaderByRoleIdAndUserNum.do", param, function (result) {
+                                console.log(result);
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg);
+                                }
+                                $("#addReviewLeaderByAcademy").prepend("<option value='-1'>请选择评委组长</option>");//添加第一个option值
+                                $.each(result.data, function (index, value) {
+                                    $("#addReviewLeaderByAcademy").append("<option value='" + value.userNum + "'>" + value.userName + "</option>");
+                                });
+                                /* 渲染表单 */
+                                form.render();
+                            });
+                            $("#inspectItem-academy-point input[name='itemName']").val(data.itemName);
+                            $("#inspectItem-academy-point input[name='leaderName']").val(data.leaderName);
+                            $("#inspectItem-academy-point input[name='tutorName']").val(data.tutorName);
+                        },
+                        yes: function (index) {
+                            if ($("#inspectItem-academy-point select[name='userName'] > option:selected").val() == "-1") {
+                                return layer.msg("请先选择评审组长！", {icon: 2});
+                            }
+                            if (itemStatus == 3) {
+                                itemStatus += 1;
+                            }
+                            itemStatus += 1;
+                            var param = {
+                                itemNum: data.itemNum,
+                                userNum: $("#inspectItem-academy-point select[name='userName'] > option:selected").val(),
+                                userName: $("#inspectItem-academy-point select[name='userName'] > option:selected").text(),
+                                itemStatus: itemStatus,
+                                userNumAdmin: userNumAdmin,
+                                roleId: roleIdAdmin
+                            };
+
+                            console.log(param);
+
+                            $.get("/chooseUserItemWithLeader.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            });
+                            layer.close(index);
+                        }
+
+                    });
+                }
+            }
+            else if (obj.event === 'del') {
+                layer.confirm('真的删除当前行项目编号为：' + data.itemNum + '么？', function (index) {
+                    var itemStatus = data.itemStatus;
+                    if (itemStatus != -1 && itemStatus != 1) {
+                        return layer.msg("对不起，目前项目正在流程之中，不能删除！");
+                    }
+
+                    var param = {
+                        itemNum: data.itemNum,
+                        userNum: userNumAdmin,
+                        roleId: roleIdAdmin
+                    };
+                    layer.msg(param.userNum);
+                    $.post("/removeItemById.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg, {icon: 0});
+                        }
+                        obj.del();
+                        layer.msg(result.msg);
+                    });
+                    layer.close(index);
+                });
+            }
+            else if (obj.event === 'detail') {
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    title: '中期检查-详情',
+                    content: $('#inspectItem-detail'),
+                    area: ['700px', '530px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    btn: ['关闭'],
+                    moveType: 1, //拖拽模式，0或者1
+                    success: function (index) {
+                        // 赋初值，还原数据
+                        $("#inspectItem-detail input[name='itemNum']").val(data.itemNum);
+                        $("#inspectItem-detail input[name='itemName']").val(data.itemName);
+
+                        // 项目级别转换
+                        // 项目级别：1: 立项失败；2：校级；3：省区级；4：国家级
+                        if (data.itemLevel == 1) {
+                            $("#inspectItem-detail input[name='itemLevel']").val("无");
+                        }
+                        else if (data.itemLevel == 2) {
+                            $("#inspectItem-detail input[name='itemLevel']").val("校级");
+                        }
+                        else if (data.itemLevel == 3) {
+                            $("#inspectItem-detail input[name='itemLevel']").val("省区级");
+                        }
+                        else if (data.itemLevel == 4) {
+                            $("#inspectItem-detail input[name='itemLevel']").val("国家级");
+                        }
+
+                        // 项目类型转换
+                        // 项目类型：1：创新训练；2：创业训练；3：创业实践
+                        if (data.itemType == 1) {
+                            $("#inspectItem-detail input[name='itemType']").val("创新训练");
+                        }
+                        else if (data.itemType == 2) {
+                            $("#inspectItem-detail input[name='itemType']").val("创业训练");
+                        }
+                        else if (data.itemType == 3) {
+                            $("#inspectItem-detail input[name='itemType']").val("创业实践");
+                        }
+
+                        // 项目状态转换
+//
+                        <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+                        if (data.itemStatus == 1) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("申请中");
+                        }
+                        else if (data.itemStatus == 2) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("立项评审");
+                        }
+                        else if (data.itemStatus == 3) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("已立项");
+                        }
+                        else if (data.itemStatus == 4) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("立项失败");
+                        }
+                        else if (data.itemStatus == 5) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("中期检查");
+                        }
+                        else if (data.itemStatus == 6) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("待结题");
+                        }
+                        else if (data.itemStatus == 7) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("结题评审");
+                        }
+                        else if (data.itemStatus == 8) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("结题成功");
+                        }
+                        else if (data.itemStatus == 9) {
+                            $("#inspectItem-detail input[name='itemStatus']").val("结题失败");
+                        }
+
+                        $("#inspectItem-detail input[name='leaderName']").val(data.leaderName);
+                        $("#inspectItem-detail input[name='tutorName']").val(data.tutorName);
+                        $("#inspectItem-detail input[name='collegeFunds']").val(data.collegeFunds);
+                        $("#inspectItem-detail input[name='governFunds']").val(data.governFunds);
+                        $("#inspectItem-detail textarea[name='summary']").val(data.summary);
+
+                    }
+                });
+            }
+            else if (obj.event === 'itemLeaderEvent') {
+                getUserInfoByUserNum(data.leaderName);
+            }
+            else if (obj.event === 'tutorNameEvent') {
+                getUserInfoByUserNum(data.tutorName);
+            }
+            else if (obj.event === 'uploadFile') {
+
+                var itemNum = data.itemNum;
+                console.log(itemNum + "   itemNum");
+
+                // 上传文件按钮事件
+                // 每行上传文件事件  多文件列表示例
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    title: '所有文件 上传附件',
+                    content: $('#inspectItem-uploadFile'),
+                    area: ['600px', '500px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    success: function () {
+                        var uploadListView = $('#uploadBodyList');
+                        var uploadListIns = upload.render({
+                            elem: '#uploadList',
+                            url: '/batchUploadFile.do',
+                            accept: 'file',
+                            multiple: true,
+                            auto: false,
+                            number: 8,
+                            field: 'files',
+                            bindAction: '#uploadListAction',
+                            before: function (obj) {
+                                var fileKind = $("#inspectItem-uploadFile select[name='fileKind'] > option:selected").val();
+                                this.data = {
+                                    "fileKind": fileKind,
+                                    "userNum": userNumAdmin,
+                                    "itemNum": itemNum
+                                };
+                            },
+                            choose: function (obj) {
+                                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                //读取本地文件
+                                obj.preview(function (index, file, result) {
+                                    var tr = $(['<tr id="upload-' + index + '">'
+                                        , '<td>' + file.name + '</td>'
+                                        , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                        , '<td>等待上传</td>'
+                                        , '<td>'
+                                        , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                        , '</td>'
+                                        , '</tr>'].join(''));
+
+                                    //单个重传
+                                    tr.find('.demo-reload').on('click', function () {
+                                        obj.upload(index, file);
+                                    });
+
+                                    //删除
+                                    tr.find('.demo-delete').on('click', function () {
+                                        delete files[index]; //删除对应的文件
+                                        tr.remove();
+                                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                    });
+
+                                    uploadListView.append(tr);
+                                });
+                            },
+                            done: function (res, index, upload) {
+                                if (res.status == 0) { //上传成功
+                                    var tr = uploadListView.find('tr#upload-' + index)
+                                        , tds = tr.children();
+                                    tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                                    tds.eq(3).html(''); //清空操作
+                                    delete this.files[index]; //删除文件队列已经上传成功的文件
+                                    setTimeout(function () {
+                                        layer.close(index);
+                                    }, 3000);
+
+                                    return;
+                                }
+                                this.error(index, upload);
+                            },
+                            error: function (index, upload) {
+                                var tr = uploadListView.find('tr#upload-' + index)
+                                    , tds = tr.children();
+                                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                            }
+                        });
+                    },
+                    yes: function (index) {
+                        var fileKind = $("#inspectItem-uploadFile select[name='fileKind'] > option:selected").val();
+
+                        var param = {
+                            fileKind: fileKind,
+                            userNum: userNumAdmin,
+                            itemNum: itemNum
+                        };
+
+                        $.get("/checkReview.do", param, function (result) {
+                            if (result.status != 0) {
+                                return layer.msg(result.msg, {icon: 2});
+                            }
+                            $("#uploadListAction").click();
+
+                            layer.msg("文件上传成功了，请稍等！！！", {icon: 1});
+
+                            layer.close(index);
+                        });
+                    },
+                    end: function () {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 3000);
+                    }
+                });
+            }
+            else if (obj.event === 'review') {
+                <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+                var itemNum = data.itemNum;
+
+                var itemStatus = data.itemStatus;
+
+                var reviewLevel = 1;
+                if (itemStatus == 2) {
+                    reviewLevel = 1;
+                }
+                else if (itemStatus == 5) {
+                    reviewLevel = 2;
+                }
+                else if (itemStatus == 7) {
+                    reviewLevel = 3;
+                }
+
+                var itemNumParam = {
+                    reviewLevel: reviewLevel,
+                    itemNum: itemNum,
+                    userNum: userNumAdmin
+                };
+
+                $.get("/checkIsReviewWithItemNumAndUserNum.do", itemNumParam, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+
+                    // 第一次评审同类型的本项目
+                    layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            title: '中期检查-评审',
+                            content: $('#inspectItem-review'),
+                            area: ['720px', '530px'],
+                            shadeClose: true,
+                            maxmin: true,
+                            moveType: 1, //拖拽模式，0或者1
+                            btn: ['确定', '取消'],
+                            success: function () {
+                                //  评审结果附件上传
+                                var reviewListView = $('#reviewBodyList');
+                                var reviewListIns = upload.render({
+                                    elem: '#reviewList',
+                                    url: '/batchUploadFile.do',
+                                    accept: 'file',
+                                    multiple: true,
+                                    auto: false,
+                                    number: 1,
+                                    field: 'files',
+                                    bindAction: '#reviewListAction',
+                                    before: function () {
+                                        var fileKind = 3;
+                                        if ("立项评审" == $("#inspectItem-review input[name='itemStatus']").val()) {
+                                            fileKind = 3;
+                                        }
+                                        else if ("中期检查" == $("#inspectItem-review input[name='itemStatus']").val()) {
+                                            fileKind = 4;
+                                        }
+                                        else if ("结题评审" == $("#inspectItem-review input[name='itemStatus']").val()) {
+                                            fileKind = 5;
+                                        }
+
+                                        this.data = {
+                                            "fileKind": fileKind,
+                                            "userNum": userNumAdmin,
+                                            "itemNum": itemNum
+                                        };
+                                    },
+                                    choose: function (obj) {
+                                        var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                        //读取本地文件
+                                        obj.preview(function (index, file, result) {
+                                            var tr = $(['<tr id="upload-' + index + '">'
+                                                , '<td>' + file.name + '</td>'
+                                                , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                                , '<td>等待上传</td>'
+                                                , '<td>'
+                                                , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                                , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                                , '</td>'
+                                                , '</tr>'].join(''));
+
+                                            //单个重传
+                                            tr.find('.demo-reload').on('click', function () {
+                                                obj.upload(index, file);
+                                            });
+
+                                            //删除
+                                            tr.find('.demo-delete').on('click', function () {
+                                                delete files[index]; //删除对应的文件
+                                                tr.remove();
+                                                reviewListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                            });
+
+                                            reviewListView.append(tr);
+                                        });
+                                    },
+                                    done: function (res, index, upload) {
+                                        if (res.status == 0) { //上传成功
+                                            var tr = reviewListView.find('tr#upload-' + index)
+                                                , tds = tr.children();
+                                            tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                                            tds.eq(3).html(''); //清空操作
+                                            delete this.files[index]; //删除文件队列已经上传成功的文件
+                                            setTimeout(function () {
+                                                layer.close(index);
+                                            }, 2000);
+                                            return;
+                                        }
+                                        this.error(index, upload);
+
+                                    },
+                                    error: function (index, upload) {
+                                        var tr = reviewListView.find('tr#upload-' + index)
+                                            , tds = tr.children();
+                                        tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                                        tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                                    }
+                                });
+
+                                $("#inspectItem-review input[name='reviewScore']").val("");
+                                $("#inspectItem-review textarea[name='reviewOption']").val("");
+
+                                // 赋初值，还原数据
+                                $("#inspectItem-review input[name='itemNum']").val(data.itemNum);
+                                $("#inspectItem-review input[name='itemName']").val(data.itemName);
+
+                                // 项目级别转换
+                                // 项目级别：1: 立项失败；2：校级；3：省区级；4：国家级
+                                if (data.itemLevel == 1) {
+                                    $("#inspectItem-review input[name='itemLevel']").val("无");
+                                }
+                                else if (data.itemLevel == 2) {
+                                    $("#inspectItem-review input[name='itemLevel']").val("校级");
+                                }
+                                else if (data.itemLevel == 3) {
+                                    $("#inspectItem-review input[name='itemLevel']").val("省区级");
+                                }
+                                else if (data.itemLevel == 4) {
+                                    $("#inspectItem-review input[name='itemLevel']").val("国家级");
+                                }
+
+                                // 项目状态转换
+                                <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+                                if (data.itemStatus == 1) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("申请中");
+                                }
+                                else if (data.itemStatus == 2) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("立项评审");
+                                }
+                                else if (data.itemStatus == 3) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("已立项");
+                                }
+                                else if (data.itemStatus == 4) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("立项失败");
+                                }
+                                else if (data.itemStatus == 5) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("中期检查");
+                                }
+                                else if (data.itemStatus == 6) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("待结题");
+                                }
+                                else if (data.itemStatus == 7) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("结题评审");
+                                }
+                                else if (data.itemStatus == 8) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("结题成功");
+                                }
+                                else if (data.itemStatus == 9) {
+                                    $("#inspectItem-review input[name='itemStatus']").val("结题失败");
+                                }
+
+                                $("#inspectItem-review input[name='leaderName']").val(data.leaderName);
+                                $("#inspectItem-review input[name='tutorName']").val(data.tutorName);
+                            },
+                            yes: function (index) {
+
+                                var itemNum = $("#inspectItem-review input[name='itemNum']").val();
+                                var reviewScore = $("#inspectItem-review input[name='reviewScore']").val();
+                                var reviewType = $("#inspectItem-review select[name='reviewType'] > option:selected").val();
+                                var reviewLevel = $("#inspectItem-review select[name='reviewLevel'] > option:selected").val();
+                                var reviewOption = $("#inspectItem-review textarea[name='reviewOption']").val();
+
+                                var param = {
+                                    itemNum: itemNum,
+                                    reviewScore: reviewScore,
+                                    reviewType: reviewType,
+                                    reviewLevel: reviewLevel,
+                                    reviewOption: reviewOption,
+                                    userNum: userNumAdmin,
+                                    roleId: roleIdAdmin
+                                };
+
+                                $("#reviewListAction").click();
+
+                                $.get("/addReviewByExport.do", param, function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    layer.msg(result.msg, {icon: 1});
+                                    setTimeout(function () {
+//                                        要使用 Eclipse 的列编辑功能，只需要通过快捷键Alt+Shift+A 进入列编辑模式，修改完成后，再按一次 Alt+Shift+A 退出列编辑模式
+//                                        alt + c  editplus
+                                        window.location.reload();
+                                    }, 3000);
+                                });
+
+                                layer.close(index);
+                            }
+                        }
+                    );
+
+                });
+
+            }
+            else if (obj.event === 'process') {
+                var itemNum = data.itemNum;
+                layer.open({
+                    type: 1,
+                    area: ['950px', '500px'],
+                    title: '中期检查-评审结果',
+                    anim: 2,
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    content: $('#inspectItem-reviewProcess'),
+                    success: function () {
+                        // 表格初始化重载
+                        var tableIns = table.render({
+                            elem: '#reviewProcess',
+                            url: '/getAllReviewWithItemNum.do',
+                            title: '项目评审结果表',
+                            toolbar: '#reviewToolbar',
+                            limit: 5,
+                            height: 'full-200',
+                            limits: [5, 10, 20, 50],
+                            totalRow: true,
+                            page: true,
+                            where: {
+                                itemNum: itemNum,
+                                userNum: userNumAdmin
+                            },
+                            cols: [
+                                [{
+                                    type: 'checkbox',
+                                    fixed: 'left',
+                                    unresize: true
+                                }, {
+                                    field: 'itemNum',
+                                    title: '项目编号',
+                                    fixed: 'left',
+                                    sort: true,
+                                    width: 125,
+                                    totalRowText: '合计',
+                                    style: 'overflow: hidden'
+                                }, {
+                                    field: 'userName',
+                                    title: '评审人',
+                                    sort: true,
+                                    width: 165,
+                                    style: 'overflow: hidden'
+                                }, {
+                                    field: 'reviewAdminType',
+                                    title: '评审类型',
+                                    sort: true,
+                                    width: 110
+                                }, {
+                                    field: 'reviewAdminLevel',
+                                    title: '评审级别',
+                                    sort: true,
+                                    width: 110
+                                }, {
+                                    field: 'fileName',
+                                    title: '评审附件',
+                                    sort: true,
+                                    width: 130,
+                                    templet: '#fileNameTpl',
+                                    style: 'overflow: hidden'
+                                }, {
+                                    field: 'reviewOption',
+                                    title: '评审意见',
+                                    sort: true,
+                                    width: 110
+                                }, {
+                                    field: 'reviewScore',
+                                    title: '评审分数',
+                                    sort: true,
+                                    width: 80,
+                                    totalRow: true
+                                }]
+                            ],
+                            done: function () {
+
+                            },
+                            parseData: function (result) { //将原始数据解析成 table 组件所规定的数据
+                                return {
+                                    "code": result.status, //解析接口状态
+                                    "count": result.data.total, //解析数据长度
+                                    "data": result.data.list //解析数据列表
+                                };
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // 监听项目级别
+        form.on("select(itemLevel)", function (data) {
+            console.log(data.elem.id); //得到select原始DOM对象
+            console.log(data.value); //得到被选中的值
+
+            var value = data.value;
+            var itemNum = data.elem.id;
+
+            // 级别：1: 无；2：校级；3：省区级；4：国家级
+            var itemLevel = "校级";
+            if (value == 1) {
+                itemLevel = "无";
+            }
+            else if (value == 2) {
+                itemLevel = "校级";
+            }
+            else if (value == 3) {
+                itemLevel = "省区级";
+            }
+            else if (value == 4) {
+                itemLevel = "国家级";
+            }
+
+            layer.confirm('真的修改当前行编号为：' + itemNum + '的项目级别为：' + itemLevel + '吗？', {
+                btn: ['确定', '取消']
+            }, function (index) {
+                var param = {
+                    itemNum: itemNum,
+                    itemLevel: value,
+                    userNum: userNumAdmin,
+                    roleId: roleIdAdmin
+                };
+                console.log(param.itemLevel);
+                $.get("/modifyItemLevelByItemNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                    setTimetout(function () {
+                        window.location.reload();
+                    }, 3000);
+                });
+            }, function () {
+                window.location.reload();
+            });
+        });
+
+        // 监听项目类型
+        form.on("select(itemType)", function (data) {
+            console.log(data.elem.id); //得到select原始DOM对象
+            console.log(data.value); //得到被选中的值
+
+            var value = data.value;
+            var itemNum = data.elem.id;
+            console.log(itemNum);
+
+            // 项目类型：1：创新训练；2：创业训练；3：创业实践
+            var itemType = "创新训练";
+            if (value == 1) {
+                itemType = "创业训练";
+            }
+            else if (value == 2) {
+                itemType = "创业训练";
+            }
+            else if (value == 3) {
+                itemType = "创业实践";
+            }
+
+            layer.confirm('真的修改当前行编号为：' + itemNum + '的项目类型为：' + itemType + '吗？', {
+                btn: ['确定', '取消']
+            }, function (index) {
+                var param = {
+                    itemNum: itemNum,
+                    itemType: value,
+                    userNum: userNumAdmin,
+                    roleId: roleIdAdmin
+                };
+                $.get("/modifyItemTypeByItemNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                    setTimetout(function () {
+                        window.location.reload();
+                    }, 3000);
+                });
+            }, function () {
+                window.location.reload();
+            });
+        });
+
+        // 监听项目状态
+        form.on("select(itemStatus)", function (data) {
+            // 得到当前项目的状态
+            var oldItemStatus = 0;
+
+            $.ajaxSettings.async = false;
+            $.get("/getItemStatusWithItemNum.do", {itemNum: data.elem.id}, function (result) {
+                if (result.status != 0) {
+                    return layer.msg(result.msg, {icon: 2});
+                }
+                oldItemStatus = result.data.itemStatus;
+            });
+            $.ajaxSettings.async = true;
+
+            var value = data.value;
+            console.log(value + "   value");
+
+            if (oldItemStatus > value) {
+                form.render();
+                layer.msg("对不起,项目的流程不能后退,请重新选择!", {icon: 2});
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+
+            if (oldItemStatus == value) {
+
+                form.render();
+                layer.msg("对不起,目前项目的流程没有改变,请重新选择!", {icon: 2});
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+
+            if (value - oldItemStatus > 2) {
+
+                form.render();
+                layer.msg("对不起,项目不能跨级修改状态,请重新选择!", {icon: 2});
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+
+            if (oldItemStatus != 2 && oldItemStatus != 3 && oldItemStatus != 7) {
+                if (value - oldItemStatus == 2) {
+                    return layer.msg("对不起，项目不能跨级修改状态！", {icon: 2});
+                }
+            }
+
+            <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+            var itemStatus = "申请中";
+            if (value == 1) {
+                itemStatus = "申请中";
+            }
+            else if (value == 2) {
+                itemStatus = "立项评审";
+            }
+            else if (value == 3) {
+                itemStatus = "已立项";
+            }
+            else if (value == 4) {
+                itemStatus = "立项失败";
+            }
+            else if (value == 5) {
+                itemStatus = "中期检查";
+            }
+            else if (value == 6) {
+                itemStatus = "待结题";
+            }
+            else if (value == 7) {
+                itemStatus = "结题评审";
+            }
+            else if (value == 8) {
+                itemStatus = "结题成功";
+            }
+            else if (value == 9) {
+                itemStatus = "结题失败";
+            }
+
+            console.log(value);
+
+            layer.confirm('真的修改当前行编号为：' + data.elem.id + '的项目状态为：' + itemStatus + '吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                var param = {
+                    itemNum: data.elem.id,
+                    itemStatus: value,
+                    userNum: userNumAdmin,
+                    roleId: roleIdAdmin
+                };
+
+                $.get("/modifyItemStatusByItemNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    layer.msg(result.msg, {icon: 1});
+
+                    if (value == 3 || value == 4 || value == 6 || value == 8 || value == 9) {
+                        var paramTemp = {
+                            itemNum: data.elem.id,
+                            roleId: roleIdAdmin
+                        };
+                        $.get("/removeUserItemWithReview.do", paramTemp, function (result) {
+                            if (result.status != 0) {
+                                return layer.msg(result.msg, {icon: 2});
+                            }
+                        });
+
+                        setTimetout(function () {
+                            window.location.reload();
+                        }, 3000);
+
+                    }
+                });
+
+            }, function () {
+                window.location.reload();
+            });
+        });
+
+        // 搜索功能
+        var searchKeyWord = $("input[name='searchKeyWord']");
+        var searchBtn = $("input[name='searchBtn']");
+
+        searchKeyWord.bind("keydown", function (event) {
+            if (event.keyCode == 13 || event.keyCode == 9) {
+                searchBtn.click();
+            }
+        });
+
+        searchBtn.click(function () {
+            var searchItemLevel = -2;
+            // 项目级别转换
+            if (searchKeyWord.val() == "无") {
+                searchItemLevel = 1;
+            }
+            else if (searchKeyWord.val() == "校级") {
+                searchItemLevel = 2;
+            }
+            else if (searchKeyWord.val() == "省区级") {
+                searchItemLevel = 3;
+            }
+            else if (searchKeyWord.val() == "国家级") {
+                searchItemLevel = 4;
+            }
+
+            var searchItemType = -2;
+            // 项目类型：1：创新训练；2：创业训练；3：创业实践
+            if (searchKeyWord.val() == "创新训练") {
+                searchItemType = 1;
+            }
+            else if (searchKeyWord.val() == "创业训练") {
+                searchItemType = 2;
+            } else if (searchKeyWord.val() == "创业实践") {
+                searchItemType = 3;
+            }
+
+            var searchItemStatus = -2;
+            <!-- 项目状态：1：申请中；2：立项评审；3：已立项；4：立项失败；5：中期检查; 6: 待结题；7：结题评审；8：结题成功；9：结题失败-->
+            if (searchKeyWord.val() == "申请中") {
+                searchItemStatus = 1;
+            }
+            else if (searchKeyWord.val() == "立项评审") {
+                searchItemStatus = 2;
+            }
+            else if (searchKeyWord.val() == "已立项") {
+                searchItemStatus = 3;
+            }
+            else if (searchKeyWord.val() == "立项失败") {
+                searchItemStatus = 4;
+            }
+            else if (searchKeyWord.val() == "中期检查") {
+                searchItemStatus = 5;
+            }
+            else if (searchKeyWord.val() == "待结题") {
+                searchItemStatus = 6;
+            }
+            else if (searchKeyWord.val() == "结题评审") {
+                searchItemStatus = 7;
+            }
+            else if (searchKeyWord.val() == "结题成功") {
+                searchItemStatus = 8;
+            }
+            else if (searchKeyWord.val() == "结题失败") {
+                searchItemStatus = 9;
+            }
+
+            //执行重载
+            tableIns.reload({
+                url: "/getItemListByUserNum.do",
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    itemStatusF: 3,
+                    itemStatusS: 5,
+                    itemNum: searchKeyWord.val(),
+                    itemName: searchKeyWord.val(),
+                    leaderName: searchKeyWord.val(),
+                    tutorName: searchKeyWord.val(),
+                    itemLevel: searchItemLevel,
+                    itemType: searchItemType,
+                    itemStatus: searchItemStatus,
+                    itemYear: $(".inspectItem-top select[name='itemDate'] > option:selected").val(),
+                    userNumAdmin: userNumAdmin,
+                    roleId: roleIdAdmin
+                }
+            });
+        });
+    })
+    ;
+</script>
+
+<!-- 方法集合  -->
+<script>
+
+    // 在线预览文件
+    function chooseFileMethod(fileName) {
+        // 模拟form表单提交来打开一个新的页面
+        function open_page(url, param) {
+            var form = '<form action="' + url + '"  target="_blank"  id="windowOpen" style="display:none">';
+            for (var key in param) {
+                form += '<input name="' + key + '" value="' + param[key] + '"/>';
+            }
+            form += '</form>';
+            $('body').append(form);
+            $('#windowOpen').submit();
+            $('#windowOpen').remove();
+        }
+
+        layer.confirm('你是需要预览文件还是下载文件呢？', {
+            btn: ['预览', '下载'] //按钮
+        }, function (index) {
+            var url = '';
+            var param = {a: 1};
+
+            $.ajaxSettings.async = false;   //关闭异步
+            $.get("/previewFile.do", {fileName: fileName}, function (result) {
+                if (result.status != 0) {
+                    return layer.msg(result.msg, {icon: 2});
+                }
+                layer.msg(result.msg, {icon: 1});
+                url = result.data;
+            });
+            $.ajaxSettings.async = true;    //改为异步请求
+            layer.close(index);
+            open_page(url, param);
+
+        }, function (index) {
+            window.location.href = "/downloadFile.do?fileName=" + fileName;
+            layer.close(index);
+        });
+    }
+
+    // 插入项目成员信息
+    function getTableContent() {
+        var set = [];
+        $('#tbody').each(function (index) {
+            var table = [];
+            $(this).find('tr').each(function () {
+                var row = [];
+                $(this).find('th,td:lt(2)').each(function () {
+                    row.push($(this).text().trim());
+                });
+                table.push(row);
+            });
+            set.push(table);
+        });
+        return set;
+    }
+
+    // 用户信息
+    function getUserInfoByUserNum(userName) {
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            title: '中期检查-相关人信息详情',
+            content: $('#inspectItem-userName'),
+            area: ['400px', '550px'],
+            shadeClose: true,
+            maxmin: true,
+            btn: ['关闭'],
+            moveType: 1,
+            success: function (index) {
+                $.get("/getUserInfoByUserName.do", {userName: userName}, function (result) {
+                    console.log(result);
+
+                    if (result.status != 0) {
+                        layer.close(index);
+                        return layer.msg(result.msg);
+                    }
+
+                    var data = result.data;
+
+                    $("#inspectItem-userName input[name='userNum']").val(data.userNum);
+                    $("#inspectItem-userName input[name='userName']").val(data.userName);
+                    $("#inspectItem-userName input[name='photoNum']").val(data.photoNum);
+                    $("#inspectItem-userName input[name='email']").val(data.email);
+                    $("#inspectItem-userName input[name='birthDate']").val(data.birthDate);
+                    $("#inspectItem-userName input[name='academy']").val(data.academy);
+                    $("#inspectItem-userName input[name='grade']").val(data.grade);
+                    $("#inspectItem-userName input[name='major']").val(data.major);
+                })
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

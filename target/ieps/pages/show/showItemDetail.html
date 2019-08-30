@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>优秀项目详情</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+
+    <style>
+        .gd-top {
+            width: 100%;
+            min-width: 230px;
+            height: 185px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #cbe8f8;
+        }
+
+        .gd-top-fixed {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-top-fixed > img {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .gd-container {
+            width: 100%;
+            height: auto;
+            margin: 15px 0 0 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-main {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-content-search > input {
+            width: 20%;
+            margin-right: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gd-top">
+    <div class="gd-top-fixed">
+        <img src="../../static/images/home/top.jpg"/>
+    </div>
+</div>
+
+<div class="gd-container">
+    <div class="gd-main">
+        <div class="gd-nav">
+					<span style="font-size: 20px;"><img src="../../static/images/home/list_book.gif" width="20" height="16">您所在的位置：<a
+                            href="/goHome.do" style="color: #8798ff; font-size: 20px;">首页</a>&nbsp;>>&nbsp;项目详情</span>
+        </div>
+
+        <table class="table table-hover table-bordered">
+            <caption style="text-align: center; font-size: 24px; margin: 10px 0; ">项目详情一览</caption>
+            <tbody id="tbody" style="font-size: 24px;"></tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+
+<script>
+
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+
+        var tbody = $("#tbody");
+
+        $.get("/getItemDetailWithItemNum.do", {itemNum: $.Request("itemNum")}, function (result) {
+            console.log(result);
+            if (result.status != 0) {
+                return;
+            }
+
+            var result = result.data;
+
+            var $trItemNum = $("<tr></tr>");
+            var $tdItemNumFirst = $("<td style='width: 15%; padding-left: 20px;'>项目编号</td>");
+            var $tdItemNumSecond = $("<td style='padding-left: 20px;'></td>");
+            $tdItemNumSecond.text(result.itemNum);
+            $trItemNum.append($tdItemNumFirst).append($tdItemNumSecond);
+
+            tbody.append($trItemNum);
+
+            var $trItemName = $("<tr></tr>");
+            var $tdItemNameFirst = $("<td style='width: 15%; padding-left: 20px;'>项目名称</td>");
+            var $tdItemNameSecond = $("<td style='padding-left: 20px;'></td>");
+            $tdItemNameSecond.append(result.itemName);
+            $trItemName.append($tdItemNameFirst).append($tdItemNameSecond);
+
+            tbody.append($trItemName);
+
+
+            $.ajaxSettings.async = false;
+            $.get("/getUserInfoWithItemNum.do", {itemNum: $.Request("itemNum")}, function (userInfo) {
+                console.log(userInfo);
+                if (userInfo.status != 0) {
+                    return;
+                }
+
+                $.each(userInfo.data, function (index, value) {
+                    var $divName = $("<div></div>");
+                    var $divEmail = $("<div></div>");
+                    var $divMajor = $("<div></div>");
+
+                    $divName.text(value.userName);
+                    $divEmail.text(value.email);
+
+                    // 项目负责人
+                    if (value.identity == 2) {
+                        var $trLeaderName = $("<tr></tr>");
+                        var $tdLeaderNameFirst = $("<td style='width: 15%; padding-left: 20px;'>项目负责人</td>");
+                        var $tdLeaderNameSecond = $("<td style='padding-left: 20px;'></td>");
+
+                        $divMajor.text(value.major);
+                        $tdLeaderNameSecond.append($divName).append($divMajor).append($divEmail);
+                        $trLeaderName.append($tdLeaderNameFirst).append($tdLeaderNameSecond);
+
+                        tbody.append($trLeaderName);
+                    }
+                    // 项目小组成员
+                    else if (value.identity == 1) {
+                        var $trTeamName = $("<tr></tr>");
+                        var $tdTeamNameFirst = $("<td style='width: 15%; padding-left: 20px;'>项目小组成员</td>");
+                        var $tdTeamNameSecond = $("<td style='padding-left: 20px;'></td>");
+
+                        $divMajor.text(value.major);
+                        $tdTeamNameSecond.append($divName).append($divMajor).append($divEmail);
+                        $trTeamName.append($tdTeamNameFirst).append($tdTeamNameSecond);
+
+                        tbody.append($trTeamName);
+                    }
+
+                    // 项目指导老师
+                    else if (value.identity == 3) {
+                        // title 职称：0：学生；1：助理研究员；2：讲师；3：高级实验师；4：副教授；5：教授
+
+                        var $trTutorName = $("<tr></tr>");
+                        var $tdTutorNameFirst = $("<td style='width: 15%; padding-left: 20px;'>指导老师</td>");
+                        var $tdTutorNameSecond = $("<td style='padding-left: 20px;'></td>");
+
+                        if (value.title == 1) {
+                            $divMajor.text("助理研究员");
+                        }
+                        else if (value.title == 2) {
+                            $divMajor.text("讲师");
+                        }
+                        else if (value.title == 3) {
+                            $divMajor.text("高级实验师");
+                        }
+                        else if (value.title == 4) {
+                            $divMajor.text("副教授");
+                        }
+                        else if (value.title == 5) {
+                            $divMajor.text("教授");
+                        }
+
+                        $tdTutorNameSecond.append($divName).append($divMajor).append($divEmail);
+                        $trTutorName.append($tdTutorNameFirst).append($tdTutorNameSecond);
+
+                        tbody.append($trTutorName);
+                    }
+                });
+            });
+            $.ajaxSettings.async = true;
+
+
+            var $trSummary = $("<tr></tr>");
+            var $tdSummaryFirst = $("<td style='width: 15%; padding-left: 20px;'>项目简介</td>");
+            var $tdSummarySecond = $("<td style='padding-left: 20px;'></td>");
+            $tdSummarySecond.text(result.summary);
+            $trSummary.append($tdSummaryFirst).append($tdSummarySecond);
+
+            tbody.append($trSummary);
+
+        });
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.InformMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.Inform">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="head" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="publisher" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="subject" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="content" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="files" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="pubdate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, head, publisher, role_id, subject, content, files, pubdate, create_time, update_time
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_inform
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_inform
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.Inform">
+    insert into ieps_inform (head, publisher, role_id, subject,
+      content, files, pubdate, create_time, update_time)
+    values (#{head,jdbcType=VARCHAR}, #{publisher,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{subject,jdbcType=VARCHAR},
+      #{content,jdbcType=VARCHAR}, #{files,jdbcType=VARCHAR}, now(), now(), now())
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.Inform">
+        insert into ieps_inform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="head != null">
+                head,
+            </if>
+            <if test="publisher != null">
+                publisher,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="subject != null">
+                subject,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="files != null">
+                files,
+            </if>
+            <if test="pubdate != null">
+                pubdate,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="head != null">
+                #{head,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null">
+                #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="subject != null">
+                #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="files != null">
+                #{files,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null">
+                now(),
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.Inform">
+        update ieps_inform
+        <set>
+            <if test="head != null">
+                head = #{head,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null">
+                publisher = #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="files != null">
+                files = #{files,jdbcType=VARCHAR},
+            </if>
+            <if test="pubdate != null">
+                pubdate = #{pubdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.Inform">
+    update ieps_inform
+    set head = #{head,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <select id="selectByUserNum" parameterType="string" resultType="Inform">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ieps_inform
+        WHERE publisher=#{publisher}
+    </select>
+
+
+    <!--List:forech中的collection属性类型是List,collection的值必须是:list,item的值可以随意,Dao接口中参数名字随意 -->
+    <!--Array:forech中的collection属性类型是array,collection的值必须是:list,item的值可以随意,Dao接口中参数名字随意 -->
+    <!--Map:不单单forech中的collection属性是map.key,其它所有属性都是map.key,比如下面的departmentId -->
+    <select id="selectAllInformList" resultType="Inform">
+        SELECT id AS id, head AS head, publisher AS publisher, role_id AS roleId, subject AS subject,
+        content AS content, files AS files, pubdate AS pubdate
+        FROM ieps_inform
+        WHERE subject IN
+        <foreach collection="list" item="subject" open="(" close=")" separator=",">
+            #{subject}
+        </foreach>
+        ORDER BY pubdate DESC
+    </select>
+
+    <select id="selectInformList" resultType="Inform">
+        SELECT if.id AS id, if.head AS head, if.publisher AS publisher, if.role_id AS roleId, if.subject AS subject,
+        if.content AS content, if.files AS files, if.pubdate AS pubdate
+        FROM ieps_inform if
+        WHERE subject IN
+        <foreach collection="list" item="subject" open="(" close=")" separator=",">
+            #{subject}
+        </foreach>
+        <if test="subject != null and subject != ''">
+            AND subject like '%${subject}%'
+        </if>
+        <if test="pubdate != null and pubdate != ''">
+            AND pubdate like '%${pubdate}%'
+        </if>
+        ORDER BY pubdate DESC
+    </select>
+
+    <select id="selectAll" resultType="Inform">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ieps_inform
+        ORDER BY pubdate DESC
+    </select>
+
+    <delete id="deleteInformByIds" parameterType="integer">
+        DELETE FROM ieps_inform
+        WHERE id IN
+        <foreach collection="array" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAllWithCondition" parameterType="Inform" resultType="Inform">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ieps_inform
+        <where>
+            <if test="head != '' || head != null">
+                OR head LIKE '%${head}%'
+            </if>
+            <if test="subject != '' || subject != null">
+                OR subject LIKE '%${subject}%'
+            </if>
+            <!--<if test="pubdate != '' || pubdate != null">-->
+                <!--AND pubdate LIKE '%${pubdate}%'-->
+            <!--</if>-->
+        </where>
+        ORDER BY pubdate DESC
+    </select>
+
+    <select id="selectAllInformListWithCondition" resultType="Inform">
+        SELECT id, head, publisher, roleId, subject, content, files, pubdate
+        FROM
+        (
+        SELECT ii.id AS id, ii.head AS head, ii.publisher AS publisher, ii.role_id AS roleId, ii.subject AS subject,
+        ii.content AS content, ii.files AS files, ii.pubdate AS pubdate
+        FROM ieps_inform ii
+        WHERE ii.subject IN
+        <foreach collection="list" item="subject" open="(" close=")" separator=",">
+            #{subject}
+        </foreach>
+        ) ii
+        <where>
+            <if test="inform.head != '' || inform.head != null">
+                OR ii.head LIKE '%${inform.head}%'
+            </if>
+            <if test="inform.subject != '' || inform.subject != null">
+                OR ii.subject LIKE '%${inform.subject}%'
+            </if>
+        </where>
+        ORDER BY ii.pubdate DESC
+    </select>
+
+    <select id="selectAllInformByAdminWithUserNum" parameterType="string" resultType="Inform">
+        SELECT ii.id AS id, ii.head AS head, ii.publisher AS publisher, ii.role_id AS roleId, ii.subject AS subject,
+        ii.content AS content, ii.files AS files, ii.pubdate AS pubdate
+        FROM ieps_inform ii
+        WHERE publisher = #{publisher}
+        <if test="head != null and head != ''">
+            AND head like '%${head}%'
+        </if>
+        <if test="pubdate != null and pubdate != ''">
+            AND pubdate like '%${pubdate}%'
+        </if>
+        ORDER BY pubdate DESC
+    </select>
+
+</mapper>

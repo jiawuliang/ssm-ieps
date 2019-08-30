@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.com.ieps.mapper.ReviewMapper" >
+  <resultMap id="BaseResultMap" type="com.ieps.pojo.Review" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="item_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="score" jdbcType="DECIMAL" javaType="java.lang.Long" />
+      <arg column="evaluate" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="review_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="review_level" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="review_time" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_id, score, evaluate, review_type, review_level, review_time, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ieps_review
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ieps_review
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ieps.pojo.Review" >
+    insert into ieps_review (id, item_id, score, 
+      evaluate, review_type, review_level, 
+      review_time, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{score,jdbcType=DECIMAL}, 
+      #{evaluate,jdbcType=VARCHAR}, #{reviewType,jdbcType=INTEGER}, #{reviewLevel,jdbcType=INTEGER}, 
+      #{reviewTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ieps.pojo.Review" >
+    insert into ieps_review
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="evaluate != null" >
+        evaluate,
+      </if>
+      <if test="reviewType != null" >
+        review_type,
+      </if>
+      <if test="reviewLevel != null" >
+        review_level,
+      </if>
+      <if test="reviewTime != null" >
+        review_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="evaluate != null" >
+        #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewType != null" >
+        #{reviewType,jdbcType=INTEGER},
+      </if>
+      <if test="reviewLevel != null" >
+        #{reviewLevel,jdbcType=INTEGER},
+      </if>
+      <if test="reviewTime != null" >
+        #{reviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.Review" >
+    update ieps_review
+    <set >
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DECIMAL},
+      </if>
+      <if test="evaluate != null" >
+        evaluate = #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewType != null" >
+        review_type = #{reviewType,jdbcType=INTEGER},
+      </if>
+      <if test="reviewLevel != null" >
+        review_level = #{reviewLevel,jdbcType=INTEGER},
+      </if>
+      <if test="reviewTime != null" >
+        review_time = #{reviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.Review" >
+    update ieps_review
+    set item_id = #{itemId,jdbcType=INTEGER},
+      score = #{score,jdbcType=DECIMAL},
+      evaluate = #{evaluate,jdbcType=VARCHAR},
+      review_type = #{reviewType,jdbcType=INTEGER},
+      review_level = #{reviewLevel,jdbcType=INTEGER},
+      review_time = #{reviewTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

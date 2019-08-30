@@ -1,0 +1,183 @@
+<html>
+<head>
+    <title>个人资料</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+
+</head>
+
+<body>
+<form class="layui-form" action="" method="post">
+    <div class="layui-form-item"></div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="userNum" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="userName" class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">学院</label>
+            <div class="layui-input-inline">
+                <input type="text" name="academy" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">年级</label>
+            <div class="layui-input-inline">
+                <input type="text" name="grade" class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">专业</label>
+            <div class="layui-input-inline">
+                <input type="text" name="major" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="birthDate" class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="photoNum" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="button" class="layui-btn layui-btn-radius" name="edit" value="编辑"/>
+            <input type="button" class="layui-btn layui-btn-normal layui-btn-disabled layui-btn-radius" name="reUpdate" value="修改"/>
+        </div>
+    </div>
+</form>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form,
+            layer = layui.layer;
+    });
+</script>
+
+<script>
+    var userNum = $("input[name='userNum']");
+    var userName = $("input[name='userName']");
+    var academy = $("input[name='academy']");
+    var grade = $("input[name='grade']");
+    var major = $("input[name='major']");
+    var birthDate = $("input[name='birthDate']");
+    var photoNum = $("input[name='photoNum']");
+    var email = $("input[name='email']");
+
+    var reUpdate = $("input[name='reUpdate']");
+</script>
+
+<script>
+    $(function () {
+        $('input:lt(5)').css("background-color", "red");
+
+        var param = {
+            userNum: decrypt(getUrlParam("userNum"), "abcd1234abcd1234")
+        };
+        $.get('/getUserInfo.do', param, function (result) {
+            if (result.status != 0) {
+                return layer.msg(result.msg, {icon: 2});
+            }
+
+            var userInfo = result.data;
+
+            userNum.val(userInfo.userNum);
+            userName.val(userInfo.userName);
+            academy.val(userInfo.academy);
+            grade.val(userInfo.grade);
+            major.val(userInfo.major);
+            birthDate.val(fmtDate(userInfo.birthDate));
+            photoNum.val(userInfo.photoNum);
+            email.val(userInfo.email);
+        })
+    })
+</script>
+
+<script>
+    $("input[name='edit']").click(function () {
+        $('input:gt(4)').attr("readonly", false)//去除input元素的readonly属性
+        reUpdate.removeClass("layui-btn-disabled").on("click", modifyUserInfo);
+    });
+</script>
+
+<script>
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+
+    function modifyUserInfo() {
+        var userInfo = {
+            userNum: userNum.val(),
+            birthDate: birthDate.val(),
+            photoNum: photoNum.val(),
+            email: email.val()
+        };
+
+        $.post("/modifyUserInfo.do", userInfo, function (result) {
+            if (result.status != 0) {
+                return layer.msg(result.msg, {icon: 2});
+            }
+            reUpdate.addClass("layui-btn-disabled");
+            layer.msg(result.msg, {icon: 1});
+        })
+    }
+
+    // 时间格式化
+    function fmtDate(obj) {
+        var date = new Date(obj);
+        var y = 1900 + date.getYear();
+        var m = "0" + (date.getMonth() + 1);
+        var d = "0" + date.getDate();
+        return y + "-" + m.substring(m.length - 2, m.length) + "-" + d.substring(d.length - 2, d.length);
+    }
+</script>
+
+</body>
+</html>

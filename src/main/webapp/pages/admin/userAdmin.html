@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>大学生创新创业项目管理系统 - 用户管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/zTree_v3/css/zTreeStyle/zTreeStyle.css"/>
+
+</head>
+
+<body style="margin: 20px 0 0 20px;">
+
+<!-- 用户管理搜索框  -->
+<div class="userAdmin-top" style="margin-bottom: 10px;">
+    <div class="layui-form-item" style="width: 40%;">
+        <input type="text" name="searchKeyWord" autocomplete="off" placeholder="请输入关键词"
+               class="layui-input" style="float: left; width: 70%">
+
+        <input type="button" name="searchBtn" class="layui-btn"
+               value="搜索" style="float: left; widows: 15%; margin-left: 5%;background-color: #01AAED;">
+    </div>
+</div>
+
+
+<!-- 用户管理数据表格 -->
+<table class="layui-hide" id="userAdmin" lay-filter="userAdmin"></table>
+
+
+<!-- 用户管理详情弹窗页面 -->
+<div id="userAdmin-detail" style="display: none">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+        <!--<div class="layui-inline" style="margin-left: 110px;">-->
+        <!--<input type="checkbox" name="sex" lay-skin="switch" lay-filter="detail-switch-sex"-->
+        <!--lay-text="男|女" readonly="readonly">-->
+        <!--</div>-->
+        <!--<div class="layui-inline" style="margin-left: 265px;">-->
+        <!--<input type="checkbox" name="userStatus" lay-skin="switch"-->
+        <!--lay-filter="detail-switch-status" lay-text="激活|锁定" readonly="readonly">-->
+        <!--</div>-->
+        <!--</div>-->
+    </form>
+</div>
+
+<!-- 用户管理编辑弹窗页面 -->
+<div id="userAdmin-edit" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" id="birthDateEditTpl">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+        <!--<div class="layui-inline" style="margin-left: 110px;">-->
+        <!--<input type="checkbox" name="sex" lay-skin="switch" lay-filter="edit-switch-sex"-->
+        <!--lay-text="男|女">-->
+        <!--</div>-->
+        <!--<div class="layui-inline" style="margin-left: 265px;">-->
+        <!--<input type="checkbox" name="userStatus" lay-skin="switch"-->
+        <!--lay-filter="edit-switch-status" lay-text="激活|锁定">-->
+        <!--</div>-->
+        <!--</div>-->
+    </form>
+</div>
+
+<!-- 用户管理新增弹窗页面 -->
+<div id="userAdmin-add" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" lay-verify="required|number" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" id="birthDateAddTpl">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" lay-verify="phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="sex" lay-skin="switch" lay-filter="addSex"
+                           lay-text="女|男">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传头像
+                    </button>
+                    <input type="button" class="layui-btn" id="uploadUserImg" style="display: none;">
+                    <span style="margin-left: 10px;">
+                        <img src="" class="userImg" style="border-radius: 100%; display: none;" width="50" height="50">
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-inline">
+                    <select name="roleId" class="layui-input" id="getAddRoleIdSelect">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 用户管理授权弹窗页面 -->
+<div id="userAdmin-grant" style="display: none">
+    <div class="layui-container" style="margin: 0 15px; width: 460px;">
+        <!--<table class="layui-hide" id="roleAdminGrant" lay-filter="roleAdminGrant"></table>-->
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
+</div>
+
+<!-- 批量添加用户 -->
+<div id="userAdmin-batchAdd" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">选择数量</label>
+                <div class="layui-input-inline">
+                    <select name="batchNum">
+                        <option value="2">2</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-inline">
+                    <select name="roleId" class="layui-input" id="getBatchAddRoleIdSelect">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">起始账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" lay-verify="required|number" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" id="batchAddBirthDate">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" lay-verify="phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="sex" lay-skin="switch" lay-filter="batchAddSex"
+                           lay-text="女|男">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="batchAddUserImg">
+                        <i class="layui-icon">&#xe67c;</i>上传头像
+                    </button>
+                    <input type="button" class="layui-btn" id="batchUploadUserImg" style="display: none;">
+                    <span style="margin-left: 10px;">
+                        <img src="" class="userImg" style="border-radius: 100%; display: none;" width="50" height="50">
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<script src="../../static/zTree_v3/js/jquery.ztree.core.min.js"></script>
+<script src="../../static/zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<!-- 用户名和角色解密  -->
+<script>
+    var userNumAdmin = decrypt(getUrlParam("userNum"), "abcd1234abcd1234");
+    var roleIdAdmin = decrypt(getUrlParam("roleId"), "abcd1234abcd1234");
+
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+</script>
+
+
+<!-- 头工具栏 -->
+<script type="text/html" id="toolbarDemo">
+    {{# if (roleIdAdmin == '200004' || roleIdAdmin == '200006') { }}
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchAddUser">
+            <i class="layui-icon">&#xe61f;</i> 批量新增
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="addUser">
+            <i class="layui-icon">&#xe61f;</i> 新增
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchRemove">
+            <i class="layui-icon">&#xe640;</i> 批量删除
+        </button>
+    </div>
+    {{# } }}
+</script>
+
+<!-- 每一条记录最后的操作栏-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" title="详情" lay-event="detail">
+        <i class="layui-icon">&#xe641;</i>
+    </a>
+    {{# if (roleIdAdmin == '200004' || roleIdAdmin == '200006') { }}
+    {{# if (roleIdAdmin == '200006') {  }}
+    <a class="layui-btn layui-bg-blue layui-btn-xs" title="授权" lay-event="grant">
+        <i class="layui-icon">&#xe672;</i>
+    </a>
+    {{# } }}
+    <a class="layui-btn layui-btn-xs" title="编辑" lay-event="edit">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+    {{# } }}
+</script>
+
+<!-- 性别模板  -->
+<script type="text/html" id="sexTpl">
+    <input type="checkbox" name="sex" value="{{d.userNum}}" lay-skin="switch" lay-text="女|男" lay-filter="sexTpl" {{
+           d.sex== 1 ? 'checked' : '' }}>
+</script>
+
+<!-- 状态模板  -->
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="lock" value="{{d.userNum}}" lay-skin="switch" lay-text="激活|锁定" lay-filter="statusTpl"
+           {{ d.userStatus== 1 ? 'checked' : '' }}>
+</script>
+
+<!-- 头像模板 -->
+<script type="text/html" id="userImgTpl">
+    {{#  if(d.userImg === ""){ }}
+    <img src="../../hub/default.jpg" class="userImgTplAdmin"
+         style="border-radius: 100%" width="30" height="30" data-action="zoom"/>
+    {{#  } else { }}
+    <img src="../../{{ d.userImg }}" class="userImgTplAdmin" style="border-radius: 100%"
+         width="30" height="30"/>
+    {{#  } }}
+</script>
+
+<!-- 数据表格js代码 -->
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['form', 'layer', 'table', 'laytpl', 'laydate', 'upload'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var laytpl = layui.laytpl;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+        laydate.render({
+            elem: '#birthDateEditTpl' // 指定编辑框元素
+        });
+
+        laydate.render({
+            elem: '#birthDateAddTpl'  // 指定新增框元素
+        });
+
+        laydate.render({
+            elem: '#batchAddBirthDate' //指定批量新增框元素
+        });
+
+
+        // 表格初始化重载
+        var tableIns = table.render({
+            elem: '#userAdmin',
+            url: '/getUserAdminList.do',
+            title: '用户管理表',
+            toolbar: '#toolbarDemo',
+            limit: 10,
+            height: 'full-90',
+            limits: [10, 20, 50, 100],
+            page: true,
+            where: {
+                userNum: userNumAdmin,
+                roleId: roleIdAdmin
+            },
+            cols: [
+                [{
+                    type: 'checkbox',
+                    fixed: 'left',
+                    unresize: true
+                }, {
+                    field: 'userNum',
+                    title: '账号',
+                    fixed: 'left',
+                    sort: true,
+                    width: 110,
+                    unresize: true
+                }, {
+                    field: 'userName',
+                    title: '姓名',
+                    sort: true,
+                    width: 100
+                }, {
+                    field: 'userImg',
+                    title: '头像',
+                    width: 60,
+                    templet: '#userImgTpl',
+                    style: 'cursor: pointer;',
+                    unresize: true
+                }, {
+                    field: 'sex',
+                    title: '性别',
+                    sort: true,
+                    width: 80,
+                    templet: '#sexTpl',
+                    unresize: true
+                }, {
+                    field: 'birthDate',
+                    title: '出生日期',
+                    sort: true,
+                    width: 105
+                }, {
+                    field: 'photoNum',
+                    title: '手机号码',
+                    sort: true,
+                    width: 120
+                }, {
+                    field: 'email',
+                    title: '邮箱',
+                    sort: true,
+                    width: 170,
+                    templet: function (res) {
+                        return '<em>' + res.email + '</em>'
+                    }
+                }, {
+                    field: 'academy',
+                    title: '学院',
+                    sort: true,
+                    width: 180
+                }, {
+                    field: 'userStatus',
+                    title: '状态',
+                    width: 100,
+                    templet: '#statusTpl',
+                    sort: true,
+                    unresize: true
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    toolbar: '#barDemo',
+                    unresize: true,
+                    width: 190
+                }]
+            ],
+            parseData: function (result) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": result.status, //解析接口状态
+                    "count": result.data.total, //解析数据长度
+                    "data": result.data.list //解析数据列表
+                };
+            }
+        });
+
+        //监听性别操作（表格）
+        form.on('switch(sexTpl)', function (obj) {
+            var userNum = this.value;
+
+            var sex = "男";
+            var sexParam = 0;
+
+            if (obj.elem.checked) {
+                sex = "女";
+                sexParam = 1;
+            }
+
+            // 开关是否开启，true或者false
+            var checked = obj.elem.checked;
+            // 询问框
+            layer.confirm('您确定将账号：' + this.value + '的性别修改为' + sex, {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                // 确定按钮
+                var param = {
+                    userNum: userNum,
+                    roleId: roleIdAdmin,
+                    sex: sexParam
+                };
+
+                $.get("/modifySexWithUserNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    obj.elem.checked = checked;
+                    form.render();
+                    layer.msg(result.msg, {icon: 1});
+                });
+                layer.close(index);
+            }, function (index) {
+                // 取消按钮
+                obj.elem.checked = !checked;
+                form.render();
+                layer.close(index);
+            });
+        });
+
+        // 监听锁定操作（表格）
+        form.on('switch(statusTpl)', function (obj) {
+            var userNum = this.value;
+
+            var statusTmp = "锁定";
+            var status = 0;
+
+            // 开关是否开启，true或者false
+            var checked = obj.elem.checked;
+
+            if (checked) {
+                statusTmp = "激活";
+                status = 1;
+            }
+            // 询问框
+            layer.confirm('您确定将账号：' + this.value + '的状态修改为' + statusTmp, {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                // 确定按钮
+                var param = {
+                    userNum: userNum,
+                    roleId: roleIdAdmin,
+                    status: status
+                };
+
+                $.get("/modifyStatusWithUserNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    obj.elem.checked = checked;
+                    form.render();
+                    layer.msg(result.msg, {icon: 1});
+                });
+                layer.close();
+            }, function (index) {
+                // 取消按钮
+                obj.elem.checked = !checked;
+                form.render();
+                layer.close(index);
+            });
+        });
+
+        // 头工具栏事件
+        table.on('toolbar(userAdmin)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'addUser':
+                    var sexTmp = false;
+                    //监听性别操作
+                    form.on('switch(addSex)', function(obj){
+                        if (obj.elem.checked == true) {
+                            sexTmp = true;
+                        }
+                        else {
+                            sexTmp = false;
+                        }
+                    });
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '用户管理新增',
+                        content: $('#userAdmin-add'),
+                        area: ['700px', '500px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+
+                            <!--选择角色-->
+                            $.get("/getAllRoleIdWithRoleIdByAdmin.do", {roleId: roleIdAdmin}, function (result) {
+                                console.log(result);
+                                $("#getAddRoleIdSelect").prepend("<option value='200001'>请选择角色</option>");//添加第一个option值
+                                $.each(result.data, function (index, value) {
+                                    $("#getAddRoleIdSelect").append("<option value='" + value.roleId + "'>" + value.roleName + "</option>");
+                                });
+                                /* 渲染表单 */
+                                form.render();
+                            });
+
+                            $('.userImg').css("display", "none").attr('src', "");
+
+                            // 执行实例
+                            var uploadInst = upload.render({
+                                elem: '#test1', //绑定元素
+                                url: '/changeUserImg.do', //上传接口
+                                data: {
+                                    userNum: userNumAdmin
+                                },
+                                bindAction: '#uploadUserImg',
+                                choose: function (obj) {
+                                    //预读本地文件示例，不支持ie8
+                                    obj.preview(function (index, file, result) {
+                                        $('.userImg').css("display", "inline").attr('src', result); //图片链接（base64）s
+                                    });
+                                },
+                                done: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg);
+                                    }
+                                },
+                                error: function () {
+                                    //演示失败状态，并实现重传
+                                    var demoText = $('#demoText');
+                                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                                    demoText.find('.demo-reload').on('click', function () {
+                                    });
+                                },
+                                accept: 'images'  // 上传文件类型
+                            });
+                        },
+                        yes: function (index) {
+                            var sex = 0;
+                            if (sexTmp == true) {
+                                sex = 1;
+                            }
+
+                            var userNum = $("#userAdmin-add input[name='userNum']").val();
+                            var userName = $("#userAdmin-add input[name='userName']").val();
+                            var photoNum = $("#userAdmin-add input[name='photoNum']").val();
+                            var email = $("#userAdmin-add input[name='email']").val();
+                            var birthDate = $("#userAdmin-add input[name='birthDate']").val();
+                            var academy = $("#userAdmin-add input[name='academy']").val();
+                            var grade = $("#userAdmin-add input[name='grade']").val();
+                            var major = $("#userAdmin-add input[name='major']").val();
+                            var roleId = $("#userAdmin-add select[name='roleId'] > option:selected").val();
+
+                            var param = {
+                                userNum: userNum,
+                                userName: userName,
+                                userStatus: 1,
+                                photoNum: photoNum,
+                                email: email,
+                                birthDate: birthDate,
+                                academy: academy,
+                                grade: grade,
+                                major: major,
+                                sex: sex,
+                                roleId: roleId,
+                                adminRoleId: roleIdAdmin
+                            };
+                            $.get("/addUserAdmin.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+
+                                $("#uploadUserImg").click();
+
+                                layer.msg(result.msg, {icon: 1});
+
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'batchRemove':
+                    var data = checkStatus.data;
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!");
+                    }
+
+                    var userNums = new Array();
+
+                    layer.confirm('真的删除选中行吗？', function (index) {
+                        $.each(data, function (index, value) {
+                            userNums[index] = value.userNum;
+                        });
+                        $.ajax({
+                            url: "/batchRemoveUser.do",
+                            type: "POST",
+                            data: {
+                                userNums: userNums,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 0});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    break;
+                case 'batchAddUser':
+
+                    var sexTmp = false;
+                    //监听性别操作
+                    form.on('switch(batchAddSex)', function(obj){
+                        if (obj.elem.checked == true) {
+                            sexTmp = true;
+                        }
+                        else {
+                            sexTmp = false;
+                        }
+                    });
+
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '用户管理新增',
+                        content: $('#userAdmin-batchAdd'),
+                        area: ['700px', '500px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+                            <!--选择角色-->
+                            $.get("/getAllRoleIdWithRoleIdByAdmin.do", {roleId: roleIdAdmin}, function (result) {
+                                $("#getBatchAddRoleIdSelect").prepend("<option value='200001'>请选择角色</option>");//添加第一个option值
+                                $.each(result.data, function (index, value) {
+                                    $("#getBatchAddRoleIdSelect").append("<option value='" + value.roleId + "'>" + value.roleName + "</option>");
+                                });
+                                /* 渲染表单 */
+                                form.render();
+                            });
+
+                            $('.userImg').css("display", "none").attr('src', "");
+
+                            // 执行实例
+                            var uploadInst = upload.render({
+                                elem: '#batchAddUserImg', //绑定元素
+                                url: '/changeUserImg.do', //上传接口
+                                data: {
+                                    userNum: userNumAdmin
+                                },
+                                bindAction: '#batchUploadUserImg',
+                                choose: function (obj) {
+                                    //预读本地文件示例，不支持ie8
+                                    obj.preview(function (index, file, result) {
+                                        $('.userImg').css("display", "inline").attr('src', result); //图片链接（base64）s
+                                    });
+                                },
+                                done: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg);
+                                    }
+                                },
+                                error: function () {
+                                    //演示失败状态，并实现重传
+                                    var demoText = $('#demoText');
+                                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                                    demoText.find('.demo-reload').on('click', function () {
+                                    });
+                                },
+                                accept: 'images'  // 上传文件类型
+                            });
+                        },
+                        yes: function (index) {
+
+                            var sex = 0;
+                            if (sexTmp == true) {
+                                sex = 1;
+                            }
+
+                            var userNum = $("#userAdmin-batchAdd input[name='userNum']").val();
+                            var userName = $("#userAdmin-batchAdd input[name='userName']").val();
+                            var photoNum = $("#userAdmin-batchAdd input[name='photoNum']").val();
+                            var email = $("#userAdmin-batchAdd input[name='email']").val();
+                            var birthDate = $("#userAdmin-batchAdd input[name='birthDate']").val();
+                            var academy = $("#userAdmin-batchAdd input[name='academy']").val();
+                            var grade = $("#userAdmin-batchAdd input[name='grade']").val();
+                            var major = $("#userAdmin-batchAdd input[name='major']").val();
+                            var roleId = $("#userAdmin-batchAdd select[name='roleId'] > option:selected").val();
+
+                            ////////////////////////////////////////////////////////////////////////////////////////
+                            var batchNum = $("#userAdmin-batchAdd select[name='batchNum'] > option:selected").val();
+                            var userNums = new Array();
+                            var userNames = new Array();
+
+                            for (var i = 1; i <= batchNum; i++) {
+                                userNums[i - 1] = userNum++;
+                                if (i < 10) {
+                                    userNames[i - 1] = userName + "00" + i;
+                                }
+                                else if (i < 100) {
+                                    userNames[i - 1] = userName + "0" + i;
+                                }
+                                else if (i < 1000) {
+                                    userNames[i - 1] = userName + i;
+                                }
+                            }
+
+                            $.ajax({
+                                url: "/batchAddUser.do",
+                                type: "POST",
+                                data: {
+                                    userNums: userNums,
+                                    userNames: userNames,
+                                    userStatus: 1,
+                                    photoNum: photoNum,
+                                    email: email,
+                                    birthDate: birthDate,
+                                    academy: academy,
+                                    grade: grade,
+                                    major: major,
+                                    sex: sex,
+                                    roleId: roleId,
+                                    roleIdAdmin: roleIdAdmin
+                                },
+                                traditional: true,
+                                success: function (result) {
+                                    if (result.status != 0) {
+                                        return layer.msg(result.msg, {icon: 2});
+                                    }
+                                    layer.msg(result.msg, {icon: 1});
+
+                                    $("#batchUploadUserImg").click();
+
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 3000);
+                                }
+                            });
+                            layer.close(index);
+                        }
+                    });
+                    break;
+            }
+        });
+
+        // 监听行双击事件（双击事件为：rowDouble，单击事件row）
+        table.on('rowDouble(userAdmin)', function (obj) {
+            var data = obj.data;
+            layer.open({
+                type: 1,
+                title: '用户管理详情',
+                content: $('#userAdmin-detail'),
+                area: ['700px', '360px'],
+                shadeClose: true,
+                maxmin: true,
+                btn: ['关闭'],
+                moveType: 1, //拖拽模式，0或者1
+                success: function () {
+                    // 赋初值，数据还原
+                    $("#userAdmin-detail input[name='userNum']").val(data.userNum);
+                    $("#userAdmin-detail input[name='userName']").val(data.userName);
+                    $("#userAdmin-detail input[name='photoNum']").val(data.photoNum);
+                    $("#userAdmin-detail input[name='email']").val(data.email);
+                    $("#userAdmin-detail input[name='academy']").val(data.academy);
+                    $("#userAdmin-detail input[name='major']").val(data.major);
+                    $("#userAdmin-detail input[name='grade']").val(data.grade);
+                    $("#userAdmin-detail input[name='birthDate']").val(data.birthDate);
+                }
+            });
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
+        // 监听每一行的工具事件
+        table.on('tool(userAdmin)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'grant') {
+
+                var userNum = data.userNum;
+                console.log(userNum);
+
+                layer.open({
+                    type: 1,
+                    area: ['500px', '450px'],
+                    title: '用户管理授权',
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    content: $('#userAdmin-grant'),
+                    success: function () {
+                        ///////////////////////////////
+                        var setting = {
+                            view: {
+                                showIcon: false,
+                                showTitle: true
+                            },
+                            check: {
+                                enable: true
+                            },
+                            data: {
+                                key: {
+                                    name: "permName"
+                                },
+                                simpleData: {
+                                    enable: true,
+                                    idKey: "permId",
+                                    pIdKey: "parentId",
+                                    rootPId: -1
+                                }
+                            },
+                            callback: {
+                                onClick: onClick
+                            } //这里是节点点击事件
+                        };
+
+                        $.get("/getPermWithCondition.do", function (result) {
+                            console.log(result);
+                            if (result.status != 0) {
+                                return;
+                            }
+                            $.fn.zTree.init($("#treeDemo"), setting, result.data);
+                        });
+                    },
+                    yes: function (index) {
+                        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                        var nodes = treeObj.getCheckedNodes(true);
+
+                        console.log(nodes);
+
+                        var permIds = new Array();
+
+                        $.each(nodes, function (index, perm) {
+                            permIds[index] = perm.permId;
+                        });
+
+                        $.ajax({
+                            url: "/addRolePermWithUserNum.do",
+                            type: "POST",
+                            data: {
+                                permIds: permIds,
+                                userNum: userNum,
+                                userNumAdmin: userNumAdmin,
+                                roleId: roleIdAdmin
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 0});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            }
+                        });
+                        layer.close(index);
+
+                    }
+                });
+            }
+            else if (obj.event === 'detail') {
+                layer.open({
+                    type: 1,
+                    title: '用户管理详情',
+                    content: $('#userAdmin-detail'),
+                    area: ['700px', '360px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    btn: ['关闭'],
+                    moveType: 1, //拖拽模式，0或者1
+                    success: function () {
+                        // 赋初值，数据还原
+                        $("#userAdmin-detail input[name='userNum']").val(data.userNum);
+                        $("#userAdmin-detail input[name='userName']").val(data.userName);
+                        $("#userAdmin-detail input[name='photoNum']").val(data.photoNum);
+                        $("#userAdmin-detail input[name='email']").val(data.email);
+                        $("#userAdmin-detail input[name='academy']").val(data.academy);
+                        $("#userAdmin-detail input[name='major']").val(data.major);
+                        $("#userAdmin-detail input[name='grade']").val(data.grade);
+                        $("#userAdmin-detail input[name='birthDate']").val(data.birthDate);
+                    }
+                });
+            }
+            else if (obj.event === 'del') {
+                layer.confirm('真的删除当前行么？', function (index) {
+                    var param = {
+                        userNum: data.userNum,
+                        roleId: roleIdAdmin
+                    };
+                    layer.msg(param.userNum);
+                    $.post("/removeUserByUserNum.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg);
+                        }
+                        obj.del();
+                        layer.msg(result.msg);
+                    });
+                    layer.close(index);
+                });
+            }
+            else if (obj.event === 'edit') {
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    title: '用户管理编辑',
+                    content: $('#userAdmin-edit'),
+                    area: ['700px', '360px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    success: function () {
+                        $("#userAdmin-edit input[name='userNum']").val(data.userNum);
+                        $("#userAdmin-edit input[name='userName']").val(data.userName);
+                        $("#userAdmin-edit input[name='photoNum']").val(data.photoNum);
+                        $("#userAdmin-edit input[name='email']").val(data.email);
+                        $("#userAdmin-edit input[name='academy']").val(data.academy);
+                        $("#userAdmin-edit input[name='major']").val(data.major);
+                        $("#userAdmin-edit input[name='grade']").val(data.grade);
+                        $("#userAdmin-edit input[name='birthDate']").val(data.birthDate);
+                    },
+                    yes: function (index) {
+                        var userNum = $("#userAdmin-edit input[name='userNum']").val();
+                        var userName = $("#userAdmin-edit input[name='userName']").val();
+                        var photoNum = $("#userAdmin-edit input[name='photoNum']").val();
+                        var email = $("#userAdmin-edit input[name='email']").val();
+                        var birthDate = $("#userAdmin-edit input[name='birthDate']").val();
+                        var academy = $("#userAdmin-edit input[name='academy']").val();
+                        var grade = $("#userAdmin-edit input[name='grade']").val();
+                        var major = $("#userAdmin-edit input[name='major']").val();
+
+                        var param = {
+                            userNum: userNum,
+                            userName: userName,
+                            photoNum: photoNum,
+                            email: email,
+                            birthDate: birthDate,
+                            academy: academy,
+                            grade: grade,
+                            major: major,
+                            roleId: roleIdAdmin
+                        };
+
+                        $.post("/modifyUserByUserNum.do", param, function (result) {
+                            if (result.status != 0) {
+                                return layer.msg(result.msg, {icon: 2});
+                            }
+                            layer.msg(result.msg, {icon: 1});
+                            // 同步更新缓存对应的值
+                            obj.update({
+                                userNum: userNum,
+                                userName: userName,
+                                photoNum: photoNum,
+                                email: email,
+                                birthDate: birthDate,
+                                academy: academy,
+                                grade: grade,
+                                major: major
+                            });
+                        });
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+
+
+        //  搜索功能
+        var searchKeyWord = $("input[name='searchKeyWord']");
+        var searchBtn = $("input[name='searchBtn']");
+
+        searchKeyWord.bind("keydown", function (event) {
+            if (event.keyCode == 13 || event.keyCode == 9) {
+                searchBtn.click();
+            }
+        });
+
+        searchBtn.click(function () {
+            //执行重载
+            tableIns.reload({
+                url: "/searchUserAdminListWithCondition.do",
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    userNum: searchKeyWord.val(),
+                    userName: searchKeyWord.val(),
+                    photoNum: searchKeyWord.val(),
+                    email: searchKeyWord.val(),
+                    academy: searchKeyWord.val(),
+                    userNumAdmin: userNumAdmin,
+                    roleId: roleIdAdmin
+                }
+            });
+        });
+
+    });
+</script>
+
+<!-- 方法集合  -->
+<script>
+
+    function onClick(event, treeId, treeNode) {
+//        // 判断是否父节点
+//        if(!treeNode.isParent){
+//            layer.msg("treeId自动编号：" + treeNode.tId + ", 节点id是：" + treeNode.permId + ", 节点文本是：" + treeNode.permName);
+//        }
+        // 阻止冒泡
+        event.preventDefault();
+    }
+
+    //    function onCheck(event, treeId, treeNode){
+    //        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+    //        var nodes = treeObj.getCheckedNodes(true);
+    //        var v = "";
+    //        console.log(nodes);
+    //        for(var i = 0; i < nodes.length; i++){
+    //            v += nodes[i].permName + ",";
+    //            console.log("节点id:" + nodes[i].permId + "节点名称" + v); //获取选中节点的值
+    //        }
+    //    };
+
+</script>
+
+
+</body>
+</html>

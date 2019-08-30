@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>大学生创新创业项目管理重置密码</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="../../static/css/background.css">
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+    <link rel="stylesheet" media="screen" href="../../static/css/substep.css"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+
+</head>
+
+<body>
+
+<div id="particles-js">
+    <form id="msform" class="layui-form" action="" method="post">
+        <ul id="progressbar">
+            <li class="active">填写账号</li>
+            <li>身份验证</li>
+            <li>设置新密码</li>
+        </ul>
+        <fieldset>
+            <div class="layui-form-item">
+                <input type="text" name="userNum" lay-verify="number" placeholder="UserNum" class="layui-input"/>
+            </div>
+            <div id="mpanel" class="layui-form-item"></div>
+            <div class="layui-form-item">
+                <input type="button" name="next" class="next action-button firstNext" value="Next" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goRegister()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;免费注册
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goLogin()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="layui-form-item">
+                <input type="text" name="userName" lay-verify="userName" placeholder="Username" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" name="verifyNum" lay-verify="email|photo" placeholder="请输入邮箱或手机号码"
+                       class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" name="verifyCode" class="layui-input layui-input-inline"
+                       style="width: 60%;" placeholder="请输入验证码" disabled="disabled"/>
+                <input type="button" class="layui-btn layui-input-inline getVerifyCode"
+                       style="width: 33.3%; height: 38px;" value="获取验证码" disabled="disabled"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="button" name="previous" class="previous action-button" value="Previous"/>
+                <input type="button" name="next" class="next action-button secondNext" value="Next" disabled="disabled" />
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goRegister()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;免费注册
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goLogin()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="layui-form-item">
+                <input type="password" name="newPassword" required lay-verify="required" placeholder="请输入新密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <input type="password" name="reNewPassword" required lay-verify="required" placeholder="请再次输入新密码"
+                       autocomplete="off" class="layui-input">
+            </div>
+
+            <div class="layui-form-item">
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="submit" class="submit action-button" value="Submit" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goRegister()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;免费注册
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goLogin()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<!-- 背景特效 -->
+<script type="text/javascript" src="../../static/js/particles.min.js"></script>
+<script type="text/javascript" src="../../static/js/app.js"></script>
+<!-- 分步注册特效 -->
+<script type="text/javascript" src="../../static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../../static/js/verify.min.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.easing.min.js"></script>
+<script type="text/javascript" src="../../static/js/script.js"></script>
+
+<script type="text/javascript" src="../../static/layui/layui.js"></script>
+
+<!-- 自定义脚本 -->
+<!-- 引用layui的form,layer -->
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+
+        form.verify({
+            username: function (value, item) {
+                //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+            }
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            ,
+            password: [
+                /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+            ]
+        });
+    });
+</script>
+
+<!-- 变量 -->
+<script>
+    var userNum = $("input[name='userNum']");
+    var userName = $("input[name='userName']");
+    var verifyNum = $("input[name='verifyNum']");
+    var verifyCode = $("input[name='verifyCode']");
+    var newPassword = $("input[name='newPassword']");
+    var reNewPassword = $("input[name='reNewPassword']");
+
+    var backVerifyCode;
+
+</script>
+
+<script>
+    $(function () {
+        $("input[name='previous']").css("background-color", "#27AE60");
+        userNum.css("background-color", "red");
+        verifyNum.css("background-color", "red");
+        verifyCode.css("background-color", "red");
+        newPassword.css("background-color", "red");
+        reNewPassword.css("background-color", "red");
+        checkVerify();
+    })
+</script>
+
+<!-- 滑动验证码 -->
+<script>
+    function checkVerify() {
+        $('#mpanel').pointsVerify({
+            defaultNum: 4, //默认的文字数量
+            checkNum: 2, //校对的文字数量
+            vSpace: 5, //间隔
+            imgName: ['../../static/images/1.jpg', '../../static/images/2.jpg'],
+            imgSize: {
+                width: '300px',
+                height: '150px'
+            },
+            barSize: {
+                width: '300px',
+                height: '30px'
+            },
+            ready: function () {
+
+            },
+            success: function () {
+                if (userNum.val() == "") {
+                    layer.msg("请先输入需要找回的账号！");
+                    $('#mpanel').empty();
+                    checkVerify();
+                    return;
+                }
+                $(".firstNext").css("background-color", "#27AE60").removeAttr("disabled");
+            },
+            error: function () {
+            }
+
+        });
+    }
+</script>
+
+<!-- 手机号码与账号是否一一对应 -->
+<script>
+    verifyNum.focus(function () {
+        verifyNum.mouseleave(function () {
+            var param = {
+                userNum: userNum.val(),
+                verifyNum: verifyNum.val()
+            };
+            if (verifyNum.val() == "") {
+                layer.msg("请先输入手机或者邮箱！");
+                return;
+            }
+            $.get("/checkVerifyNum.do", param, function (result) {
+                if (result.status != 0) {
+                    layer.msg(result.msg);
+                    return;
+                }
+                $(".getVerifyCode").on("click", sendMessage).removeAttr("disabled");
+            })
+        })
+    })
+</script>
+
+<!-- 获取手机或email验证码 -->
+<script>
+    var count = 60; //间隔函数，1秒执行
+    var InterValObj; //timer变量，控制时间
+    var curCount; //当前剩余秒数
+    function sendMessage() {
+        curCount = count;
+        var verifyNumTemp = $.trim(verifyNum.val());
+        if (!is_mobile(verifyNumTemp) && !is_email(verifyNumTemp)) {
+            layer.msg(" 请输入有效的手机号码或邮箱");
+            return false;
+        }
+        //设置button效果，开始计时
+        $(".getVerifyCode").attr("disabled", "true").val( + curCount + "秒再获取");
+        InterValObj = window.setInterval(setRemainTime, 1000); //启动计时器，1秒执行一次
+        // todo 向后台发送处理数据
+        var param = {
+            verifyNum: verifyNum.val()
+        };
+
+        $.get("/getVerifyCode.do", param, function (result) {
+            if (result.status != 0) {
+                layer.msg(rsult.msg);
+                return;
+            }
+            backVerifyCode = result.data;
+            console.log("backVerifyCode：" + backVerifyCode);
+
+            verifyCode.removeAttr("disabled", "");
+        })
+    }
+
+    function setRemainTime() {
+        if (curCount == 0) {
+            window.clearInterval(InterValObj); //停止计时器
+            $(".getVerifyCode").removeAttr("disabled").val("重新发送");
+            ; //启用按钮
+        } else {
+            curCount--;
+            $(".getVerifyCode").val( + curCount + "秒再获取");
+        }
+    }
+
+    verifyCode.focus(function () {
+        verifyCode.mouseleave(function () {
+            if (verifyNum.val() == "") {
+                layer.msg(" 请输入有效的手机号码或邮箱");
+                verifyCode.val("");
+                return;
+            }
+            if (verifyCode.val() != backVerifyCode) {
+                layer.msg("验证码不正确，请重新输入！");
+                return;
+            }
+
+            layer.msg("验证通过，请继续下一步！");
+            $(".secondNext").css("background-color", "#27AE60").removeAttr("disabled", "");
+
+        });
+    });
+
+    reNewPassword.focus(function () {
+        reNewPassword.mouseleave(function () {
+            if (newPassword.val() == "") {
+                layer.msg("请先输入新密码！");
+                reNewPassword.val("");
+                return;
+            }
+            if (newPassword.val() != reNewPassword.val()) {
+                layer.msg("前后两次密码不一致，请重新输入！");
+                newPassword.val("");
+                reNewPassword.val("");
+                return;
+            }
+
+            $("input[name='submit']").css("background-color", "#27AE60").removeAttr("disabled", "");
+
+        })
+    })
+
+</script>
+
+<!-- 提交按钮   -->
+<script>
+    $("input[name='submit']").click(function () {
+        var param = {
+            userNum: userNum.val(),
+            userPwd: newPassword.val()
+        };
+        console.log(param.userNum + "   " + param.userPwd)
+
+        $.post("/forgetPwd.do", param, function (result) {
+            if (result.status != 0) {
+                layer.msg(result.msg);
+                return;
+            }
+            layer.msg(result.msg);
+            setTimeout(function () {
+                $(window).attr('location', '/goHome.do');
+            }, 1000);
+        })
+    });
+</script>
+
+<!-- 方法集合 -->
+<script>
+    //订单提交页-验证手机号
+    function is_mobile(mobile) {
+        if (mobile == "") {
+            return false;
+        } else {
+            if (!/^0{0,1}(13[0-9]|15[0-9]|18[0-9]|14[0-9])[0-9]{8}$/.test(mobile)) {
+                return false;
+            }
+            return true;
+        }
+    }
+    //订单提交页-验证email的合法性
+    function is_email(email) {
+        if (email == "") {
+            return false;
+        } else {
+            if (!/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/.test(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function goRegister() {
+        layer.msg("正在跳转到注册页面，请稍候！");
+        setTimeout(function () {
+            $(window).attr('location', 'goRegister.do');
+        }, 2000);
+    }
+
+    function goLogin() {
+        layer.msg("正在跳转到登录页面，请稍候！");
+        setTimeout(function () {
+            $(window).attr('location', 'goLogin.do');
+        }, 2000);
+    }
+</script>
+
+</body>
+
+</html>

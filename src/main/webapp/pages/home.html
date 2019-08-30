@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>桂林电子科技大学大创管理系统</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/layui/css/layui.css">
+
+    <style>
+        *,
+        body {
+            margin: 0 auto;
+            padding: 0;
+            font-size: 16px;
+            position: relative;
+            /*width: 100%;*/
+            height: auto;
+        }
+
+        .gd-top {
+            width: 100%;
+            min-width: 230px;
+            height: 210px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-top-01 {
+            width: 100%;
+            height: 180px;
+            background-color: #cbe8f8;
+        }
+
+        .gd-top-02 {
+            width: 100%;
+            height: 30px;
+            background-color: #0E6EC2;
+        }
+
+        .gd-top-01-top,
+        .gd-top-02-bottom {
+            width: 70%;
+            margin: 0 15%;
+            padding: 0;
+        }
+
+        .gd-top-02-bottom {
+            height: 30px;
+            background: url('../static/images/home/lab.png') no-repeat;
+        }
+
+        .gd-top-01-top > img {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .gd-container {
+            width: 100%;
+            height: auto;
+            margin: 10px 0 0 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-main {
+            width: 70%;
+            margin: 0 15%;
+            padding: 0;
+        }
+
+        .gd-main-left,
+        .gd-main-right {
+            height: auto;
+            margin: 0;
+            padding: 0;
+            float: left;
+            overflow: hidden;
+        }
+
+        .gd-main-left {
+            width: 60%;
+        }
+
+        .gd-main-right {
+            width: 40%;
+            padding-left: 3%;
+        }
+
+        .gd-main-left-01,
+        .gd-main-left-02 {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gd-main-right-01,
+        .gd-main-right-02 {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gd-main-left-01,
+        .gd-main-right-01 {
+            height: 250px;
+        }
+
+        .gd-main-left-02,
+        .gd-main-right-02 {
+            height: 250px;
+        }
+
+        .gd-main-title {
+            width: 100%;
+            height: 39px;
+            line-height: 39px;
+            background: #ecf4fd;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-main-left-title {
+            width: 146px;;
+            height: 39px;
+            margin: 0;
+            padding: 0;
+            line-height: 39px;
+            text-align: center;
+            background: url('../static/images/home/zt_bj.png') no-repeat left center;
+            font-family: "微软雅黑";
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            float: left;
+        }
+
+        .gd-main-right-more {
+            width: 50px;
+            height: 39px;
+            margin: 0 10px 0 0;
+            padding: 0;
+            line-height: 39px;
+            float: right;
+        }
+
+        .gd-main-top-content {
+            width: 100%;
+            height: 210px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-con {
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            overflow: hidden;
+        }
+
+        .left-content {
+            width: 80%;
+            height: 26px;
+            line-height: 26px;
+            overflow: hidden;
+            background: url('../static/images/home/arrow.gif') no-repeat left center;
+            margin: 0;
+            padding-left: 15px;
+            float: left;
+        }
+
+        .right-desc {
+            width: 18%;
+            height: 26px;
+            line-height: 26px;
+            overflow: hidden;
+            text-align: right;
+            margin: 0 2% 0 0;
+            padding: 0;
+            float: right;
+        }
+
+        .left-bottom {
+            width: 45%;
+            height: 20px;
+            overflow: hidden;
+            float: left;
+            padding-left: 15px;
+            margin-bottom: 10px;
+        }
+
+        .right-bottom {
+            width: 45%;
+            height: 20px;
+            overflow: hidden;
+            float: right;
+            margin-bottom: 10px;
+            padding-right: 15px;
+            text-align: right;
+        }
+
+        .scroll {
+            position: relative;
+            display: inline-block;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .scroll ul {
+            position: relative;
+            line-height: 26px;
+            list-style-type: none;
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+<div class="gd-top">
+    <div class="gd-top-01">
+        <div class="gd-top-01-top">
+            <img src="../static/images/home/top.jpg"/>
+        </div>
+
+    </div>
+    <div class="gd-top-02">
+        <div class="gd-top-02-bottom">
+            <div class="" style="padding-left: 30px; line-height: 30px;">
+                <marquee onmouseover="this.stop()" onmouseout="this.start()" behavior="scroll" scrollamount="3."
+                         scrolldelay="3"
+                         align="left" direction="left"
+                         style="width: 100%; color: #fcfdff; font-family: 宋体; font-size: 14px; font-weight: lighter">
+                    欢迎登录大学生创新创业项目智能管理系统！注意：项目学生申报截止11月30日晚上12点，请大家及时申报！
+                </marquee>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="gd-container">
+    <div class="gd-main">
+        <div class="gd-main-left">
+            <div class="gd-main-left-01">
+                <div class="gd-main-title">
+                    <div class="gd-main-left-title">
+                        通知公告
+                    </div>
+                    <div class="gd-main-right-more">
+                        <a href="/goShowInformMore.do">
+                            <img src="../static/images/home/more.gif" height="39px" width="50px"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="gd-main-top-content">
+                </div>
+            </div>
+            <div class="gd-main-left-02">
+                <div class="gd-main-title">
+                    <div class="gd-main-left-title">
+                        历届项目
+                    </div>
+                    <div class="gd-main-right-more">
+                        <a href="/goShowItemMore.do">
+                            <img src="../static/images/home/more.gif" height="39px" width="50px"/>
+                        </a>
+                    </div>
+                </div>
+                <!--style="margin-top: 10px; height: 200px; overflow: hidden; line-height: 45px;"/
+                style="margin-top:0!important"
+                -->
+                <div class="gd-main-bottom-content scroll">
+                    <ul class="list-unstyled">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="gd-main-right">
+            <div class="gd-main-right-01">
+                <div class="gd-main-title">
+                    <div class="gd-main-left-title">
+                        登录系统
+                    </div>
+                </div>
+                <div class="gd-main-top-content">
+                    <div class="loginPage" style="margin: 3% 3% 0 4%;">
+                        <form class="form-horizontal" role="form" method="post" action="">
+                            <div class="form-group">
+                                <div class="col-sm-12" style="overflow: hidden;">
+                                    <input type="text" name="userNum" class="form-control" id="userNum"
+                                           placeholder="请输入账号" autocomplete="off"
+                                           style="background-image: url(../static/images/home/userNum.png); padding-left: 32px; background-repeat: no-repeat; width: 100%; height: 43px; line-height: 43px;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12" style="overflow: hidden;">
+                                    <input type="password" name="userPwd" class="form-control" id="password"
+                                           autocomplete="off"
+                                           placeholder="请输入密码" style="background-image: url(../static/images/home/password.png); padding-left: 32px; background-repeat: no-repeat; width: 100%; width: 100%; height: 43px;
+line-height: 43px;"></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <input type="button" class="btn btn-primary col-sm-5" name="login" value="登录"/>
+                                    <input type="reset" class="btn btn-info col-sm-5 col-sm-offset-2" name="reset"
+                                           value="重置"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="left-bottom">
+                                    <a href="javascript:void(0) " onclick="goForgetPwd()">重置密码</a>
+                                </div>
+                                <div class="right-bottom">
+                                    <a href="javascript:void(0) " onclick="goRegister()">立即注册</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="gd-main-right-02">
+                <div class="gd-main-title">
+                    <div class="gd-main-left-title">
+                        下载专区
+                    </div>
+                    <div class="gd-main-right-more">
+                        <a href="/goShowDownLoadMore.do">
+                            <img src="../static/images/home/more.gif" height="39px" width="50px"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="gd-main-bottom-content">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/jquery-1.9.1.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/layui/layui.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../static/js/module/encrypt/aes.js"></script>
+<script src="../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<!-- 自定义脚本 layer -->
+<script>
+    layui.use('layer', function () {
+        var layer = layui.layer;
+    });
+</script>
+
+<!-- 登录按钮  -->
+<script>
+    var loginBtn = $("input[name='login']");
+
+    var userNum = $("input[name='userNum']");
+    var userPwd = $("input[name='userPwd']");
+
+    userPwd.focus(function () {
+        userPwd.mouseleave(function () {
+            if (userNum.val() == "") {
+                userPwd.val("");
+                return layer.msg("请先输入账号！", {icon: 2});
+            }
+        })
+    });
+
+    $(function () {
+
+        //回车事件绑定
+        userPwd.bind("keydown", function (event) {
+            if (event.keyCode == 13 || event.keyCode == 9) {
+                loginBtn.click();
+            }
+        });
+
+        $('input[type="text"]').attr("autocomplete", "off");
+
+        // 登录按钮
+        loginBtn.click(function () {
+            if (userNum.val() == "") {
+                return layer.msg("账号不能为空！", {icon: 2});
+            }
+
+            if (userPwd.val() == "") {
+                return layer.msg("密码不能为空！", {icon: 2});
+            }
+
+            var param = {
+                userNum: userNum.val(),
+                userPwd: userPwd.val()
+            };
+
+            $.post("/login.do", param, function (result) {
+                console.log(result);
+                if (result.status != 0) {
+                    return layer.msg(result.msg, {icon: 2});
+                }
+                layer.msg(result.msg, {icon: 1});
+
+                setTimeout(function () {
+                    $(window).attr('location', '/goIndex.do?userNum=' + encrypt(result.data.userNum, "abcd1234abcd1234") + '&roleId=' + encrypt(result.data.roleId, "abcd1234abcd1234"));
+//                    $(window).attr('location', '/goIndex.do?userNum=' + result.data.userNum + '&roleId=' + result.data.roleId);
+                }, 1000);
+            })
+        })
+    })
+
+</script>
+
+<!-- 重要通知公告  -->
+<script>
+    $(function () {
+        $.get("/getInformListByAdminWithUserNum.do", function (result) {
+            if (result.status != 0) {
+                return;
+            }
+            var informList = $(".gd-main-left-01 > .gd-main-top-content");
+            result = result.data;
+            $.each(result.list, function (index, value) {
+                var gdCon = $("<div class='gd-con'></div>");
+                var leftContent = $("<div class='left-content'></div>");
+                var rightDesc = $("<div class='right-desc'></div>");
+
+                var $a = $("<a></a>");
+                var $span = $("<span></span>");
+                $a.prop("href", "/goShowInformDetail.do?id=" + value.id).prop("title", value.head).text(value.head);
+
+
+                $span.text(value.pubdate);
+
+                gdCon.append(leftContent.append($a));
+                gdCon.append(rightDesc.append($span));
+
+                informList.append(gdCon);
+
+            })
+        })
+    })
+</script>
+
+<!-- 常用下载模板脚本 -->
+<script>
+    $(function () {
+        $.get("/getFileListByAdminWithKind.do", function (result) {
+            if (result.status != 0) {
+                return;
+            }
+            var fileList = $(".gd-main-right-02 > .gd-main-bottom-content");
+            result = result.data.list;
+            $.each(result, function (index, value) {
+                var fileName = "";
+                if (value.fileName.indexOf("-") != -1) {
+                    fileName = value.fileName.substring(value.fileName.indexOf("-") + 1);
+                }
+                else {
+                    fileName = value.fileName;
+                }
+
+                var gdCon = $("<div class='gd-con'></div>");
+                var leftContent = $("<div class='left-content' style='width: 98%;'></div>");
+
+                var $a = $("<a></a>");
+                $a.prop("href", "javascript:void(0)").prop("title", fileName).prop("name", value.fileName).text(fileName);
+                $a.on('click', chooseFileMethod);
+
+                gdCon.append(leftContent.append($a));
+
+                fileList.append(gdCon);
+            })
+        })
+    });
+
+    function chooseFileMethod() {
+        var fileName = this.name;
+
+        // 模拟form表单提交来打开一个新的页面
+        function open_page(url, param) {
+            var form = '<form action="' + url + '"  target="_blank"  id="windowOpen" style="display:none">';
+            for (var key in param) {
+                form += '<input name="' + key + '" value="' + param[key] + '"/>';
+            }
+            form += '</form>';
+            $('body').append(form);
+            $('#windowOpen').submit();
+            $('#windowOpen').remove();
+        }
+
+        layer.confirm('你是需要预览文件还是下载文件呢？', {
+            btn: ['预览', '下载'] //按钮
+        }, function (index) {
+            var url = '';
+            var param = {a: 1};
+
+            $.ajaxSettings.async = false;   //关闭异步
+            $.get("/previewFile.do", {fileName: fileName}, function (result) {
+                console.log(result);
+                if (result.status != 0) {
+                    return layer.msg(result.msg, {icon: 2});
+                }
+                layer.msg(result.msg, {icon: 1});
+                url = result.data;
+            });
+            $.ajaxSettings.async = true;    //改为异步请求
+            layer.close(index);
+            open_page(url, param);
+
+        }, function (index) {
+            window.location.href = "/downloadFile.do?fileName=" + fileName;
+            layer.close(index);
+        });
+
+    }
+
+</script>
+
+<!-- 历届项目 -->
+<script>
+    $(function () {
+
+        $.get("/getFinishedItemList.do", function (result) {
+            if (result.status != 0) {
+                return;
+            }
+
+            var leftBoxMain = $(".list-unstyled");
+
+            $.each(result.data.list, function (index, item) {
+                var gdCon = $("<li class='gd-con'></li>");
+                var leftContent = $("<div class='left-content'></div>");
+                var $a = $("<a></a>");
+                var rightDesc = $("<div class='right-desc'></div>");
+                var $span = $("<span></span>");
+
+                leftContent.append($a.prop("title", item.itemName).prop("href", "/goShowItemDetail.do?itemNum=" + item.itemNum)
+                    .text(item.itemName));
+                rightDesc.append($span.text(item.updateTime));
+
+                leftBoxMain.append(gdCon.append(leftContent).append(rightDesc));
+            });
+
+        });
+
+    });
+</script>
+
+
+<!-- 上下滚动 -->
+<script language="javascript">
+
+    $(function () {
+        //每隔1秒循环滚动
+        var aObj = setInterval('auto()', 0);
+        $(".scroll").hover(function () {
+            //清除滚动
+            clearInterval(aObj);
+        }, function () {
+            //重新滚动
+            aObj = setInterval('auto()', 0);
+        });
+        auto();
+    });
+    function auto() {
+        //top的位移高度尽量和scroll的高度相同，可以很好控制滚动范围
+        $(".scroll ul").animate({"top": "-26px"}, 1000, function () {
+            //将ul的第一个li加到ul的最后
+            $(".scroll ul").css("top", "0px").find("li:first").appendTo('ul');
+        });
+    };
+
+    //    function autoScroll(obj){
+    //        $(obj).find('ul').animate({
+    //            marginTop: '-2.8rem'
+    //        },1000,function(){
+    //            $(this).css({marginTop : "0px"});
+    //            var li  =$("ul").children().first().clone();
+    //            $("ul li:last").after(li );
+    //            $("ul li:first").remove();
+    //        })
+    //    }
+    //    $(function(){
+    //        setInterval('autoScroll(".left-box")',2000);
+    //
+    //    })
+</script>
+
+
+<!-- 常用方法 -->
+<script>
+    function goRegister() {
+        layer.msg("正在为你跳转到注册页面，请等待！", {icon: -1});
+        setTimeout(function () {
+            //登录返回，跳转首页
+            $(window).attr('location', 'goRegister.do');
+        }, 1000);
+    }
+
+    function goForgetPwd() {
+        layer.msg("正在为你跳转到重置密码页面，请等待！", {icon: -1});
+        setTimeout(function () {
+            //登录返回，跳转首页
+            $(window).attr('location', 'goForgetPwd.do');
+        }, 1000);
+    }
+</script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+                           "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 自定义别名 -->
+	<typeAliases>
+		<!-- 批量别名定义（推荐） -->
+		<!-- package：指定包名称来为该包下的po类声明别名，默认的别名就是类名（首字母大小写都可） -->
+		<package name="com.ieps.pojo" />
+	</typeAliases>
+
+</configuration>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>大学生创新创业项目管理系统 - 角色管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/zTree_v3/css/zTreeStyle/zTreeStyle.css"/>
+</head>
+
+<body style="margin: 20px 0 0 20px;">
+
+<!-- 角色管理搜索框  -->
+<div class="userAdmin-top" style="margin-bottom: 10px;">
+    <div class="layui-form-item" style="width: 50%;">
+        <input type="text" name="searchKeyWord" autocomplete="off" placeholder="请输入关键词"
+               class="layui-input" style="float: left; width: 70%">
+
+        <input type="button" name="searchBtn" class="layui-btn layui-btn-info" data-type="reload"
+               value="搜索" style="float: left; width: 20%; margin-left: 5%">
+    </div>
+</div>
+
+
+<!-- 角色管理数据表格 -->
+<table class="layui-hide" id="roleAdmin" lay-filter="roleAdmin"></table>
+
+
+<!-- 角色管理授权弹窗页面 -->
+<div id="roleAdmin-grant" style="display: none">
+    <div class="layui-container" style="margin: 0 15px; width: 460px;">
+        <!--<table class="layui-hide" id="roleAdminGrant" lay-filter="roleAdminGrant"></table>-->
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
+</div>
+
+<!-- 角色管理编辑弹窗页面 -->
+<div id="roleAdmin-edit" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" id="birthDateEditTpl">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline" style="margin-left: 110px;">
+                <input type="checkbox" name="sex" lay-skin="switch" lay-filter="detail-switch-sex"
+                       lay-text="男|女" readonly="readonly">
+            </div>
+            <div class="layui-inline" style="margin-left: 175px;">
+                <input type="checkbox" name="userStatus" lay-skin="switch"
+                       lay-filter="detail-switch-status" lay-text="激活|锁定" readonly="readonly">
+            </div>
+            <div class="layui-inline" style="margin-left: 170px;">
+                <img src="" class="editUserImg" title="头像" style="border-radius: 100%" width="30"
+                     height="30"/>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 角色管理新增弹窗页面 -->
+<div id="roleAdmin-add" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userNum" lay-verify="required|number" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="userName" lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthDate" class="layui-input" id="birthDateAddTpl">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学院</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="academy" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="grade" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="major" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">手机号码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="photoNum" lay-verify="phone" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="sex" lay-skin="switch" lay-filter="detail-switch-sex"
+                           lay-text="男|女">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传头像
+                    </button>
+                    <span style="margin-left: 10px;"><img src="" class="userImg"
+                                                          style="border-radius: 100%; display: none;" width="50"
+                                                          height="50"></span>
+                </div>
+
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-inline">
+                    <select name="roleId" required>
+                        <option value="200001">学生</option>
+                        <option value="200002">教师</option>
+                        <option value="200003">院内专家</option>
+                        <option value="200004">院内管理员</option>
+                        <option value="200005">校内专家</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 授权 头工具栏 -->
+<script type="text/html" id="grantToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="expandPerm">
+            <i class="layui-icon">&#xe625;</i> 展示全部
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="collapsePerm">
+            <i class="layui-icon">&#xe623;</i> 折叠全部
+        </button>
+    </div>
+</script>
+
+<!-- 主表头工具栏 -->
+<script type="text/html" id="toolbarDemo">
+    {{# if (( getUrlParam("roleId") == '200004') || (getUrlParam("roleId") == '200006')) { }}
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addRole">
+            <i class="layui-icon">&#xe61f;</i> 新增
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchRemove">
+            <i class="layui-icon">&#xe640;</i> 批量删除
+        </button>
+    </div>
+    {{# } }}
+</script>
+
+<!--主表每一条记录最后的操作栏-->
+<script type="text/html" id="barDemo">
+    {{# if (getUrlParam("roleId") == '200006') { }}
+    <a class="layui-btn layui-btn-xs" title="授权" lay-event="grant">
+        <i class="layui-icon">&#xe672;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+    {{# } }}
+</script>
+
+<!-- 父节点类型模板 -->
+<script type="text/html" id="parentIdTpl">
+    {{# if(d.parentId == -1) { }}
+    <span>根节点</span>
+    {{#  } }}
+</script>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+<script src="../../static/zTree_v3/js/jquery.ztree.core.min.js"></script>
+<script src="../../static/zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+
+<!-- 数据表格 -->
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.config({
+        base: '../../static/js/module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['form', 'layer', 'table', 'treetable'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+
+        // 表格初始化重载
+        var tableIns = table.render({
+            elem: '#roleAdmin',
+            url: '/getRoleListByAdmin.do',
+            title: '角色管理表',
+            toolbar: '#toolbarDemo',
+            limit: 10,
+            height: 'full-90',
+            limits: [10, 20, 50, 100],
+            page: true,
+            where: {
+                userNum: getUrlParam("userNum"),
+                roleAdminId: getUrlParam("roleId")
+            },
+            cols: [
+                [{
+                    type: 'checkbox',
+                    fixed: 'left',
+                    unresize: true
+                }, {
+                    field: 'roleId',
+                    title: '角色id',
+                    fixed: 'left',
+                    sort: true,
+                    width: 110,
+                    unresize: true
+                }, {
+                    field: 'roleName',
+                    title: '角色名',
+                    sort: true,
+                    width: 250
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    toolbar: '#barDemo',
+                    unresize: true,
+                    width: 170
+                }]
+            ],
+            parseData: function (result) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": result.status, //解析接口状态
+                    "count": result.data.total, //解析数据长度
+                    "data": result.data.list //解析数据列表
+                };
+            }
+        });
+
+
+        // 头工具栏事件
+        table.on('toolbar(roleAdmin)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'addRole':
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '角色管理新增',
+                        content: $('#roleAdmin-add'),
+                        area: ['700px', '500px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+                        },
+                        yes: function (index) {
+
+                        }
+                    });
+                    break;
+                case 'batchRemove':
+                    var data = checkStatus.data;
+                    var roleIds = new Array();
+
+                    layer.confirm('真的删除选中行吗？', function (index) {
+                        $.each(data, function (index, value) {
+                            roleIds[index] = value.roleId;
+                        });
+                        console.log(roleIds);
+                        $.ajax({
+                            url: "/batchRemoveRole.do",
+                            type: "POST",
+                            data: {
+                                roleIds: roleIds,
+                                userNum: getUrlParam("userNum"),
+                                roleAdminId: getUrlParam("roleId")
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+                            }
+                        });
+                        layer.close(index);
+                    });
+            }
+        });
+
+
+        // 监听每一行的工具事件
+        table.on('tool(roleAdmin)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'grant') {
+                layer.open({
+                    type: 1,
+                    area: ['500px', '450px'],
+                    title: '角色管理授权',
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    content: $('#roleAdmin-grant'),
+                    success: function () {
+                        ///////////////////////////////
+                        var setting = {
+                            view: {
+                                showIcon: false,
+                                showTitle: true
+                            },
+                            check: {
+                                enable: true
+                            },
+                            data: {
+                                key: {
+                                    name: "permName"
+                                },
+                                simpleData: {
+                                    enable: true,
+                                    idKey: "permId",
+                                    pIdKey: "parentId",
+                                    rootPId: -1
+                                }
+                            },
+                            callback: {
+                                onClick: onClick,
+                                onCheck: onCheck
+                            } //这里是节点点击事件
+                        };
+
+                        $.get("/getPermWithCondition.do", function (result) {
+                            console.log(result);
+                            if (result.status != 0) {
+                                return;
+                            }
+                            $.fn.zTree.init($("#treeDemo"),setting, result.data);
+                        });
+                    },
+                    yes: function (index) {
+                        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                        var nodes = treeObj.getCheckedNodes(true);
+
+                        console.log(nodes);
+
+                        var permIds = new Array();
+
+                        $.each(nodes, function (index, perm) {
+                            permIds[index] = perm.permId;
+                        });
+
+                        console.log(permIds);
+
+                    }
+                });
+            }
+            else if (obj.event === 'del') {
+                layer.confirm('真的删除当前角色编号' + data.roleId + '么？', function (index) {
+                    var param = {
+                        roleId: data.roleId,
+                        userNum: getUrlParam("roleId"),
+                        roleAdminId: getUrlParam("roleId")
+                    };
+                    layer.msg(param.userNum);
+                    $.post("/removeRoleByRoleId.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg, {icon: 2});
+                        }
+                        obj.del();
+                        layer.msg(result.msg, {icon: 1});
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+
+        // 授权 头工具栏事件
+        table.on('toolbar(roleAdminGrant)', function (obj) {
+            console.log(obj);
+            var checkStatus = table.checkStatus(obj.config.id);
+
+            switch (obj.event) {
+                case 'expandPerm':
+                    treetable.expandAll('#roleAdminGrant');
+                    break;
+                case 'collapsePerm':
+                    treetable.foldAll('#roleAdminGrant');
+                    break;
+            }
+        });
+
+        //  搜索功能
+        var searchKeyWord = $("input[name='searchKeyWord']");
+        var searchBtn = $("input[name='searchBtn']");
+
+        searchKeyWord.bind("keydown", function (event) {
+            if (event.keyCode == 13 || event.keyCode == 9) {
+                searchBtn.click();
+            }
+        });
+
+        searchBtn.click(function () {
+            //执行重载
+            tableIns.reload({
+                url: "/searchroleAdminListWithCondition.do",
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    userNum: searchKeyWord.val(),
+                    userName: searchKeyWord.val(),
+                    photoNum: searchKeyWord.val(),
+                    email: searchKeyWord.val(),
+                    academy: searchKeyWord.val(),
+                    userNumAdmin: getUrlParam("userNum"),
+                    roleId: getUrlParam("roleId")
+                }
+            });
+        });
+        //////////////////////////////////////////////////////////////////////////////////////////
+    });
+</script>
+
+<script>
+//    var setting = {
+//        view: {
+//            showIcon: false,
+//            showTitle: true
+//        },
+//        check: {
+//            enable: true
+//        },
+//        data: {
+//            key: {
+//                name: "permName"
+//            },
+//            simpleData: {
+//                enable: true,
+//                idKey: "permId",
+//                pIdKey: "parentId",
+//                rootPId: -1
+//            }
+//        },
+//        callback: {
+//            onClick: onClick,
+//            onCheck: onCheck
+//        } //这里是节点点击事件
+//    };
+//
+//    $(function() {
+//        $.get("/getPermWithCondition.do", function (result) {
+//            console.log(result);
+//            if (result.status != 0) {
+//                return;
+//            }
+//            zTree = $.fn.zTree.init($("#treeDemo"),setting, result.data);
+//        });
+//    });
+
+    function onClick (event, treeId, treeNode) {
+        // 判断是否父节点
+        if(!treeNode.isParent){
+            alert("treeId自动编号：" + treeNode.tId + ", 节点id是：" + treeNode.permId + ", 节点文本是：" + treeNode.permName);
+        }
+        // 阻止冒泡
+        event.preventDefault();
+    };
+
+    function onCheck(event, treeId, treeNode){
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getCheckedNodes(true);
+        var v = "";
+        console.log(nodes);
+        for(var i = 0; i < nodes.length; i++){
+            v += nodes[i].permName + ",";
+            console.log("节点id:" + nodes[i].permId + "节点名称" + v); //获取选中节点的值
+        }
+    };
+
+</script>
+
+<!-- 方法集合  -->
+<script>
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+</script>
+
+
+</body>
+</html>

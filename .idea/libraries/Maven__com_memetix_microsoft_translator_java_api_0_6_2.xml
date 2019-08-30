@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.memetix:microsoft-translator-java-api:0.6.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/memetix/microsoft-translator-java-api/0.6.2/microsoft-translator-java-api-0.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/memetix/microsoft-translator-java-api/0.6.2/microsoft-translator-java-api-0.6.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/memetix/microsoft-translator-java-api/0.6.2/microsoft-translator-java-api-0.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

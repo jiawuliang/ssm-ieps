@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>通知公告详情</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+
+    <style>
+        .gd-top {
+            width: 100%;
+            min-width: 230px;
+            height: 185px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #cbe8f8;
+        }
+
+        .gd-top-fixed {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-top-fixed > img {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .gd-container {
+            width: 100%;
+            height: auto;
+            margin: 15px 0 0 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-main {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-content-title {
+            color: red;
+            text-align: center;
+            margin: 10px 0px;
+        }
+
+        .gd-content-time {
+            text-align: center;
+            border: 1px #91c0f2 dashed;
+            line-height: 35px;
+            background-color: #eceded;
+            height: 35px;
+            margin-bottom: 20px;
+        }
+
+        .gd-inform-footer {
+            font-size: 24px;
+            text-align: right;
+            padding-right: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gd-top">
+    <div class="gd-top-fixed">
+        <img src="../../static/images/home/top.jpg"/>
+    </div>
+</div>
+
+<div class="gd-container">
+    <div class="gd-main">
+        <div class="gd-nav">
+            <span style="font-size: 20px;">
+                <img src="../../static/images/home/list_book.gif" width="20" height="16">您所在的位置:
+                <a href="/goHome.do" style="color: #8798ff; font-size: 20px;">首页</a>&nbsp;>>&nbsp;通知公告
+            </span>
+        </div>
+        <div class="gd-content">
+
+        </div>
+    </div>
+</div>
+
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+        console.log($.Request("id"));
+        var param = {
+            id: $.Request("id")
+        };
+        $.get("/getInformDetailById.do", param, function (result) {
+            if (result.status != 0) {
+                return;
+            }
+
+            var informDetail = $(".gd-main .gd-content");
+
+            result = result.data;
+            var contentTitle = $("<div class='gd-content-title'></div>");
+            var $contentTitleSpan = $("<span style='font-size: 22px;'></span>");
+            var contentTime = $("<div class='gd-content-time'></div>");
+            var $contentTimeSpan = $("<span style='font-size: 14px; '></span>")
+            var contentMain = $("<div></div>");
+            var contentMainDivF = $("<div style='font-size: 16px;'></div>");
+            var contentMainBottom = $("<div style=''></div>");
+            var contentMainBottomDivF = $("<div class='gd-inform-footer'></div>");
+            var contentMainBottomDivS = $("<div class='gd-inform-footer'></div>");
+
+            contentTitle.append($contentTitleSpan.text(result.head));
+            contentTime.append($contentTimeSpan.text(result.pubdate));
+            contentMainDivF.html(result.content);
+
+            contentMainBottomDivF.text(result.subject);
+            contentMainBottomDivS.text(result.pubdate);
+            contentMainBottom.append(contentMainBottomDivF).append(contentMainBottomDivS);
+
+            contentMain.append(contentMainDivF);
+            contentMain.append(contentMainBottom);
+            informDetail.append(contentTitle);
+            informDetail.append(contentTime);
+            informDetail.append(contentMain);
+
+        })
+    })
+</script>
+
+
+</body>
+</html>

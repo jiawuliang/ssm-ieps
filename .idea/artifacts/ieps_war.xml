@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="ieps:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="ieps.war">
+      <element id="artifact" artifact-name="ieps:war exploded" />
+    </root>
+  </artifact>
+</component>

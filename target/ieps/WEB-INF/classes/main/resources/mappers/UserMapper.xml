@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.com.ieps.mapper.UserMapper">
+
+  <!--
+    collection : 一个复杂的类型关联，许多结果将映射为这种类型
+    property : 这是关联的 JavaBean 中的属性名， 在 RoleModel 中对应 private List<MenuModel> menus;
+    javaType : property 属性对应的集合类型
+    ofType : property 集合中的泛型，在 RoleModel 中是 MenuModel
+    column : RoleModel 的 id ，作为参数传入被调用的 Select 语句
+    select : 另外一个映射语句的 ID
+  -->
+
+  <resultMap id="BaseResultMap" type="com.ieps.pojo.User" >
+    <id column="user_id" property="userId"/>
+    <result column="user_num" property="userNum"/>
+    <result column="username" property="username"/>
+    <result column="password" property="password"/>
+    <result column="salt" property="salt"/>
+    <result column="user_status" property="userStatus"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+  </resultMap>
+
+  <resultMap id="getLoginUserMap" type="com.ieps.pojo.User">
+    <id column="user_id" property="userId"/>
+    <result column="user_num" property="userNum"/>
+    <result column="username" property="username"/>
+    <collection property="roleList" column="user_id" ofType="com.ieps.pojo.Role"
+                javaType="java.com.ieps.util.ArrayList" select="getLoginRole"/>
+  </resultMap>
+  
+  <resultMap id="getLoginRoleMap" type="com.ieps.pojo.Role">
+    <id column="role_id" property="roleId"/>
+    <result column="role_name" property="roleName"/>
+    <collection property="permList" column="role_id" ofType="com.ieps.pojo.Perm"
+                javaType="java.com.ieps.util.ArrayList" select="getLoginPerm"/>
+    <!--<collection property="permList" ofType="com.icom.ieps.pojopojo.Perm" javaType="jcom.ieps.utilutil.ArrayList">-->
+      <!--<id column="perm_id" property="permId"/>-->
+      <!--<result column="perm_name" property="permName"/>-->
+      <!--<result column="perm_type" property="permType"/>-->
+      <!--<result column="url" property="url"/>-->
+      <!--<result column="icon" property="icon"/>-->
+      <!--<result column="parent_id" property="parentId"/>-->
+    <!--</collection>-->
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    user_id, user_num, username, password, salt, user_status, create_time, update_time
+  </sql>
+
+  <select id="login" parameterType="string" resultType="com.ieps.vo.ActiveUserVO">
+    SELECT username, user_num
+    FROM ieps_user
+    WHERE user_num=#{userNum}
+    AND password=#{password}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from ieps_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ieps_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ieps.pojo.User" >
+    insert into ieps_user (user_id, user_num, username,
+    password, salt, user_status,
+    create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{userNum,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
+    #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER},
+    #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ieps.pojo.User" >
+    insert into ieps_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.User" >
+    update ieps_user
+    <set >
+      <if test="userNum != null" >
+        user_num = #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.User" >
+    update ieps_user
+    set user_num = #{userNum,jdbcType=VARCHAR},
+    username = #{username,jdbcType=VARCHAR},
+    password = #{password,jdbcType=VARCHAR},
+    salt = #{salt,jdbcType=VARCHAR},
+    user_status = #{userStatus,jdbcType=INTEGER},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByUserNum" parameterType="string" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ieps_user
+    WHERE user_num = #{userNum}
+  </select>
+
+
+  <select id="selectMenuByUserNum" parameterType="string" resultMap="getLoginUserMap">
+    SELECT user_id, user_num, username
+    FROM ieps_user
+    WHERE user_num=#{userNum}
+  </select>
+
+  <!--<select id="getLoginRole" resultMap="getLoginRoleMap">-->
+    <!--SELECT ir.role_id, ir.role_name-->
+    <!--FROM ieps_role ir-->
+    <!--INNER JOIN ieps_user_role iur-->
+    <!--on ir.role_id=iur.role_id-->
+    <!--WHERE iur.user_id=#{useId}-->
+  <!--</select>-->
+
+  <select id="getLoginRole" resultMap="getLoginRoleMap">
+     SELECT ir.role_id, ir.role_name
+     FROM ieps_role ir
+     INNER JOIN
+     ieps_user_role iur
+     ON ir.role_id=iur.role_id
+     WHERE iur.user_id=#{useId}
+  </select>
+
+
+</mapper>

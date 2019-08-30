@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.PermMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.Perm">
+        <constructor>
+            <idArg column="perm_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="perm_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="perm_type" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="url" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="icon" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="parent_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="perm_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="perm_desc" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    perm_id, perm_name, perm_type, url, icon, parent_id, perm_code, perm_desc, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_perm
+        where perm_id = #{permId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_perm
+    where perm_id = #{permId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.Perm">
+    insert into ieps_perm (perm_id, perm_name, perm_type, parent_id,
+      url, icon, perm_code, perm_desc,
+      create_time, update_time)
+    values (#{permId,jdbcType=INTEGER}, #{permName,jdbcType=VARCHAR}, #{permType,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER},
+      #{url,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{permCode,jdbcType=VARCHAR}, #{permDesc,jdbcType=VARCHAR},
+      now(), now())
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.Perm">
+        insert into ieps_perm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permId != null">
+                perm_id,
+            </if>
+            <if test="permName != null">
+                perm_name,
+            </if>
+            <if test="permType != null">
+                perm_type,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="permCode != null">
+                perm_code,
+            </if>
+            <if test="permDesc != null">
+                perm_desc,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="permId != null">
+                #{permId,jdbcType=INTEGER},
+            </if>
+            <if test="permName != null">
+                #{permName,jdbcType=VARCHAR},
+            </if>
+            <if test="permType != null">
+                #{permType,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="permCode != null">
+                #{permCode,jdbcType=VARCHAR},
+            </if>
+            <if test="permDesc != null">
+                #{permDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.Perm">
+        update ieps_perm
+        <set>
+            <if test="permName != null">
+                perm_name = #{permName,jdbcType=VARCHAR},
+            </if>
+            <if test="permType != null">
+                perm_type = #{permType,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="permCode != null">
+                perm_code = #{permCode,jdbcType=VARCHAR},
+            </if>
+            <if test="permDesc != null">
+                perm_desc = #{permDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where perm_id = #{permId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.Perm">
+    update ieps_perm
+    set perm_name = #{permName,jdbcType=VARCHAR},
+      perm_type = #{permType,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      perm_code = #{permCode,jdbcType=VARCHAR},
+      perm_desc = #{permDesc,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where perm_id = #{permId,jdbcType=INTEGER}
+  </update>
+
+
+    <select id="selectAllPerm" resultType="Perm">
+        SELECT ip.perm_id AS permId, ip.perm_name AS permName, ip.perm_type AS permType,
+        ip.url AS url, ip.icon AS icon, ip.parent_id AS parentId
+        FROM ieps_perm ip
+    </select>
+
+    <delete id="deletePermById" parameterType="Perm">
+        DELETE FROM ieps_perm
+        WHERE perm_id = #{permId}
+            <if test="permType == 'menu'">
+                OR perm_id IN
+                (
+                SELECT ip.perm_id FROM
+                (
+                SELECT perm_id
+                FROM ieps_perm
+                WHERE parent_id = #{permId}
+                ) ip
+                )
+            </if>
+    </delete>
+
+    <select id="selectAllMenu" resultType="Perm">
+        SELECT ip.perm_id AS permId, ip.perm_name AS permName, ip.perm_type AS permType,
+        ip.url AS url, ip.icon AS icon, ip.parent_id AS parentId
+        FROM ieps_perm ip
+        WHERE ip.perm_type = 'menu';
+    </select>
+
+    <!--<select id="selectParentByPermId" parameterType="integer" resultType="Perm">-->
+    <!--SELECT ip.perm_id AS permId, ip.perm_name AS permName, ip.perm_type AS permType,-->
+    <!--ip.url AS url, ip.icon AS icon, ip.parent_id AS parentId-->
+    <!--FROM ieps_perm ip-->
+    <!--WHERE ip.perm_id =-->
+    <!--(-->
+    <!--SELECT parent_id-->
+    <!--FROM ieps_perm-->
+    <!--WHERE perm_id = #{permId}-->
+    <!--)-->
+    <!--</select>-->
+
+    <delete id="batchDeletePerm" parameterType="integer">
+        DELETE FROM ieps_perm ip
+        WHERE perm_id IN
+        <foreach collection="array" separator="," item="permId" open="(" close=")">
+            #{permId}
+        </foreach>
+    </delete>
+
+    <insert id="insertRolePerm" parameterType="integer">
+        INSERT INTO ieps_role_perm
+        (role_id, perm_id)
+        VALUES
+        (#{roleId}, #{permId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.ItemMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.Item">
+        <constructor>
+            <idArg column="item_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="item_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="item_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="leader_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="leader_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="tutor_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="tutor_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="item_status" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="item_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        item_id, item_num, item_name, leader_num, leader_name, tutor_num, tutor_name, item_status, item_date, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_item
+        where item_id = #{itemId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_item
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.Item">
+        insert into ieps_item (item_num, item_name,
+          leader_num, leader_name, tutor_num, tutor_name, item_status,
+          create_time, update_time)
+        values (#{itemNum,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, #{leaderNum,jdbcType=VARCHAR},
+          #{leaderName,jdbcType=VARCHAR}, #{tutorNum,jdbcType=VARCHAR}, #{tutorName,jdbcType=VARCHAR}, #{itemStatus,jdbcType=INTEGER},
+          now(), now(), now())
+      </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.Item">
+        insert into ieps_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemId != null">
+                item_id,
+            </if>
+            <if test="itemNum != null">
+                item_num,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="leaderNum != null">
+                leader_num,
+            </if>
+            <if test="leaderName != null">
+                leader_name,
+            </if>
+            <if test="tutorNum != null">
+                tutor_num,
+            </if>
+            <if test="tutorName != null">
+                tutor_name,
+            </if>
+            <if test="itemStatus != null">
+                item_status,
+            </if>
+            <if test="itemDate != null">
+                itemDate,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemId != null">
+                #{itemId,jdbcType=INTEGER},
+            </if>
+            <if test="itemNum != null">
+                #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null">
+                #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderNum != null">
+                #{leaderNum,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderName != null">
+                #{leaderName,jdbcType=VARCHAR},
+            </if>
+            <if test="tutorNum != null">
+                #{tutorNum,jdbcType=VARCHAR},
+            </if>
+            <if test="tutorName != null">
+                #{tutorName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemStatus != null">
+                #{itemStatus,jdbcType=INTEGER},
+            </if>
+            <if test="itemDate != null">
+                now(),
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.Item">
+        update ieps_item
+        <set>
+            <if test="itemNum != null">
+                item_num = #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderNum != null">
+                leader_num = #{leaderNum,jdbcType=VARCHAR},
+            </if>
+            <if test="leaderName != null">
+                leader_name = #{leaderName,jdbcType=VARCHAR},
+            </if>
+            <if test="tutorNum != null">
+                tutor_num = #{tutorNum,jdbcType=VARCHAR},
+            </if>
+            <if test="tutorName != null">
+                tutor_name = #{tutorName,jdbcType=VARCHAR},
+            </if>
+            <if test="itemStatus != null">
+                item_status = #{itemStatus,jdbcType=INTEGER},
+            </if>
+            <if test="itemDate != null">
+                item_date = #{itemDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where item_id = #{itemId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.Item">
+    update ieps_item
+    set item_num = #{itemNum,jdbcType=VARCHAR},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      leader_num = #{leaderNum,jdbcType=VARCHAR},
+      leader_name = #{leaderName,jdbcType=VARCHAR},
+      tutor_num = #{tutorNum,jdbcType=VARCHAR},
+      tutor_name = #{tutorName,jdbcType=VARCHAR},
+      item_status = #{itemStatus,jdbcType=INTEGER},
+      item_date = #{itemDate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+
+    <!-- 学校管理员查看所有的项目-->
+    <select id="selectAllItem" parameterType="ItemAdminDto" resultType="ItemAdminDto">
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName, tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel,
+        item_type AS
+        itemType, summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName,
+        file_kind
+        AS fileKind, academyScore AS academyScore, collegeScore AS collegeScore, governScore, item_date AS itemDate
+        FROM
+        (
+          SELECT * FROM ieps_item
+          <where>
+              <if test="list.size() != 0">
+                  item_status IN
+                  <foreach collection="list" item="itemStatus" separator="," open="(" close=")">
+                      #{itemStatus}
+                  </foreach>
+              </if>
+          </where>
+        ) ii
+        LEFT JOIN ieps_file_hub ifh
+        ON ii.item_num = ifh.type_num
+        AND ifh.user_num = ii.leader_num
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ii.item_num LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ii.item_name LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ii.leader_name LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ii.tutor_name LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR iii.item_level LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemStatus != null and itemAdminDto.itemStatus != '' and itemAdminDto.itemStatus != -2">
+                OR ii.item_status LIKE '%${itemAdminDto.itemStatus}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR iii.item_type LIKE '%${itemAdminDto.itemType}%'
+            </if>
+            <if test="itemAdminDto.itemYear != null and itemAdminDto.itemYear != ''">
+                AND ii.item_date LIKE '%${itemAdminDto.itemYear}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 学院管理员查看本院的所有项目-->
+    <select id="selectAllItemByAdminWithUserNum" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName,
+        academyScore AS academyScore, collegeScore AS collegeScore, governScore, item_date AS itemDate
+        FROM
+        (
+        SELECT * FROM ieps_item
+        <where>
+            <if test="list.size() != 0">
+                item_status IN
+                <foreach collection="list" item="itemStatus" separator="," open="(" close=")">
+                    #{itemStatus}
+                </foreach>
+            </if>
+        </where>
+        ) ii
+        LEFT JOIN ieps_file_hub ifh
+        ON ii.item_num = ifh.type_num
+        AND ifh.user_num = ii.leader_num
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE ii.leader_num IN
+        (
+        SELECT iui.user_num
+        FROM ieps_user_info iui
+        WHERE iui.academy =
+        (
+        SELECT academy
+        FROM ieps_user_info
+        WHERE user_num = #{userNum}
+        )
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemStatus != null and itemAdminDto.itemStatus != '' and itemAdminDto.itemStatus != -2">
+                OR ie.itemStatus LIKE '%${itemAdminDto.itemStatus}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+            <if test="itemAdminDto.itemYear != null and itemAdminDto.itemYear != ''">
+                AND ie.itemDate LIKE '%${itemAdminDto.itemYear}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 校内专家 / 院内专家查看需要评审的项目-->
+    <select id="selectAllItemByExportWithUserNum" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName,
+        academyScore AS academyScore, collegeScore AS collegeScore, governScore, item_date AS itemDate
+        FROM
+        (
+        SELECT * FROM ieps_item
+        <where>
+            <if test="list.size() != 0">
+                item_status IN
+                <foreach collection="list" item="itemStatus" separator="," open="(" close=")">
+                    #{itemStatus}
+                </foreach>
+            </if>
+        </where>
+        ) ii
+        LEFT JOIN ieps_file_hub ifh
+        ON ii.item_num = ifh.type_num
+        AND ifh.user_num = ii.leader_num
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE ii.item_num IN
+        (
+        SELECT iui.item_num FROM ieps_user_item iui
+        WHERE iui.user_num = #{userNum}
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemStatus != null and itemAdminDto.itemStatus != '' and itemAdminDto.itemStatus != -2">
+                OR ie.itemStatus LIKE '%${itemAdminDto.itemStatus}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+            <if test="itemAdminDto.itemYear != null and itemAdminDto.itemYear != ''">
+                AND ie.itemDate LIKE '%${itemAdminDto.itemYear}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 指导老师查看所指导的项目 或者再查一遍ieps_user_item表，找出关联的项目编号  -->
+    <select id="selectAllItemByTutorWithUserNum" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName,
+        academyScore AS academyScore, collegeScore AS collegeScore, governScore, item_date AS itemDate
+        FROM
+        (
+        SELECT * FROM ieps_item
+        <where>
+            <if test="list.size() != 0">
+                item_status IN
+                <foreach collection="list" item="itemStatus" separator="," open="(" close=")">
+                    #{itemStatus}
+                </foreach>
+            </if>
+        </where>
+        ) ii
+        LEFT JOIN ieps_file_hub ifh
+        ON ii.item_num = ifh.type_num
+        AND ifh.user_num = ii.leader_num
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE ii.tutor_num = #{userNum}
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemStatus != null and itemAdminDto.itemStatus != '' and itemAdminDto.itemStatus != -2">
+                OR ie.itemStatus LIKE '%${itemAdminDto.itemStatus}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+            <if test="itemAdminDto.itemYear != null and itemAdminDto.itemYear != ''">
+                AND ie.itemDate LIKE '%${itemAdminDto.itemYear}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 普通学生查看自己的项目详情  包括自己作为组长或者组员的情况-->
+    <select id="selectAllItemByStuWithUserNum" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName, tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel,
+        item_type AS itemType, summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName,
+        academyScore AS academyScore, collegeScore AS collegeScore, governScore, item_date AS itemDate
+        FROM
+        (
+        SELECT * FROM ieps_item
+        <where>
+            <if test="list.size() != 0">
+                item_status IN
+                <foreach collection="list" item="itemStatus" separator="," open="(" close=")">
+                    #{itemStatus}
+                </foreach>
+            </if>
+        </where>
+        ) ii
+        LEFT JOIN ieps_file_hub ifh
+        ON ii.item_num = ifh.type_num
+        AND ifh.user_num = ii.leader_num
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE ii.leader_num = #{userNum}
+        OR ii.item_num IN
+        (
+        SELECT item_num
+        FROM ieps_user_item
+        WHERE user_num = #{userNum}
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemStatus != null and itemAdminDto.itemStatus != '' and itemAdminDto.itemStatus != -2">
+                OR ie.itemStatus LIKE '%${itemAdminDto.itemStatus}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+            <if test="itemAdminDto.itemYear != null and itemAdminDto.itemYear != ''">
+                AND ie.itemDate LIKE '%${itemAdminDto.itemYear}%'
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 学校管理员根据项目状态查看所有的项目-->
+    <select id="selectAllItemWithItemStatus" parameterType="ItemAdminDto" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum, review_level
+        AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE
+        ii.item_status = #{itemAdminDto.itemStatus}
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 学院管理员根据项目状态查看本院的所有项目-->
+    <select id="selectAllItemByAdminWithUserNumAndItemStatus" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum, review_level
+        AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE
+        ii.item_status = #{itemAdminDto.itemStatus}
+        AND ii.leader_num IN
+        (
+        SELECT iui.user_num
+        FROM ieps_user_info iui
+        WHERE iui.academy =
+        (
+        SELECT academy
+        FROM ieps_user_info
+        WHERE user_num = #{userNum}
+        )
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 校内专家 / 院内专家查看需要评审的项目-->
+    <select id="selectAllItemByExportWithUserNumAndItemStatus" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum, review_level
+        AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE
+        ii.item_status = #{itemAdminDto.itemStatus}
+        AND ii.item_num IN
+        (
+        SELECT iui.item_num FROM ieps_user_item iui
+        WHERE iui.user_num = #{userNum}
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 指导老师查看所指导的项目 或者再查一遍ieps_user_item表，找出关联的项目编号  -->
+    <select id="selectAllItemByTutorWithUserNumAndItemStatus" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum, review_level
+        AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE
+        ii.item_status = #{itemAdminDto.itemStatus}
+        AND ii.tutor_num = #{userNum}
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+        </where>
+    </select>
+
+    <!-- 普通学生查看自己的项目详情  包括自己作为组长或者组员的情况-->
+    <select id="selectAllItemByStuWithUserNumAndItemStatus" resultType="ItemAdminDto">
+        SELECT ie.* FROM
+        (
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name AS
+        leaderName,
+        tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS itemLevel, item_type AS
+        itemType,
+        summary AS summary, college_funds AS collegeFunds, govern_funds AS governFunds, file_name AS fileName
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS academyScore, irC.collegeScore, irC.governScore, item_num AS itemNum, review_level
+        AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS collegeScore, irG.governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review ir
+        LEFT JOIN
+        (
+        SELECT sum(review_score) AS governScore, item_num AS itemNum, review_level AS reviewLevel
+        FROM ieps_review
+        WHERE review_type = 1
+        AND review_level = 3
+        GROUP BY item_num, review_level
+        ) irG
+        ON ir.item_num = irG.itemNum
+        WHERE review_type = 1
+        AND review_level = 2
+        GROUP BY item_num, review_level
+        ) irC
+        ON ir.item_num = irC.itemNum
+        WHERE review_type = 1
+        AND review_level = 1
+        GROUP BY item_num, review_level
+        ) irA
+        ON ii.item_num = irA.itemNum
+        WHERE
+        ii.item_status = #{itemAdminDto.itemStatus}
+        AND ii.leader_num = #{userNum}
+        OR ii.item_num IN
+        (
+        SELECT item_num
+        FROM ieps_user_item
+        WHERE user_num = #{userNum}
+        )
+        ) ie
+        <where>
+            <if test="itemAdminDto.itemNum != null and itemAdminDto.itemNum != ''">
+                OR ie.itemNum LIKE '%${itemAdminDto.itemNum}%'
+            </if>
+            <if test="itemAdminDto.itemName != null and itemAdminDto.itemName != ''">
+                OR ie.itemName LIKE '%${itemAdminDto.itemName}%'
+            </if>
+            <if test="itemAdminDto.leaderName != null and itemAdminDto.leaderName != ''">
+                OR ie.leaderName LIKE '%${itemAdminDto.leaderName}%'
+            </if>
+            <if test="itemAdminDto.tutorName != null and itemAdminDto.tutorName != ''">
+                OR ie.tutorName LIKE '%${itemAdminDto.tutorName}%'
+            </if>
+            <if test="itemAdminDto.itemLevel != null and itemAdminDto.itemLevel != '' and itemAdminDto.itemLevel != -2">
+                OR ie.itemLevel LIKE '%${itemAdminDto.itemLevel}%'
+            </if>
+            <if test="itemAdminDto.itemType != null and itemAdminDto.itemType != '' and itemAdminDto.itemType != -2">
+                OR ie.itemType LIKE '%${itemAdminDto.itemType}%'
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteItemByItemNums" parameterType="string">
+        DELETE FROM ieps_item
+        WHERE item_num IN
+        <foreach collection="array" item="itemNum" separator="," open="(" close=")">
+            #{itemNum}
+        </foreach>
+    </delete>
+
+    <update id="updateItemStatusByItemNum">
+        UPDATE ieps_item
+        SET item_status = #{itemStatus}
+        WHERE item_num = #{itemNum}
+    </update>
+
+
+    <update id="updateItemByItemNum" parameterType="ItemAdminDto">
+        UPDATE ieps_item
+        SET
+          leader_num = #{leaderNum,jdbcType=VARCHAR},
+          leader_name = #{leaderName,jdbcType=VARCHAR},
+          tutor_num = #{tutorNum,jdbcType=VARCHAR},
+          tutor_name = #{tutorName,jdbcType=VARCHAR},
+          update_time = now()
+        where item_num = #{itemNum,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectItemByItemNum" parameterType="string" resultType="ItemAdminDto">
+        SELECT leader_num AS leaderNum, leader_name AS leaderName, tutor_num AS tutorNum, tutor_name AS tutorName,
+        item_status AS itemStatus
+        FROM ieps_item
+        WHERE item_num = #{itemNum}
+    </select>
+
+    <update id="updateItemStatusWithItemNums">
+        UPDATE ieps_item
+        SET item_status = #{itemStatus}
+        WHERE item_num IN
+        <foreach collection="itemNums" item="itemNum" separator="," open="(" close=")">
+            #{itemNum}
+        </foreach>
+    </update>
+
+    <insert id="insertItemWithItemAdminDto" parameterType="ItemAdminDto">
+        INSERT INTO ieps_item
+        (
+        item_num, item_name, leader_name, leader_num, tutor_name, tutor_num, item_status
+        )
+        VALUES
+        (
+        #{itemNum}, #{itemName}, #{leaderName}, #{leaderNum}, #{tutorName}, #{tutorNum}, #{itemStatus}
+        )
+    </insert>
+
+    <select id="selectFinishedItemWithItemStatus" resultType="ItemAdminDto">
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name
+        AS leaderName, tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS
+        itemLevel, item_type AS itemType, summary AS summary, college_funds AS collegeFunds, govern_funds AS
+        governFunds,
+        ii.create_time AS createTime, ii.update_time AS updateTime, ii.item_date AS itemDate
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        WHERE
+        ii.item_status = #{itemStatus}
+        <if test="itemName != null and itemName !=''">
+            AND ii.item_name LIKE '%${itemName}%'
+        </if>
+        <if test="itemDate != null and itemDate !=''">
+            AND ii.item_date LIKE '%${itemDate}%'
+        </if>
+    </select>
+
+    <select id="selectAllItemDate" resultType="string">
+        SELECT DISTINCT(year(item_date)) AS itemDate
+        FROM ieps_item
+    </select>
+
+    <select id="selectItemDetailWithItemId" resultType="ItemAdminDto">
+        SELECT item_id AS itemId, ii.item_num AS itemNum, item_name AS itemName, leader_num AS leaderNum, leader_name
+        AS leaderName, tutor_num AS tutorNum, tutor_name AS tutorName, item_status AS itemStatus, item_level AS
+        itemLevel, item_type AS itemType, summary AS summary, ii.create_time AS createTime, ii.update_time AS updateTime
+        FROM ieps_item ii
+        INNER JOIN ieps_item_info iii
+        ON ii.item_num = iii.item_num
+        WHERE ii.item_num = #{itemNum}
+    </select>
+
+    <select id="selectItemsWithYear" resultType="Item">
+        SELECT COUNT(item_num) AS itemNum, item_date AS itemDate
+        FROM ieps_item
+        GROUP BY YEAR(item_date)
+    </select>
+
+    <select id="selectStuUserInfoWithAcademy" resultType="UserAdminDto">
+        SELECT iui.academy AS academy, COUNT(DISTINCT (iuii.user_num)) AS stuNum
+        FROM ieps_user_info iui
+        INNER JOIN ieps_user_item iuii
+        ON iui.user_num = iuii.user_num
+        INNER JOIN
+        (
+        SELECT item_num
+        FROM ieps_item
+        <where>
+            <if test="itemDate != null and itemDate != ''">
+                AND item_date LIKE '%${itemDate}%'
+            </if>
+        </where>
+        ) ii
+        ON iuii.item_num = ii.item_num
+        WHERE iuii.identity
+        IN
+        (1,2)
+        GROUP BY academy
+    </select>
+
+
+</mapper>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.FileHubMapper" >
+
+  <resultMap id="BaseResultMap" type="com.ieps.pojo.FileHub" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="type_num" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_num" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="file_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="file_size" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="file_kind" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_num,  user_num, academy, file_name, file_size, file_kind, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from ieps_file_hub
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ieps_file_hub
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ieps.pojo.FileHub" >
+    insert into ieps_file_hub (type_num, user_num, academy, file_name,
+    file_size, file_kind, create_time, update_time)
+    values (#{typeNum,jdbcType=VARCHAR}, #{userNum,jdbcType=VARCHAR}, #{academy,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR},
+    #{fileSize,jdbcType=INTEGER}, #{fileKind,jdbcType=INTEGER}, now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.ieps.pojo.FileHub" >
+    insert into ieps_file_hub
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeNum != null" >
+        type_num,
+      </if>
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="academy != null" >
+        academy,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileSize != null" >
+        file_size,
+      </if>
+      <if test="fileKind != null" >
+        file_kind,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeNum != null" >
+        #{typeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="academy != null" >
+        #{academy,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=INTEGER},
+      </if>
+      <if test="fileKind != null" >
+        #{fileKind,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.FileHub" >
+    update ieps_file_hub
+    <set >
+      <if test="typeNum != null" >
+        type_num = #{typeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        user_num = #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="academy != null" >
+        academy = #{academy,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        file_size = #{fileSize,jdbcType=INTEGER},
+      </if>
+      <if test="fileKind != null" >
+        file_kind = #{fileKind,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.FileHub" >
+    update ieps_file_hub
+    set type_num = #{typeNum,jdbcType=VARCHAR},
+    user_num = #{userNum,jdbcType=VARCHAR},
+    academy = #{academy,jdbcType=VARCHAR},
+    file_name = #{fileName,jdbcType=VARCHAR},
+    file_size = #{fileSize,jdbcType=INTEGER},
+    file_kind = #{fileKind,jdbcType=INTEGER},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+
+
+
+
+  <select id="selectByFileName" parameterType="string" resultType="FileHub">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ieps_file_hub
+    WHERE file_name=#{fileName}
+  </select>
+
+
+  <select id="selectAllFileHub" resultType="FileHub">
+    SELECT id, type_num, user_num AS userNum, academy AS academy, file_name AS fileName, file_size AS fileSize, file_kind AS fileKind
+    FROM ieps_file_hub
+    <where>
+      <if test="userNum != null and userNum != -1">
+        OR user_num LIKE '%${userNum}%'
+      </if>
+      <if test="fileSize != null and fileSize != -1 and fileSize != 0">
+        OR file_size LIKE '%${fileSize}%'
+      </if>
+      <if test="fileName != null and fileName != ''">
+        OR file_name LIKE '%${fileName}%'
+      </if>
+      <if test="academy != null and academy != ''">
+        OR academy LIKE '%${academy}%'
+      </if>
+    </where>
+  </select>
+
+
+  <select id="selectAllFileByUserNum" resultType="FileHub">
+    SELECT id, type_num, user_num AS userNum, academy AS academy, file_name AS fileName, file_size AS fileSize, file_kind AS fileKind
+    FROM ieps_file_hub
+    WHERE user_num = #{userNumCollege}
+    OR academy =
+    (
+      SELECT academy
+      FROM ieps_user_info
+      WHERE user_num = #{userNumAcademy}
+    )
+    <if test="fileHub.userNum != null and fileHub.userNum != -1">
+      OR fileHub.user_num LIKE '%${userNum}%'
+    </if>
+    <if test="fileHub.fileSize != null and fileHub.fileSize != -1">
+      OR fileHub.file_size LIKE '%${fileSize}%'
+    </if>
+    <if test="fileHub.fileName != null and fileHub.fileName != ''">
+      OR fileHub.file_name LIKE '%${fileName}%'
+    </if>
+    <if test="fileHub.academy != null and fileHub.academy != ''">
+      OR fileHub.academy LIKE '%${academy}%'
+    </if>
+  </select>
+
+  <delete id="batchDeleteFileByIds" parameterType="integer">
+    DELETE FROM ieps_file_hub
+    WHERE id IN
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <delete id="deleteFileHubByItemNum">
+    DELETE FROM ieps_file_hub
+    WHERE type_num IN
+    <foreach collection="array" item="itemNum" separator="," open="(" close=")">
+      #{itemNum}
+    </foreach>
+  </delete>
+
+
+  <select id="selectAllFileByAdminWithKind" resultType="FileHub">
+    SELECT id, type_num, user_num AS userNum, academy AS academy, file_name AS fileName, file_size AS fileSize,
+    file_kind AS fileKind, create_time AS createTime, update_time AS updateTime
+    FROM ieps_file_hub
+    WHERE file_kind = #{fileKind}
+    <if test="fileName != null and fileName != ''">
+      AND file_name LIKE '%${fileName}%'
+    </if>
+    <if test="updateTime != null and updateTime != ''">
+      AND update_time LIKE '%${updateTime}%'
+    </if>
+  </select>
+
+  <select id="selectFileWithItemNum" parameterType="string" resultType="FileHub">
+    SELECT id, type_num, user_num AS userNum, academy AS academy, file_name AS fileName, file_size AS fileSize,
+    file_kind AS fileKind, create_time AS createTime, update_time AS updateTime
+    FROM ieps_file_hub
+    WHERE type_num = #{itemNum}
+  </select>
+
+
+
+
+
+</mapper>

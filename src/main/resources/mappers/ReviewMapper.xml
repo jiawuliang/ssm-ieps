@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.ReviewMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.Review">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="item_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="review_score" jdbcType="DECIMAL" javaType="java.lang.Long"/>
+            <arg column="review_option" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="review_type" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="review_level" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="review_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_num, item_num, review_score, review_option, review_type, review_level, review_time, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_review
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_review
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.Review">
+    insert into ieps_review (user_num, item_num, review_score,
+      review_option, review_type, review_level,
+      review_time, create_time, update_time
+      )
+    values
+    (
+      #{userNum,jdbcType=VARCHAR}, #{itemNum,jdbcType=VARCHAR}, #{reviewScore,jdbcType=DECIMAL}, #{reviewOption,jdbcType=VARCHAR},
+      #{reviewType,jdbcType=INTEGER}, #{reviewLevel,jdbcType=INTEGER}, now(), now(), now()
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.Review">
+        insert into ieps_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                user_num,
+            </if>
+            <if test="itemNum != null">
+                item_num,
+            </if>
+            <if test="reviewScore != null">
+                review_score,
+            </if>
+            <if test="reviewOption != null">
+                review_option,
+            </if>
+            <if test="reviewType != null">
+                review_type,
+            </if>
+            <if test="reviewLevel != null">
+                review_level,
+            </if>
+            <if test="reviewTime != null">
+                review_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                #{userNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemNum != null">
+                #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewScore != null">
+                #{reviewScore,jdbcType=DECIMAL},
+            </if>
+            <if test="reviewOption != null">
+                #{reviewOption,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewType != null">
+                #{reviewType,jdbcType=INTEGER},
+            </if>
+            <if test="reviewLevel != null">
+                #{reviewLevel,jdbcType=INTEGER},
+            </if>
+            <if test="reviewTime != null">
+                now(),
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.Review">
+        update ieps_review
+        <set>
+            <if test="userNum != null">
+                user_num = #{userNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemNum != null">
+                item_num = #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewScore != null">
+                review_score = #{reviewScore,jdbcType=DECIMAL},
+            </if>
+            <if test="reviewOption != null">
+                review_option = #{reviewOption,jdbcType=VARCHAR},
+            </if>
+            <if test="reviewType != null">
+                review_type = #{reviewType,jdbcType=INTEGER},
+            </if>
+            <if test="reviewLevel != null">
+                review_level = #{reviewLevel,jdbcType=INTEGER},
+            </if>
+            <if test="reviewTime != null">
+                review_time = #{reviewTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.Review">
+    update ieps_review
+    set user_num = #{userNum,jdbcType=VARCHAR},
+      item_num = #{itemNum,jdbcType=VARCHAR},
+      review_score = #{reviewScore,jdbcType=DECIMAL},
+      review_option = #{reviewOption,jdbcType=VARCHAR},
+      review_type = #{reviewType,jdbcType=INTEGER},
+      review_level = #{reviewLevel,jdbcType=INTEGER},
+      review_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+     <!-- -1：普通文件；0：重要通知文件；1：常用下载文件；2：申请项目文件；3：立项评审结果附件；4：中期检查评审结果附件；5：结题评审结果附件。-->
+    <select id="selectAllReviewListWithItemNum" parameterType="string" resultType="ReviewAdminDto">
+        SELECT ir.id, ir.user_num AS userNum, iui.user_name AS userName, ir.item_num AS itemNum, ir.review_score AS reviewScore, ir.review_option AS reviewOption,
+        ir.review_type AS reviewType, ir.review_level AS reviewLevel, ir.review_time AS reviewTime, ir.create_time AS createTime, ir.update_time AS updateTime,
+        ifh.file_name AS fileName, ifh.file_kind AS fileKind
+		FROM ieps_review ir
+		LEFT JOIN
+        (
+        SELECT * FROM ieps_file_hub
+        WHERE file_kind NOT IN (-1, 0, 1, 2)
+        ) ifh
+        ON ifh.type_num = ir.item_num
+		AND ifh.user_num = ir.user_num
+        INNER JOIN ieps_user_info iui
+        ON iui.user_num = ir.user_num
+        WHERE ir.item_num = #{itemNum}
+    </select>
+    
+    
+    <select id="selectReviewWithMultCondition" resultType="ReviewAdminDto">
+        SELECT ir.id, ir.user_num AS userNum, iui.user_name AS userName, ir.item_num AS itemNum, ir.review_score AS reviewScore, ir.review_option AS reviewOption,
+        ir.review_type AS reviewType, ir.review_level AS reviewLevel, ir.review_time AS reviewTime, ir.create_time AS createTime, ir.update_time AS updateTime,
+        ifh.file_name AS fileName, ifh.file_kind AS fileKind
+		FROM ieps_review ir
+		INNER JOIN
+        (
+        SELECT * FROM ieps_file_hub
+        WHERE file_kind = #{fileKind}
+        ) ifh
+        ON ifh.type_num = ir.item_num
+		AND ifh.user_num = ir.user_num
+        INNER JOIN ieps_user_info iui
+        ON iui.user_num = ir.user_num
+        WHERE ir.item_num = #{itemNum}
+        AND ir.user_num = #{userNum}
+    </select>
+
+
+</mapper>

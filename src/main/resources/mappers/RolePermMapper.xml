@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.RolePermMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.RolePerm">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="role_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="perm_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, role_id, perm_id, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_role_perm
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_role_perm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.RolePerm">
+    insert into ieps_role_perm (id, role_id, perm_id, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{permId,jdbcType=INTEGER}, 
+      now(), now())
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.RolePerm">
+        insert into ieps_role_perm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="permId != null">
+                perm_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="permId != null">
+                #{permId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.RolePerm">
+        update ieps_role_perm
+        <set>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="permId != null">
+                perm_id = #{permId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.RolePerm">
+    update ieps_role_perm
+    set role_id = #{roleId,jdbcType=INTEGER},
+      perm_id = #{permId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <resultMap id="getMenuMap" type="com.ieps.pojo.RolePerm">
+        <id column="role_id" property="roleId"/>
+        <collection property="permList" column="role_id" ofType="com.ieps.pojo.Perm" javaType="java.util.ArrayList">
+            <id column="perm_id" property="permId"/>
+            <result column="perm_name" property="permName"/>
+            <result column="perm_type" property="permType"/>
+            <result column="url" property="url"/>
+            <result column="icon" property="icon"/>
+            <result column="parent_id" property="parentId"/>
+            <result column="perm_code" property="permCode"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectPermList" resultType="Perm">
+        SELECT ip.perm_id AS permId, ip.perm_name AS permName, ip.perm_type AS permType,
+        ip.url AS url, ip.icon AS icon, ip.parent_id AS parentId, ip.perm_code AS permCode
+        FROM ieps_role_perm irp
+        INNER JOIN ieps_perm ip
+        ON irp.perm_id = ip.perm_id
+        WHERE irp.role_id = #{roleId}
+        <if test="perm.permName != null || perm.permName !=''">
+        OR ip.perm_name LIKE '%${perm.permName}%'
+        </if>
+        <if test="perm.permType != null || perm.permType !=''">
+        OR ip.perm_type LIKE '%${perm.permType}%'
+        </if>
+        <if test="perm.permCode != null || perm.permCode !=''">
+        OR ip.perm_code LIKE '%${perm.permCode}%'
+        </if>
+        <if test="perm.permId != null || perm.permId !=''">
+        OR ip.perm_id LIKE '%${perm.permId}%'
+        </if>
+        <if test="perm.parentId != null || perm.parentId !=''">
+        OR ip.parent_id LIKE '%${perm.parentId}%'
+        </if>
+        <if test="perm.url != null || perm.url !=''">
+        OR ip.url LIKE '%${perm.url}%'
+        </if>
+    </select>
+
+    <select id="getPerm" parameterType="integer" resultMap="getMenuMap">
+    SELECT irp.role_id, ip.perm_id , ip.perm_name, ip.perm_type,
+    ip.url, ip.icon, ip.parent_id, ip.perm_code
+    FROM ieps_role_perm irp
+    INNER JOIN ieps_perm ip
+    ON irp.perm_id = ip.perm_id
+    WHERE irp.role_id = #{roleId}
+    </select>
+
+
+</mapper>

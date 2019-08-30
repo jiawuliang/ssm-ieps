@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.com.ieps.mapper.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ieps.pojo.UserInfo" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_num" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_img" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="photo_num" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="title" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="sex" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="academy" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="grade" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="major" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="birth_date" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.com.ieps.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_num, user_img, photo_num, email, title, sex, academy, grade, major, birth_date, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ieps_user_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ieps_user_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ieps.pojo.UserInfo" >
+    insert into ieps_user_info (id, user_id, user_img, 
+      photo_num, email, title, 
+      sex, birth_date, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userImg,jdbcType=VARCHAR}, 
+      #{photoNum,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{birthDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ieps.pojo.UserInfo" >
+    insert into ieps_user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userImg != null" >
+        user_img,
+      </if>
+      <if test="photoNum != null" >
+        photo_num,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthDate != null" >
+        birth_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userImg != null" >
+        #{userImg,jdbcType=VARCHAR},
+      </if>
+      <if test="photoNum != null" >
+        #{photoNum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthDate != null" >
+        #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.UserInfo" >
+    update ieps_user_info
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userImg != null" >
+        user_img = #{userImg,jdbcType=VARCHAR},
+      </if>
+      <if test="photoNum != null" >
+        photo_num = #{photoNum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="birthDate != null" >
+        birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.UserInfo" >
+    update ieps_user_info
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_img = #{userImg,jdbcType=VARCHAR},
+      photo_num = #{photoNum,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByUserNum" resultMap="BaseResultMap" parameterType="string">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM ieps_user_info
+    WHERE user_num=#{usernum}
+  </select>
+</mapper>

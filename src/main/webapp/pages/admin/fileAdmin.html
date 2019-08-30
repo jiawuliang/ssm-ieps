@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>大学生创新创业项目管理系统 - 文件管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+
+</head>
+
+<body style="margin: 20px 0 0 20px;">
+
+<!-- 文件管理搜索框  -->
+<div class="fileAdmin-top" style="margin-bottom: 10px;">
+    <div class="layui-form-item" style="width: 40%;">
+        <input type="text" name="searchKeyWord" autocomplete="off" placeholder="请输入关键词"
+               class="layui-input" style="float: left; width: 70%">
+
+        <input type="button" name="searchBtn" class="layui-btn"
+               value="搜索" style="float: left; widows: 25%; margin-left: 5%;background-color: #01AAED;">
+    </div>
+</div>
+
+<!-- 文件管理数据表格 -->
+<table class="layui-hide" id="fileAdmin" lay-filter="fileAdmin"></table>
+
+<!-- 文件管理新增弹窗页面 -->
+<div id="fileAdmin-upload" style="display: none;">
+    <div class="layui-upload" style="width: 600px; margin: 10px 50px; ">
+        <div class="layui-upload-list">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="text-align: center;">文件名</th>
+                    <th style="text-align: center;">大小</th>
+                    <th style="text-align: center;">状态</th>
+                    <th style="text-align: center;">操作</th>
+                </tr>
+                </thead>
+                <tbody id="demoList"></tbody>
+            </table>
+        </div>
+        <div class="layui-form-item" style="text-align: right;">
+            <button type="button" class="layui-btn layui-btn-normal" id="testList">选择文件</button>
+            <button type="button" class="layui-btn" id="testListAction" style="display: none">开始上传</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<!-- 用户名和角色解密  -->
+<script>
+    var userNumAdmin = decrypt(getUrlParam("userNum"), "abcd1234abcd1234");
+    var roleIdAdmin = decrypt(getUrlParam("roleId"), "abcd1234abcd1234");
+
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+</script>
+
+
+
+<!-- 常用下载模板  -->
+<script type="text/html" id="kindTpl">
+    <input type="checkbox" class="fileKind" name="{{ d.userNum }}" value="{{d.fileKind}}" id="{{ d.id }}"
+           lay-skin="switch" lay-text="是|否" lay-filter="kindTpl" {{
+           d.fileKind== 1 ? 'checked' : '' }}>
+</script>
+
+<!-- 头工具栏按钮 -->
+<script type="text/html" id="toolbarDemo">
+    {{# if ( roleIdAdmin == '200004' || roleIdAdmin == '200006') { }}
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="uploadFile">
+            <i class="layui-icon">&#xe681;</i>&nbsp;上传
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchRemoveFile">
+            <i class="layui-icon">&#xe640;</i> 批量删除
+        </button>
+    </div>
+    {{# } }}
+</script>
+
+<!--每一行最后的操作栏-->
+<script type="text/html" id="barDemo">
+    {{# if ( roleIdAdmin == '200004' || roleIdAdmin == '200006') { }}
+    <a class="layui-btn layui-btn-xs" title="下载" href="/downloadFile.do?fileName={{d.fileName}}">
+        <i class="layui-icon">&#xe601;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+    {{# } }}
+</script>
+
+<!-- 文件名链接下载模板 -->
+<script type="text/html" id="fileNameTpl">
+    {{# if (d.fileName.indexOf("-") != -1) { }}
+    <a href="/downloadFile.do?fileName={{d.fileName}}" class="layui-table-link">{{
+        d.fileName.substring(d.fileName.indexOf("-") + 1) }}</a>
+    {{# } else { }}
+    <a href="/downloadFile.do?fileName={{d.fileName}}" class="layui-table-link">{{ d.fileName }}</a>
+    {{# } }}
+</script>
+
+<!-- 表格脚本代码 -->
+<script>
+
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['form', 'layer', 'table', 'laytpl', 'laydate', 'upload'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var laytpl = layui.laytpl;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+
+        // 表格初始化重载
+        var tableIns = table.render({
+            elem: '#fileAdmin',
+            url: '/getFileListByUserNum.do',
+            title: '文件管理表',
+            toolbar: '#toolbarDemo',
+            limit: 10,
+            height: 'full-90',
+            limits: [10, 10, 20, 50],
+            page: true,
+            where: {
+                userNumAdmin: userNumAdmin,
+                roleId: roleIdAdmin
+            },
+            cols: [
+                [{
+                    type: 'checkbox',
+                    fixed: 'left',
+                    unresize: true
+                }, {
+                    field: 'id',
+                    title: 'id',
+                    hide: true
+                }, {
+                    field: 'userNum',
+                    title: '上传者',
+                    sort: true,
+                    width: 150
+                }, {
+                    field: 'academy',
+                    title: '所在单位',
+                    sort: true,
+                    width: 250
+                }, {
+                    field: 'fileName',
+                    title: '文件名',
+                    sort: true,
+                    width: 350,
+                    templet: '#fileNameTpl'
+                }, {
+                    field: 'fileSize',
+                    title: '文件大小',
+                    sort: true,
+                    width: 150,
+                    templet: function (result) {
+                        return result.fileSize / 1024 + 'k';
+                    }
+                }, {
+                    field: 'fileKind',
+                    title: '常用下载',
+                    width: 150,
+                    templet: '#kindTpl'
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    toolbar: '#barDemo',
+                    unresize: true,
+                    width: 110
+                }]
+            ],
+            done: function () {
+            },
+            parseData: function (result) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": result.status, //解析接口状态
+                    "count": result.data.total, //解析数据长度
+                    "data": result.data.list //解析数据列表
+                };
+            }
+        });
+
+
+
+
+        //监听文件类型操作
+        form.on('switch(kindTpl)', function (obj) {
+            var fileKind = 0;
+            if (obj.elem.checked) {
+                fileKind = 1;
+            }
+            var id = this.id;
+            var userNum = this.name;
+            console.log(id + "  id   " + userNum + "    userNum");
+
+            // 开关是否开启，true或者false
+            var checked = obj.elem.checked;
+
+            // 询问框
+            layer.confirm('您确定将修改文件名的重要性吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                // 确定按钮
+                var param = {
+                    id: id,
+                    userNum: userNum,
+                    fileKind: fileKind,
+                    userNumAdmin: userNumAdmin,
+                    roleId: roleIdAdmin
+                };
+
+                $.get("/modifyFileKindWithUserNum.do", param, function (result) {
+                    if (result.status != 0) {
+                        return layer.msg(result.msg, {icon: 2});
+                    }
+                    obj.elem.checked = checked;
+                    form.render();
+                    layer.msg(result.msg, {icon: 1});
+                });
+                layer.close(index);
+            }, function (index) {
+                // 取消按钮
+                // 取消按钮
+                obj.elem.checked = !checked;
+                form.render();
+                layer.close(index);
+            });
+        });
+
+
+        // 头工具栏事件
+        table.on('toolbar(fileAdmin)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var data = checkStatus.data;
+            console.log(data);
+
+            switch (obj.event) {
+                case 'uploadFile':
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '文件管理上传',
+                        content: $('#fileAdmin-upload'),
+                        area: ['700px', '500px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+                            // 文件上传
+                            // 多文件列表示例
+                            var demoListView = $('#demoList');
+                            var uploadListIns = upload.render({
+                                elem: '#testList',
+                                url: '/batchUploadFile.do',
+                                accept: 'file',
+                                multiple: true,
+                                auto: false,
+                                number: 8,
+                                field: 'files',
+                                bindAction: '#testListAction',
+                                data: {
+                                    // 普通文件
+                                    fileKind: 0,
+                                    userNum: userNumAdmin
+                                },
+                                choose: function (obj) {
+                                    var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                    //读取本地文件
+                                    obj.preview(function (index, file, result) {
+                                        var tr = $(['<tr id="upload-' + index + '">'
+                                            , '<td>' + file.name + '</td>'
+                                            , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                                            , '<td>等待上传</td>'
+                                            , '<td>'
+                                            , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                            , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                            , '</td>'
+                                            , '</tr>'].join(''));
+
+                                        //单个重传
+                                        tr.find('.demo-reload').on('click', function () {
+                                            obj.upload(index, file);
+                                        });
+
+                                        //删除
+                                        tr.find('.demo-delete').on('click', function () {
+                                            delete files[index]; //删除对应的文件
+                                            tr.remove();
+                                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                        });
+
+                                        demoListView.append(tr);
+                                    });
+                                },
+                                done: function (res, index, upload) {
+                                    if (res.status == 0) { //上传成功
+                                        var tr = demoListView.find('tr#upload-' + index)
+                                            , tds = tr.children();
+                                        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                                        tds.eq(3).html(''); //清空操作
+                                        return delete this.files[index]; //删除文件队列已经上传成功的文件
+                                    }
+                                    this.error(index, upload);
+                                },
+                                error: function (index, upload) {
+                                    var tr = demoListView.find('tr#upload-' + index)
+                                        , tds = tr.children();
+                                    tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                                    tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                                }
+                            });
+                        },
+                        yes: function () {
+                            $("#testListAction").click();
+
+                            setTimeout(function () {
+                                $('#demoList').empty();
+                                window.location.reload();
+                            }, 3000);
+
+                            layer.close(index);
+                        }
+                    });
+                    break;
+                case 'batchRemoveFile':
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!");
+                    }
+                    var ids = new Array();
+                    var userNums = new Array();
+                    var fileNames = new Array();
+                    layer.confirm('真的删除选中行吗？', function (index) {
+                        $.each(data, function (index, value) {
+                            ids[index] = value.id;
+                            userNums[index] = value.userNum;
+                            fileNames[index] = value.fileName;
+                        });
+                        $.ajax({
+                            url: "/batchRemoveFile.do",
+                            type: "POST",
+                            data: {
+                                ids: ids,
+                                userNums: userNums,
+                                fileNames: fileNames,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+                            }
+                        });
+                        layer.close(index);
+                    });
+            }
+        });
+
+        // 监听每一行的工具事件
+        table.on('tool(fileAdmin)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除当前文件名：' + data.fileName + '么？', function (index) {
+                    var param = {
+                        id: data.id,
+                        fileName: data.fileName,
+                        userNum: data.userNum,
+                        userNumAdmin: userNumAdmin,
+                        roleId: roleIdAdmin
+                    };
+                    $.post("/removeFileById.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg, {icon: 2});
+                        }
+                        obj.del();
+                        layer.msg(result.msg, {icon: 1});
+                    });
+                    layer.close(index);
+                });
+            }
+            else if (obj.event === 'download') {
+
+            }
+        });
+
+        //  搜索功能
+        var searchKeyWord = $("input[name='searchKeyWord']");
+        var searchBtn = $("input[name='searchBtn']");
+
+        searchKeyWord.bind("keydown", function (event) {
+            if (event.keyCode == 13 || event.keyCode == 9) {
+                searchBtn.click();
+            }
+        });
+
+        searchBtn.click(function () {
+            var searchUserNum;
+            if (isNaN(parseInt(searchKeyWord.val()))) {
+                searchUserNum = -1;
+            }
+            else {
+                searchUserNum = parseInt(searchKeyWord.val());
+            }
+
+            //执行重载
+            tableIns.reload({
+                url: "/getFileListByUserNum.do",
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    userNum: searchUserNum,
+                    fileName: searchKeyWord.val(),
+                    academy: searchKeyWord.val(),
+                    fileSize: searchUserNum,
+                    userNumAdmin: userNumAdmin,
+                    roleId: roleIdAdmin
+                }
+            });
+        });
+
+    });
+</script>
+
+
+</body>
+</html>

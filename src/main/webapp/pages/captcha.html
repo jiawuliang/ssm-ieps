@@ -1,0 +1,52 @@
+<html>
+<head>
+    <title>Title</title>
+    <script src="../../static/js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+
+生成的验证码：<a href="javascript:void(0)" onclick="changeCaptcha()"><img id="changeCaptcha" src="getCaptchaCode.do"></a>
+<br>
+<br>
+请输入验证码：<input id="captchaCode" type="text"> <input type="button" value="提交验证" onclick="checkCaptcha()">
+</body>
+<script type="text/javascript">
+    //获取验证码图片
+    function changeCaptcha(){
+        $("#changeCaptcha").attr("src","getCaptchaCode.do");
+    }
+
+    //验证输入的验证码
+    function checkCaptcha(){
+        var captchaCode = $("#captchaCode").val();
+        $.ajax({
+            type:'post',
+            url:'checkCaptchaCode.do',
+            data:{
+                "captchaCode" : captchaCode
+            },
+            success: function(res){
+                alert(res);
+            }
+        });
+    }
+
+    //时间戳
+    //为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳
+    function chgUrl(url) {
+        var timestamp = (new Date()).valueOf();
+        var stamp = $("#timestamp");
+        /* alert(url);
+         url = url.substring(0, 60);
+         if ((url.indexOf("&") >= 0)) {
+         url = url + "×tamp=" + timestamp;
+         } else {
+         url = url + "?timestamp=" + timestamp;
+         stamp.val(timestamp);
+         } */
+        return url;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>大学生创新创业项目管理登录页</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+	<link rel="stylesheet" media="screen" href="../../static/css/background.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/reset.css" />
+</head>
+
+<body>
+
+	<div id="particles-js">
+		<div class="login">
+			<div class="login-top">
+				大学生创新创业项目
+			</div>
+			<form action="" method="POST">
+				<div class="login-center clearfix">
+					<div class="login-center-img"><img src="../../static/images/name.png" /></div>
+					<div class="login-center-input">
+						<input type="text" name="userNum" class="userNum" value="" placeholder="请输入您的账号" onfocus="this.placeholder=''" onblur="this.placeholder='请输入您的账号'" />
+						<div class="login-center-input-text">账号</div>
+					</div>
+				</div>
+				<div class="login-center clearfix">
+					<div class="login-center-img"><img src="../../static/images/password.png" /></div>
+					<div class="login-center-input">
+						<input type="password" name="userPwd" class="userPwd" value="" autocomplete="off" placeholder="请输入您的密码" onfocus="this.placeholder=''" onblur="this.placeholder='请输入您的密码'" />
+						<div class="login-center-input-text">密码</div>
+					</div>
+				</div>
+				<div class="login-button">
+					登录
+				</div>
+				<div class="login-bottom">
+					<div class="left-bottom">
+						<a href="javascript:void(0)" class="left-bottom-link" style="margin: 0 0 0 10%;" onclick="goForgetPwd()"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;忘记密码</a>
+					</div>
+					<div class="right-bottom">
+						<a href="javascript:void(0)" class="right-bottom-link" onclick="goRegister()">免费注册&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- scripts -->
+	<script src="../../static/js/particles.min.js"></script>
+	<script src="../../static/js/app.js"></script>
+	<script src="../../static/js/jquery-1.9.1.min.js"></script>
+	<script src="../../static/layui/layui.js"></script>
+
+	<!-- 自定义脚本 -->
+	<script>
+        $(function () {
+            $('input[type="text"]').attr("autocomplete", "off");
+        });
+
+		layui.use('layer', function(){
+		  var layer = layui.layer;
+		});  
+	</script>
+
+	<script >
+		$(function() {
+			/* try{
+				var _href = window.location.href+"";
+				if(_href && _href.indexOf('?kickout')!=-1){
+					layer.msg('您已经被踢出，请重新登录！');
+				}
+			}catch(e){
+				
+			} */
+			
+			//回车事件绑定
+			$(".userPwd").bind("keydown", function(event){
+	            if(event.keyCode == 13||event.keyCode == 9) {  
+	　　　　　		$('.login-button').click();
+	            }  
+	        });
+		
+			//登录操作
+		    $('.login-button').click(function(){
+		    	
+		        var userNum = $('.userNum').val();
+		        var userPwd = $('.userPwd').val();
+		        console.log(userNum + "   " + userPwd);
+		        
+		        if(userNum == '') {
+		            layer.msg('用户名不能为空！');
+		            return false;
+		        }
+		        if(userPwd == '') {
+		        	layer.msg("密码不能为空！");
+		            return false;
+		        }
+		        var data = {userNum: userNum, userPwd: userPwd};
+                var load = layer.load();
+
+				$.ajax({
+                    url: "/login.do",
+                    data: data,
+                    type: "post",
+                    beforeSend: function(){
+                        layer.msg('开始登录...');
+                        console.log("进入开始登录！");
+                    },
+                    success: function(result){
+                        layer.close(load);
+
+                        console.log(result);
+
+                        console.log("status：" + result.status);
+                        console.log("message：" + result.msg);
+                        if(result.status != 0){
+                            console.log("登录失败状态：" + result.msg);
+                            layer.msg(result.msg, function(){});
+                            $('.userPwd').val('');
+                            return;
+                        } else{
+                            layer.msg(result.msg);
+                            setTimeout(function(){
+                                $(window).attr('location','goIndex.do?userNum=' + userNum);
+                                //登录返回，跳转首页
+                            },1000);
+                        }
+                    },
+                    error: function(e){
+                        console.log(e, e.msg);
+                        layer.msg('登录异常！',new Function());
+                        console.log("登录异常！");
+                    }
+				})
+		    });
+		});
+    </script>
+
+	<script>
+        function hasClass(elem, cls) {
+            cls = cls || '';
+            if (cls.replace(/\s/g, '').length == 0) return false; //当cls没有参数时，返回false
+            return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
+        }
+
+        function addClass(ele, cls) {
+            if (!hasClass(ele, cls)) {
+                ele.className = ele.className == '' ? cls : ele.className + ' ' + cls;
+            }
+        }
+
+        function removeClass(ele, cls) {
+            if (hasClass(ele, cls)) {
+                var newClass = ' ' + ele.className.replace(/[\t\r\n]/g, '') + ' ';
+                while (newClass.indexOf(' ' + cls + ' ') >= 0) {
+                    newClass = newClass.replace(' ' + cls + ' ', ' ');
+                }
+                ele.className = newClass.replace(/^\s+|\s+$/g, '');
+            }
+        }
+
+		function goRegister() {
+		    layer.msg("正在跳转到注册页面，请稍后！");
+
+            setTimeout(function(){
+                //登录返回，跳转首页
+                $(window).attr('location','goRegister.do');
+            },1000);
+        }
+
+    	function goForgetPwd() {
+			layer.msg("正在跳转到忘记密码页面，请稍后！");
+
+			setTimeout(function(){
+				//登录返回，跳转首页
+				$(window).attr('location','goForgetPwd.do');
+			},1000);
+    	}
+	</script>
+
+</body>
+
+</html>

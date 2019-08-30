@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>大学生创新创业项目管理注册页</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="../../static/css/background.css">
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+    <link rel="stylesheet" media="screen" href="../../static/css/substep.css"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+
+</head>
+
+<body>
+
+<div id="particles-js">
+    <form id="msform" class="layui-form" action="" method="post">
+        <ul id="progressbar">
+            <li class="active">基本信息</li>
+            <li>联系账号</li>
+            <li>详细资料</li>
+        </ul>
+        <fieldset>
+            <div class="layui-form-item">
+                <input type="text" name="userNum" lay-verify="number" placeholder="UserNum" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" name="userName" lay-verify="userName" placeholder="UserName" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="password" name="userPwd" autocomplete="off" lay-verify="userPwd" placeholder="Password" class="layui-input"
+                       disabled="disabled"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="password" name="rePassword" autocomplete="off" lay-verify="userPwd" placeholder="Confirm Password"
+                       class="layui-input" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item">
+                <input type="button" name="next" class="next action-button firstNext" value="Next" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goForgetPwd()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;忘记密码
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goHome()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="layui-form-item">
+                <input type="text" name="email" lay-verify="email" placeholder="Email" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" name="photoNum" lay-verify="phone" placeholder="PhotoNum" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" id="birthDate" name="birthDate" placeholder="BirthDate" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <select name="titlle">
+                        <option value="">请选择职称</option>
+                        <option value="0">学生</option>
+                        <option value="1">助理研究员</option>
+                        <option value="2">讲师</option>
+                        <option value="3">高级实验师</option>
+                        <option value="4">副教授</option>
+                        <option value="5">教授</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="1" title="男" checked>
+                    <input type="radio" name="sex" value="0" title="女">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <input type="button" name="previous" class="previous action-button" value="Previous"/>
+                <input type="button" name="next" class="next action-button secondNext" value="Next" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goForgetPwd()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;忘记密码
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goHome()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <select name="grade" lay-filter="gradeCheckBox" >
+                        <option value="">请选择年级</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <select name="academy" lay-verify="required" lay-filter="academyCheckBox">
+                        <option value="">请选择所在学院</option>
+                        <option value="机电工程学院">机电工程学院</option>
+                        <option value="信息与通信学院">信息与通信学院</option>
+                        <option value="计算机与信息安全学院">计算机与信息安全学院</option>
+                        <option value="艺术与设计学院">艺术与设计学院</option>
+                        <option value="商学院">商学院</option>
+                        <option value="外国语学院">外国语学院</option>
+                        <option value="数学与计算科学学院">数学与计算科学学院</option>
+                        <option value="电子工程与自动化学院">电子工程与自动化学院</option>
+                        <option value="法学院">法学院</option>
+                        <option value="马克思主义学院">马克思主义学院</option>
+                        <option value="材料科学与工程学院">材料科学与工程学院</option>
+                        <option value="生命与环境科学学院">生命与环境科学学院</option>
+                        <option value="建筑与交通工程学院">建筑与交通工程学院</option>
+                        <option value="国际学院">国际学院</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <input type="text" name="major" placeholder="Major" class="layui-input"/>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <select name="roleId" lay-verify="required" lay-filter="roleCheckBox">
+                        <option value="">请选择角色</option>
+                        <option value="200001">学生</option>
+                        <option value="200002">教师</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <input type="button" name="previous" class="previous action-button" value="Previous"/>
+                <input type="button" name="submit" class="submit action-button" value="Submit" disabled="disabled"/>
+            </div>
+
+            <div class="layui-form-item" style="margin-bottom:0px;">
+                <div class="left-bottom">
+                    <a href="javascript:void(0) " class="left-bottom-link" onclick="goForgetPwd()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;忘记密码
+                    </a>
+                </div>
+                <div class="right-bottom">
+                    <a href="javascript:void(0) " class="right-bottom-link" onclick="goHome()">
+                        马上登录&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<!-- 背景特效 -->
+<script src="../../static/js/particles.min.js"></script>
+<script src="../../static/js/app.js"></script>
+<!-- 分步注册特效 -->
+<script type="text/javascript" src="../../static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.easing.min.js"></script>
+<script type="text/javascript" src="../../static/js/script.js"></script>
+
+<script type="text/javascript" src="../../static/layui/layui.js"></script>
+
+<!-- 自定义脚本 layui -->
+<script>
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.use(['laydate', 'layer', 'form'], function () {
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var form = layui.form;
+        laydate.render({
+            elem: '#birthDate' //指定元素
+        });
+
+        // 表单验证
+        form.verify({
+            userName: function (value, item) {
+                //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+            }
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , userPwd: [
+                /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+            ]
+        });
+
+        form.on('select(roleCheckBox)', function(data){
+            console.log(data.value); //得到被选中的值
+            if (data.value != "") {
+                $("input[name='submit']").removeAttr("disabled").on("click", submitUser).css("background-color", "#27AE60");
+                return;
+            }
+        });
+
+    });
+</script>
+
+<!-- 常用变量与页面启动加载 -->
+<script>
+    var userNum = $("input[name='userNum']");
+    var userName = $("input[name='userName']");
+    var userPwd = $("input[name='userPwd']");
+    var rePassword = $("input[name='rePassword']");
+    var email = $("input[name='email']");
+    var photoNum = $("input[name='photoNum']");
+    var birthDate = $("input[name='birthDate']");
+    var title = $("select[name='title']");
+    var sex = $("input[name='sex']");
+    var grade = $("select[name='grade']");
+    var academy = $("select[name='academy']");
+    var major = $("input[name='major']");
+    var roleId = $("select[name='roleId']");
+
+    $(function () {
+        $(".previous").css("background-color", "#27AE60");
+        userNum.css("background-color", "red");
+        userName.css("background-color", "red");
+        userPwd.css("background-color", "red");
+        rePassword.css("background-color", "red");
+        email.css("background-color", "red");
+        photoNum.css("background-color", "red");
+    })
+    
+</script>
+
+
+<script>
+    // 验证账号是否已注册
+    userNum.focus(function () {
+        userNum.mouseleave(function () {
+            var param = {
+                userNum: userNum.val()
+            };
+            if (userNum.val() == "") {
+                layer.msg("账号不能为空！");
+                return;
+            }
+            $.get("/checkUser.do", param, function (result) {
+                userNum.siblings().remove();
+                if (result.status != 0) {
+                    layer.msg(result.msg);
+                    userNum.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#x1006;</i>");
+                    return;
+                }
+                userNum.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#xe605;</i>");
+                userPwd.removeAttr("disabled");
+                return;
+            });
+        });
+    });
+
+    // 用户密码
+    userPwd.focus(function () {
+        userPwd.mouseleave(function () {
+            if (userNum.val() == "") {
+                layer.msg("请先填写账号！");
+                userPwd.val("");
+                return;
+            }
+            if (userPwd.val() == "") {
+                layer.msg("请填写密码！");
+                return;
+            }
+            rePassword.removeAttr("disabled");
+        })
+    });
+
+    // 确认密码
+    rePassword.focus(function () {
+        rePassword.mouseleave(function () {
+            userPwd.siblings().remove();
+            rePassword.siblings().remove();
+            if (userNum.val() == "") {
+                layer.msg("请先填写账号！");
+                userPwd.val("");
+                return;
+            }
+            if (userPwd.val() == "") {
+                layer.msg("请填写密码！");
+                return;
+            }
+            if (rePassword.val() == "") {
+                layer.msg("请再次输入密码！");
+                return;
+            }
+            if (userPwd.val() != rePassword.val()) {
+                layer.msg("前后两次密码不一致，请重新填写！");
+                userPwd.val("");
+                rePassword.val("");
+                return;
+            }
+            userPwd.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#xe605;</i>");
+            rePassword.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#xe605;</i>");
+            $(".firstNext").removeAttr("disabled").css("background-color", "#27AE60");
+        })
+    });
+
+    email.focus(function () {
+        email.mouseleave(function () {
+            email.siblings().remove();
+            if (!is_email(email.val())) {
+                email.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#x1006;</i>");
+                return;
+            }
+            email.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#xe605;</i>");
+        })
+    });
+
+    photoNum.focus(function () {
+        photoNum.mouseleave(function () {
+            photoNum.siblings().remove();
+            if (!is_mobile(photoNum.val())) {
+                photoNum.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#x1006;</i>");
+                return;
+            }
+            photoNum.parent().append("<i class='layui-icon' style='float: right; margin-top: -30px; margin-right: 5px'>&#xe605;</i>");
+            $(".secondNext").removeAttr("disabled").css("background-color", "#27AE60");
+        })
+    });
+
+
+</script>
+
+<script>
+    function submitUser() {
+        var param = {
+            userNum: userNum.val(),
+            userName: userName.val(),
+            userPwd: userPwd.val(),
+            rePassword: rePassword.val(),
+            email: email.val(),
+            photoNum: photoNum.val(),
+            birthDate: birthDate.val(),
+            title: title.val(),
+            sex: sex.val(),
+            grade: grade.val(),
+            academy: academy.val(),
+            major: major.val(),
+            roleId: roleId.val()
+        };
+
+        console.log(param);
+        $.post("/register.do", param, function (result) {
+            if (result.status != 0) {
+                return layer.msg(result.msg);
+            }
+
+            layer.msg(result.msg);
+
+            setTimeout(function () {
+                $(window).attr("location", "/goHome.do");
+            }, 2000);
+        });
+    }
+
+    // 验证手机号
+    function is_mobile(mobile) {
+        if (mobile == "") {
+            return false;
+        } else {
+            if (!/^0{0,1}(13[0-9]|15[0-9]|18[0-9]|14[0-9])[0-9]{8}$/.test(mobile)) {
+                return false;
+            }
+            return true;
+        }
+    }
+    // 验证email的合法性
+    function is_email(email) {
+        if (email == "") {
+            return false;
+        } else {
+            if (!/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/.test(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function goForgetPwd() {
+        layer.msg("正在跳转到忘记密码页面，请稍候！");
+        setTimeout(function () {
+            $(window).attr('location', '/goForgetPwd.do');
+        }, 2000);
+    }
+
+    function goHome() {
+        layer.msg("正在跳转到登录页面，请稍候！");
+        setTimeout(function () {
+            $(window).attr('location', '/goHome.do');
+        }, 2000);
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.ItemInfoMapper">
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.ItemInfo">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="item_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="item_level" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="item_type" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="summary" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="college_funds" jdbcType="DECIMAL" javaType="java.lang.Long"/>
+            <arg column="govern_funds" jdbcType="DECIMAL" javaType="java.lang.Long"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, item_num, item_level, item_type, summary, college_funds, govern_funds, create_time,
+    update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_item_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_item_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.ItemInfo">
+    insert into ieps_item_info (id, item_num, item_level,
+      item_type, summary, college_funds, 
+      govern_funds, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{itemNum,jdbcType=VARCHAR}, #{itemLevel,jdbcType=INTEGER},
+      #{itemType,jdbcType=INTEGER}, #{summary,jdbcType=VARCHAR}, #{collegeFunds,jdbcType=DECIMAL}, 
+      #{governFunds,jdbcType=DECIMAL}, now(), now()
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.ItemInfo">
+        insert into ieps_item_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="itemNum != null">
+                item_num,
+            </if>
+            <if test="itemLevel != null">
+                item_level,
+            </if>
+            <if test="itemType != null">
+                item_type,
+            </if>
+            <if test="summary != null">
+                summary,
+            </if>
+            <if test="collegeFunds != null">
+                college_funds,
+            </if>
+            <if test="governFunds != null">
+                govern_funds,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="itemNum != null">
+                #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemLevel != null">
+                #{itemLevel,jdbcType=INTEGER},
+            </if>
+            <if test="itemType != null">
+                #{itemType,jdbcType=INTEGER},
+            </if>
+            <if test="summary != null">
+                #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="collegeFunds != null">
+                #{collegeFunds,jdbcType=DECIMAL},
+            </if>
+            <if test="governFunds != null">
+                #{governFunds,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.ItemInfo">
+        update ieps_item_info
+        <set>
+            <if test="itemNum != null">
+                item_num = #{itemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="itemLevel != null">
+                item_level = #{itemLevel,jdbcType=INTEGER},
+            </if>
+            <if test="itemType != null">
+                item_type = #{itemType,jdbcType=INTEGER},
+            </if>
+            <if test="summary != null">
+                summary = #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="collegeFunds != null">
+                college_funds = #{collegeFunds,jdbcType=DECIMAL},
+            </if>
+            <if test="governFunds != null">
+                govern_funds = #{governFunds,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.ItemInfo">
+    update ieps_item_info
+    set item_num = #{itemNum,jdbcType=VARCHAR},
+      item_level = #{itemLevel,jdbcType=INTEGER},
+      item_type = #{itemType,jdbcType=INTEGER},
+      summary = #{summary,jdbcType=VARCHAR},
+      college_funds = #{collegeFunds,jdbcType=DECIMAL},
+      govern_funds = #{governFunds,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now(),
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <delete id="deleteItemInfoByItemNums" parameterType="string">
+        DELETE FROM ieps_item_info
+        WHERE item_num IN
+        <foreach collection="array" separator="," item="itemNum" open="(" close=")">
+            #{itemNum}
+        </foreach>
+    </delete>
+
+    <update id="updateItemLevelByItemNum">
+        UPDATE ieps_item_info
+        SET item_level = #{itemLevel}
+        WHERE item_num = #{itemNum}
+    </update>
+
+    <update id="updateItemTypeByItemNum">
+        UPDATE ieps_item_info
+        SET item_type = #{itemType}
+        WHERE item_num = #{itemNum}
+    </update>
+
+    <update id="updateItemByItemNum" parameterType="ItemAdminDto">
+        UPDATE ieps_item_info
+        SET
+          summary = #{summary,jdbcType=VARCHAR},
+          college_funds = #{collegeFunds,jdbcType=DECIMAL},
+          govern_funds = #{governFunds,jdbcType=DECIMAL},
+          update_time = now()
+        WHERE item_num = #{itemNum,jdbcType=VARCHAR}
+     </update>
+
+    <update id="updateItemTypeWithItemNums">
+        UPDATE ieps_item_info
+        SET item_type = #{itemType}
+        WHERE item_num IN
+        <foreach collection="itemNums" item="itemNum" separator="," open="(" close=")">
+            #{itemNum}
+        </foreach>
+    </update>
+
+    <update id="updateItemLevelWithItemNums">
+        UPDATE ieps_item_info
+        SET item_level = #{itemLevel}
+        WHERE item_num IN
+        <foreach collection="itemNums" item="itemNum" separator="," open="(" close=")">
+            #{itemNum}
+        </foreach>
+    </update>
+
+    <insert id="insertItemInfoWithSummary">
+        INSERT INTO ieps_item_info
+        (
+          item_num, item_type, summary
+        )
+        values
+        (
+        #{itemNum,jdbcType=VARCHAR}, #{itemType,jdbcType=INTEGER}, #{summary,jdbcType=VARCHAR}
+        )
+    </insert>
+
+</mapper>

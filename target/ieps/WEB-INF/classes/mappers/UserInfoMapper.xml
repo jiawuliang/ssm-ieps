@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.UserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.UserInfo">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="user_img" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="photo_num" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="title" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="sex" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="academy" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="grade" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="major" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="birth_date" jdbcType="DATE" javaType="java.util.Date"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_num, user_name, user_img, photo_num, email, title, sex, academy, grade, major, birth_date, create_time, update_time
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_user_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ieps_user_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.UserInfo">
+        <!--
+                keyProperty：将查询出的主键设置到parameterType中的哪个属性上
+                order：相对于sql语句的执行顺序
+                resultType：指定返回值类型
+                LAST_INSERT_ID()：获取ID函数
+            -->
+        insert into ieps_user_info (user_num, user_name, user_img,
+        photo_num, email, title,sex, birth_date, create_time, update_time)
+        values (#{userNum,jdbcType=INTEGER}, #{userName,jdbcType=INTEGER}, #{userImg,jdbcType=VARCHAR},
+        #{photoNum,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+        #{sex,jdbcType=INTEGER}, #{birthDate,jdbcType=DATE}, now(), now())
+    </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.UserInfo">
+        <!--
+                keyProperty：将查询出的主键设置到parameterType中的哪个属性上
+                order：相对于sql语句的执行顺序
+                resultType：指定返回值类型
+                LAST_INSERT_ID()：获取ID函数
+            -->
+        <!--<selectKey keyProperty="id" resultType="integer" order="BEFORE">-->
+        <!--SELECT last_insert_id() + 1-->
+        <!--</selectKey>-->
+        insert into ieps_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                user_num,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userImg != null">
+                user_img,
+            </if>
+            <if test="photoNum != null">
+                photo_num,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="birthDate != null">
+                birth_date,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                #{userNum,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=INTEGER},
+            </if>
+            <if test="userImg != null">
+                #{userImg,jdbcType=VARCHAR},
+            </if>
+            <if test="photoNum != null">
+                #{photoNum,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="birthDate != null">
+                #{birthDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                now(),
+            </if>
+            <if test="updateTime != null">
+                now(),
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.UserInfo">
+        update ieps_user_info
+        <set>
+            <if test="userNum != null">
+                user_num = #{userNum,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=INTEGER},
+            </if>
+            <if test="userImg != null">
+                user_img = #{userImg,jdbcType=VARCHAR},
+            </if>
+            <if test="photoNum != null">
+                photo_num = #{photoNum,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="academy != null">
+                academy = #{academy,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="major != null">
+                major = #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="birthDate != null">
+                birth_date = #{birthDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.UserInfo">
+    update ieps_user_info
+    set user_num = #{userNum,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=INTEGER},
+      user_img = #{userImg,jdbcType=VARCHAR},
+      photo_num = #{photoNum,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      academy = #{academy,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=VARCHAR},
+      major = #{major,jdbcType=VARCHAR},
+      birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByUserNum" resultType="UserInfo" parameterType="string">
+      SELECT iui.id  AS id, iui.user_name AS userName, iui.user_img AS userImg, iui.photo_num AS photoNum, iui.email AS email,
+      iui.title AS title, iui.sex AS sex, iui.academy AS academy, iui.grade AS grade, iui.major AS major, iui.birth_date AS birthDate
+      FROM ieps_user_info iui
+      WHERE iui.user_num=#{userNum}
+    </select>
+
+    <update id="updateByUserNumSelective" parameterType="com.ieps.pojo.UserInfo">
+        update ieps_user_info
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userImg != null">
+                user_img = #{userImg,jdbcType=VARCHAR},
+            </if>
+            <if test="photoNum != null">
+                photo_num = #{photoNum,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="academy != null">
+                academy = #{academy,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="major != null">
+                major = #{major,jdbcType=VARCHAR},
+            </if>
+            <if test="birthDate != null">
+                birth_date = #{birthDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            update_time = now()
+        </set>
+        where user_num = #{userNum,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectByUserNumAndEmail" parameterType="string" resultType="int">
+        SELECT count(1)
+        FROM ieps_user_info
+        WHERE user_num=#{userNum}
+        AND email=#{email}
+     </select>
+
+    <select id="selectByUserNumAndPhotoNum" parameterType="string" resultType="int">
+        SELECT count(1)
+        FROM ieps_user_info
+        WHERE user_num=#{userNum}
+        AND photo_num=#{photoNum}
+     </select>
+
+    <update id="updateSexByUserNum">
+        UPDATE ieps_user_info
+        SET sex = #{sex}
+        WHERE user_num = #{userNum}
+    </update>
+
+    <delete id="deleteByUserNum" parameterType="string">
+        DELETE FROM ieps_user_info
+        WHERE user_num = #{userNum}
+    </delete>
+
+    <delete id="deleteUserInfoByUserNum" parameterType="string">
+        DELETE FROM ieps_user_info
+        WHERE user_num IN
+        (
+        <foreach collection="array" item="userNum" separator="," open="(" close=")">
+            #{userNum}
+        </foreach>
+        )
+    </delete>
+
+    <select id="selectUserInfoByUserName" parameterType="string" resultType="UserInfo">
+        SELECT iui.id  AS id, iui.user_num AS userNum, iui.user_name AS userName, iui.user_img AS userImg, iui.photo_num AS photoNum, iui.email AS email,
+        iui.title AS title, iui.sex AS sex, iui.academy AS academy, iui.grade AS grade, iui.major AS major, iui.birth_date AS birthDate
+        FROM ieps_user_info iui
+        WHERE iui.user_name=#{userName}
+    </select>
+
+    <select id="selectUserInfoByAcademy" parameterType="string" resultType="UserInfo">
+        SELECT iui.id  AS id, iui.user_num AS userNum, iui.user_name AS userName, iui.user_img AS userImg, iui.photo_num AS photoNum, iui.email AS email,
+        iui.title AS title, iui.sex AS sex, iui.academy AS academy, iui.grade AS grade, iui.major AS major, iui.birth_date AS birthDate
+        FROM ieps_user_info iui
+        WHERE iui.academy=#{academy}
+        AND iui.user_name LIKE '%评审组%组组员001'
+    </select>
+
+    <select id="selectUserInfoLikeUserName" parameterType="string" resultType="UserInfo">
+        SELECT * FROM
+        (
+        SELECT iui.id  AS id, iui.user_num AS userNum, iui.user_name AS userName, iui.user_img AS userImg, iui.photo_num AS photoNum, iui.email AS email,
+        iui.title AS title, iui.sex AS sex, iui.academy AS academy, iui.grade AS grade, iui.major AS major, iui.birth_date AS birthDate
+        FROM ieps_user_info iui
+        WHERE iui.academy IN
+        (
+          SELECT i.academy FROM ieps_user_info i
+          WHERE i.user_num = #{userNum}
+        )
+        ) iui
+        WHERE userName LIKE '%${userName}%'
+        AND userNum != #{userNum}
+    </select>
+
+    <select id="selectUserInfoWithItemNum" parameterType="string" resultType="UserAdminDto">
+        SELECT iui.id  AS id, iui.user_num AS userNum, iui.user_name AS userName, iui.user_img AS userImg,
+        iui.photo_num AS photoNum, iui.email AS email, iui.title AS title, iui.sex AS sex, iui.academy AS academy,
+         iui.grade AS grade, iui.major AS major, iui.birth_date AS birthDate, iuii.identity AS identity
+        FROM ieps_user_info iui
+        INNER JOIN ieps_user_item iuii
+        ON iui.user_num = iuii.user_num
+        WHERE iuii.item_num = #{itmeNum}
+        AND iuii.identity IN
+        (1,2,3)
+    </select>
+
+    <!--<select id="selectStuUserInfoWithAcademy" resultType="UserAdminDto">-->
+        <!--SELECT iui.academy AS academy, COUNT(iuii.user_num) AS stuNum-->
+        <!--FROM ieps_user_info iui-->
+        <!--INNER JOIN ieps_user_item iuii-->
+        <!--ON iui.user_num = iuii.user_num-->
+        <!--INNER JOIN-->
+        <!--(-->
+        <!--SELECT item_num-->
+        <!--FROM ieps_item-->
+        <!--<where>-->
+            <!--<if test="userNum != null and userNum != ''">-->
+               <!--AND item_date LIKE '%${userNum}%'-->
+            <!--</if>-->
+        <!--</where>-->
+        <!--) ii-->
+        <!--ON iuii.item_num = ii.item_num-->
+        <!--WHERE iuii.identity-->
+        <!--IN-->
+        <!--(1,2)-->
+		<!--GROUP BY academy-->
+
+<!--&#45;&#45;         SELECT iui.academy, COUNT(iuii.user_num) as stuNum-->
+<!--&#45;&#45;         FROM ieps_user_info iui-->
+<!--&#45;&#45;         INNER JOIN ieps_user_item iuii-->
+<!--&#45;&#45;         ON iui.user_num = iuii.user_num-->
+<!--&#45;&#45;         WHERE iuii.identity-->
+<!--&#45;&#45;         IN-->
+<!--&#45;&#45;         (1,2)-->
+<!--&#45;&#45;         GROUP BY academy-->
+    <!--</select>-->
+
+</mapper>

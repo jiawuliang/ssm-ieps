@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>大学生创新创业项目管理系统 - 权限管理</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" type="text/css" href="../../static/layui/css/layui.css"/>
+
+    <style>
+        .model-form {
+            padding: 30px 30px 0 0;
+        }
+    </style>
+</head>
+
+<body style="margin: 20px 0 0 20px;">
+
+<!-- 权限管理数据表格 -->
+<table class="layui-table" id="test" lay-filter="test"></table>
+
+<!-- 权限类型模板  -->
+<script type="text/html" id="permTypeTpl">
+    {{#  if(d.permType === 'menu') { }}
+    <span class="layui-badge-rim">菜单</span>
+    {{#  } else { }}
+    <span class="layui-badge layui-bg-gray">按钮</span>
+    {{#  } }}
+</script>
+
+<!-- 父节点类型模板 -->
+<script type="text/html" id="parentIdTpl">
+    {{# if(d.parentId == -1) { }}
+     <span>根节点</span>
+    {{#  } }}
+</script>
+
+<!-- 权限管理详情弹窗页面 -->
+<div id="perm-detail" class="model-form" style="display: none;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-block">
+                <input type="text" name="parentId" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">permId</label>
+            <div class="layui-input-block">
+                <input type="text" name="permId" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="permName" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="permType" value="menu" title="菜单">
+                <input type="radio" name="permType" value="permission" title="按钮">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="icon" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 权限管理编辑弹窗页面 -->
+<div id="perm-edit" style="display: none;">
+    <form class="layui-form model-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-block">
+                <input type="text" name="parentId" class="layui-input" readonly="readonly"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">permId</label>
+            <div class="layui-input-block">
+                <input type="text" name="permId" class="layui-input" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="permName" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="permType" value="menu" title="菜单">
+                <input type="radio" name="permType" value="permission" title="按钮">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="icon" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 权限管理新增弹窗页面 -->
+<div id="perm-add" style="display: none;">
+    <form class="layui-form model-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-block">
+                <select class="layui-input" name="parentId" id="addSelectParent" lay-fliter="addPermFilter">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">permId</label>
+            <div class="layui-input-block">
+                <input type="text" name="permId" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="permName" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="permType" value="menu" title="菜单">
+                <input type="radio" name="permType" value="permission" title="按钮" checked="checked">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="url" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单图标</label>
+            <div class="layui-input-block">
+                <input type="text" name="icon" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../static/layui/layui.js"></script>
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/getParam.js"></script>
+
+<!-- 加密和解密 -->
+<script src="../../static/js/module/encrypt/aes.js"></script>
+<script src="../../static/js/module/encrypt/customAesEncrypt.js"></script>
+
+<!-- 用户名和角色解密  -->
+<script>
+    var userNumAdmin = decrypt(getUrlParam("userNum"), "abcd1234abcd1234");
+    var roleIdAdmin = decrypt(getUrlParam("roleId"), "abcd1234abcd1234");
+
+    // 获取传参的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); //构造一个含有目标参数的正则表达式对象
+        var r = window.parent.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return encodeURI(r[2]);
+        return null; //返回参数值
+    }
+</script>
+
+
+<!-- 头工具栏 -->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addPerm">
+            <i class="layui-icon">&#xe61f;</i> 新增
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="expandPerm">
+            <i class="layui-icon">&#xe625;</i> 展示全部
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="collapsePerm">
+            <i class="layui-icon">&#xe623;</i> 折叠全部
+        </button>
+        {{# if (roleIdAdmin == '200006') { }}
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchRemove">
+            <i class="layui-icon">&#xe640;</i> 批量删除
+        </button>
+        {{# } }}
+    </div>
+</script>
+
+<!-- 每一条行最后的操作栏-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" title="查看" lay-event="detail">
+        <i class="layui-icon">&#xe641;</i>
+    </a>
+    {{# if (roleIdAdmin == '200006') { }}
+    <a class="layui-btn layui-btn-xs" title="编辑" lay-event="edit">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" title="删除" lay-event="del">
+        <i class="layui-icon">&#xe640;</i>
+    </a>
+    {{# } }}
+</script>
+
+<!-- 树形表格脚本 -->
+<script>
+
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+    });
+
+    layui.config({
+        base: '../../static/js/module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['form', 'layer', 'table', 'treetable'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var treetable = layui.treetable;
+
+        form.render();
+
+        // 渲染表格
+        var renderTable = function () {
+            layer.load(2);
+            treetable.render({
+                treeColIndex: 1,           // 树形图标显示在第几列
+                treeSpid: -1,              // 最上级的父级id， 不能为空，一般为0或-1
+                treeIdName: 'permId',      // id字段的名称
+                treePidName: 'parentId',   // pid字段的名称
+                treeDefaultClose: true,    // 是否默认折叠
+                treeLinkage: false,        // 父级展开时是否自动展开所有子级
+                elem: '#test',
+                url: '/getPermWithCondition.do',
+                title: '菜单管理表',
+                toolbar: '#toolbarDemo',
+                check: 'checkbox',
+                where: {
+                    userNum: userNumAdmin,
+                    roleId: roleIdAdmin
+                },
+                cols: [
+                    [{
+                        type: 'checkbox',
+                        fixed: 'left'
+                    }, {
+                        field: 'permId',
+                        title: 'permId',
+                        width: 150
+                    }, {
+                        field: 'permName',
+                        title: '权限名称',
+                        width: 100
+                    }, {
+                        field: 'permType',
+                        title: '权限类型',
+                        templet: '#permTypeTpl',
+                        width: 90
+                    }, {
+                        field: 'url',
+                        title: '菜单url',
+                        width: 250
+                    }, {
+                        field: 'parentId',
+                        title: 'parentId',
+                        width: 100,
+                        templet: '#parentIdTpl'
+                    }, {
+                        title: '操作',
+                        toolbar: '#barDemo',
+                        width: 170,
+                        fixed: 'right'
+                    }]
+                ],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        };
+
+        renderTable();
+
+        // 头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            console.log(obj);
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'addPerm':
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer-rim', //加上边框
+                        title: '菜单权限新增',
+                        content: $('#perm-add'),
+                        area: ['360px', '450px'],
+                        shadeClose: true,
+                        maxmin: true,
+                        moveType: 1,
+                        btn: ['确定', '取消'],
+                        success: function () {
+                            $("#addSelectParent").empty();//清空select列表数据
+
+                            $.get("/getAllMenu.do", function (result) {
+                                $("#addSelectParent").prepend("<option value='-1'>请选择上级菜单</option>");//添加第一个option值
+                                $.each(result.data, function (index, value) {
+                                    $("#addSelectParent").append("<option value='" + value.permId + "'>" + value.permName + "</option>");
+                                });
+                                /* 渲染表单 */
+                                form.render();
+                            });
+                        },
+                        yes: function (index) {
+                            var param = {
+                                permId: $("#perm-add input[name='permId']").val(),
+                                permName: $("#perm-add input[name='permName']").val(),
+                                permType: $("#perm-add input[name='permType']:checked").val(),
+                                parentId: $("#perm-add select[name='parentId'] > option:selected").val(),
+                                icon: $("#perm-add input[name='icon']").val(),
+                                url: $("#perm-add input[name='url']").val(),
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            };
+                            layer.close(index);
+                            $("#addSelectParent").empty();//清空select列表数据
+                            $.get("/addPerm.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg);
+                                }
+                                layer.msg("新增权限名" + $("#perm-add input[name='permName']").val() + "成功！");
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 3000);
+
+                            });
+                        }
+                    });
+                    break;
+                case 'expandPerm':
+                    treetable.expandAll('#test');
+                    break;
+                case 'collapsePerm':
+                    treetable.foldAll('#test');
+                    break;
+                case 'batchRemove':
+                    var data = checkStatus.data;
+
+                    if (data.length == 0) {
+                        return layer.msg("亲，你还没有选择任何的项目呢!");
+                    }
+
+                    var ids = new Array();
+
+                    layer.confirm('真的删除选中角色编号' + data.roleId + '吗？', function (index) {
+                        $.each(data, function (index, value) {
+                            ids[index] = value.id;
+                        });
+                        $.ajax({
+                            url: "/batchRemovePerm.do",
+                            type: "POST",
+                            data: {
+                                permIds: ids,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            },
+                            traditional: true,
+                            success: function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                layer.msg(result.msg, {icon: 1});
+
+                                setTimeout(function () {
+                                   window.location.reload();
+                                }, 3000);
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+
+        // 监听行双击事件（双击事件为：rowDouble，单击事件row）
+        table.on('rowDouble(test)', function (obj) {
+            var data = obj.data;
+
+            initParam(data);
+
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
+        // 监听行工具事件
+        table.on('tool(test)', function (obj) {
+            console.log(obj);
+            var data = obj.data;
+
+            if (obj.event === 'detail') {
+                initParam(data);
+            }
+            else if (obj.event === 'del') {
+                layer.confirm('警告：当前操作可能对系统造成严重错误，确定删除' +  data.permName  + '么？', function (index) {
+                    var param = {
+                        permId: data.permId,
+                        permType: data.permType,
+                        userNum: userNumAdmin,
+                        roleId: roleIdAdmin
+                    };
+                    // 切忌胡乱删除
+                    $.get("/removePermById.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg);
+                        }
+                        obj.del();
+                        layer.msg(result.msg, {icon: 1});
+                    });
+                    layer.close(index);
+                });
+            }
+            else if (obj.event === 'edit') {
+
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    title: '菜单权限编辑',
+                    content: $('#perm-edit'),
+                    area: ['360px', '450px'],
+                    shadeClose: true,
+                    maxmin: true,
+                    moveType: 1,
+                    btn: ['确定', '取消'],
+                    success: function () {
+                        // 值清空
+                        $("#perm-edit input[name='permId']").val("");
+                        $("#perm-edit input[name='parentId']").val("");
+                        $("#perm-edit input[name='permName']").val("");
+                        $("#perm-edit input[name='icon']").val("");
+                        $("#perm-edit input[name='url']").val("");
+
+                        if (data.parentId == -1) {
+                            $("#perm-edit input[name='parentId']").val("根目录");
+                        }
+                        else {
+                            var param = {
+                                permId: data.parentId,
+                                userNum: userNumAdmin,
+                                roleId: roleIdAdmin
+                            };
+
+                            $.get("/getPermByPermId.do", param, function (result) {
+                                if (result.status != 0) {
+                                    return layer.msg(result.msg, {icon: 2});
+                                }
+                                $("#perm-edit input[name='parentId']").val(result.data.permName);
+                            });
+                        }
+
+                        $("#perm-edit input[name='permId']").val(data.permId);
+
+                        $("#perm-edit input[name='permName']").val(data.permName);
+
+                        if (data.permType == "menu") {
+                            $("#perm-edit input[name='permType'][value='permission']").prop("checked", false);
+                            $("#perm-edit input[name='permType'][value='menu']").prop("checked", true);
+                        }
+                        else {
+                            $("#perm-edit input[name='permType'][value='permission']").prop("checked", true);
+                            $("#perm-edit input[name='permType'][value='menu']").prop("checked", false);
+                        }
+
+                        $("#perm-edit input[name='icon']").val(data.icon);
+                        $("#perm-edit input[name='url']").val(data.url);
+                        renderForm();
+                    },
+                    yes: function (index) {
+                        var parentId = -1;
+                        var param = {
+                            permId: data.permId,
+                            permName: $("#perm-edit input[name='permName']").val(),
+                            permType: $("#perm-edit input[name='permType']:checked").val(),
+                            parentId: data.parentId,
+                            icon: $("#perm-edit input[name='icon']").val(),
+                            url: $("#perm-edit input[name='url']").val(),
+                            userNum: userNumAdmin,
+                            roleId: roleIdAdmin
+                        };
+                        layer.close(index);
+                        $("#editSelectParent").remove();//清空select列表数据
+                        $.get("/modifyPemrById.do", param, function (result) {
+                            if (result.status != 0) {
+                                return later.msg(result.msg);
+                            }
+                            // 同步更新缓存对应的值
+                            obj.update({
+                                permId: $("#perm-edit input[name='permId']").val(),
+                                permName: $("#perm-edit input[name='permName']").val(),
+                                permType: $("#perm-edit input[name='permType']:checked").val(),
+                                parentId: $("#perm-edit input[name='parentId']").val(),
+                                icon: $("#perm-edit input[name='icon']").val(),
+                                url: $("#perm-edit input[name='url']").val()
+                            });
+                        });
+                    }
+                })
+                ;
+            }
+        });
+    });
+</script>
+
+<!-- 行双击、详情弹框方法 -->
+<script>
+    function initParam(data) {
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            title: '菜单权限详情',
+            content: $('#perm-detail'),
+            area: ['360px', '450px'],
+            shadeClose: true,
+            maxmin: true,
+            btn: ['关闭'],
+            moveType: 1, //拖拽模式，0或者1
+            success: function (layero, index) {
+                // 赋初值，数据还原
+                // 值清空
+                $("#perm-detail input[name='permId']").val("");
+                $("#perm-detail input[name='parentId']").val("");
+                $("#perm-detail input[name='permName']").val("");
+                $("#perm-detail input[name='icon']").val("");
+                $("#perm-detail input[name='url']").val("");
+
+                if (data.parentId == -1) {
+                    $("#perm-detail input[name='parentId']").val("根目录");
+                }
+                else {
+                    var param = {
+                        permId: data.parentId,
+                        userNum: userNumAdmin,
+                        roleId: roleIdAdmin
+                    };
+
+                    $.get("/getPermByPermId.do", param, function (result) {
+                        if (result.status != 0) {
+                            return layer.msg(result.msg, {icon: 2});
+                        }
+                        $("#perm-detail input[name='parentId']").val(result.data.permName);
+                    });
+                }
+
+                $("#perm-detail input[name='permId']").val(data.permId);
+
+                $("#perm-detail input[name='permName']").val(data.permName);
+
+                if (data.permType == "menu") {
+                    $("#perm-detail input[name='permType'][value='permission']").prop("checked", false);
+                    $("#perm-detail input[name='permType'][value='menu']").prop("checked", true);
+                }
+                else {
+                    $("#perm-detail input[name='permType'][value='permission']").prop("checked", true);
+                    $("#perm-detail input[name='permType'][value='menu']").prop("checked", false);
+                }
+
+                $("#perm-detail input[name='icon']").val(data.icon);
+                $("#perm-detail input[name='url']").val(data.url);
+
+                renderForm();
+            }
+        });
+    }
+</script>
+
+<!-- 新增弹窗方法 -->
+<script>
+    function addPerm() {
+
+    }
+</script>
+
+<!-- 方法集合  -->
+<script>
+    // 动态生成下拉框
+    function ininDepart() {
+        $("#selectParent").remove();//清空select列表数据
+        $.get("/getAllMenu.do", function (result) {
+            $("#selectParent").prepend("<option value='-1'>请选择上级菜单</option>");//添加第一个option值
+            $.each(result.data, function (index, value) {
+                console.log(value.permId + "   " + value.permName);
+                $("#selectParent").append("<option value='" + value.permId + "'>" + value.permName + "</option>");
+            });
+            form.render('select');
+        });
+    }
+
+    //重新渲染表单
+    function renderForm() {
+        layui.use('form', function () {
+            var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+            form.render();
+        });
+    }
+
+</script>
+
+
+</body>
+
+</html>

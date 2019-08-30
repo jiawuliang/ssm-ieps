@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>下载文件更多</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/layui/css/layui.css">
+
+    <style>
+        .gd-top {
+            width: 100%;
+            min-width: 230px;
+            height: 185px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #cbe8f8;
+        }
+
+        .gd-top-fixed {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-top-fixed > img {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+
+        .gd-container {
+            width: 100%;
+            height: auto;
+            margin: 15px 0 0 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gd-main {
+            width: 64%;
+            margin: 0 18%;
+            padding: 0;
+        }
+
+        .gd-content-search {
+            margin-top: 15px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .gd-content-search > input {
+            width: 20%;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .gd-content-main {
+            margin-top: 15px;
+            width: 100%;
+
+        }
+
+        .info_list {
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            overflow: hidden;
+            border-bottom: 1px dashed #e2e2e3;
+        }
+
+        .info_lt {
+            width: 80%;
+            height: 26px;
+            line-height: 26px;
+            float: left;
+            overflow: hidden;
+            background: url("../../static/images/home/arrow.gif") no-repeat center left;
+            padding-left: 20px;
+        }
+
+        .info_dt {
+            width: 18%;
+            height: 26px;
+            margin-right: 2%;
+            float: right;
+            line-height: 26px;
+            text-align: right;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="gd-top">
+    <div class="gd-top-fixed">
+        <img src="../../static/images/home/top.jpg"/>
+    </div>
+</div>
+
+<div class="gd-container">
+    <div class="gd-main">
+        <div class="gd-nav">
+					<span style="font-size: 20px;"><img src="../../static/images/home/list_book.gif" width="20"
+                                                        height="16">您所在的位置:<a
+                            href="/goHome.do" style="color: #8798ff; font-size: 20px;">首页</a>&nbsp;>>&nbsp;常用下载</span>
+        </div>
+        <div class="gd-content-search">
+            <input type="text" class="form-control" name="fileName" placeholder="请输入文件名" autocomplete="off" >
+            <input type="text" class="form-control" name="updateTime" placeholder="请选择时间" autocomplete="off">
+
+            <button type="button" class="btn btn-primary" name="searchBtn" style="width: 10%;">搜索</button>
+        </div>
+
+        <div class="gd-content-main">
+
+        </div>
+
+        <div id="downloadMore" style="margin-top: 30px;"></div>
+
+    </div>
+
+</div>
+
+<script src="../../static/js/jquery-1.9.1.min.js"></script>
+<script src="../../static/js/bootstrap.min.js"></script>
+<script src="../../static/layui/layui.js"></script>
+
+
+<script>
+    <!-- 获取全部的历届项目 -->
+    $(function () {
+        $('input[type="text"]').attr("autocomplete", "off");
+        loadData();   //请求数据
+        getPage();    //分页操作
+    });
+
+    // 总页数
+    var total;
+    var pageNum = 1;            // 设置首页页码
+    var pageSize = 10;           // 设置一页显示的条数
+
+    var fileName = $(".gd-content-search input[name='fileName']");
+    var updateTime = $(".gd-content-search input[name='updateTime']");
+
+
+    function loadData() {
+        var pageParam = {
+            pageNum: pageNum,   // 设置首页页码
+            pageSize: pageSize,  // 设置一页显示的条数
+            fileName: fileName.val(),
+            updateTime: updateTime.val()
+        };
+
+        var contentMain = $("div.gd-content-main");
+
+        $.get("/getFileListByAdminWithKind.do", pageParam, function (result) {
+            if (result.status != 0) {
+                return;
+            }
+
+            total = result.data.total;
+            contentMain.empty();
+
+            $.each(result.data.list, function (index, value) {
+                var fileName = "";
+                if (value.fileName.indexOf("-") != -1) {
+                    fileName = value.fileName.substring(value.fileName.indexOf("-") + 1);
+                }
+                else {
+                    fileName = value.fileName;
+                }
+
+                var informList = $("<div class='info_list'></div>");
+                var informLt = $("<div class='info_lt'></div>");
+                var $a = $("<a style='font-size: 16px;'></a>");
+                $a.prop("href", "/downloadFile.do?fileName=" + value.fileName).prop("title", fileName).text(fileName);
+                informLt.append($a);
+                var informDt = $("<div class='info_dt'></div>");
+                informDt.text(value.updateTime);
+
+                informList.append(informLt).append(informDt);
+
+                contentMain.append(informList);
+
+            });
+
+        });
+    };
+
+    function getPage() {
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'downloadMore', //注意，这里的 test1 是 ID，不用加 # 号
+                count: total, //数据总数，从服务端得到
+                groups: 5,
+                limit: 10,
+                limits: [10, 20, 50, 100],
+                layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+                first: '首页',
+                last: '尾页',
+                prev: '<em>←</em>',
+                next: '<em>→</em>',
+                jump: function (obj, first) {
+                    pageNum = obj.curr;       // 得到当前页
+                    pageSize = obj.limit;     // 得到每页显示的条数
+                    //首次不执行
+                    if (!first) {
+                        loadData()  //加载数据
+                    }
+                }
+            });
+        });
+    };
+
+    var searchBtn = $("button[name='searchBtn']");
+
+    fileName.bind("keydown", function (event) {
+        if (event.keyCode == 13 || event.keyCode == 9) {
+            searchBtn.click();
+        }
+    });
+    updateTime.bind("keydown", function (event) {
+        if (event.keyCode == 13 || event.keyCode == 9) {
+            searchBtn.click();
+        }
+    });
+
+    searchBtn.click(function () {
+        loadData();   //请求数据
+        getPage();    //分页操作
+    });
+</script>
+
+
+<!--<script>-->
+<!--$(function () {-->
+<!--var contentMain = $("div.gd-content-main");-->
+<!--$.get("/getFileListByAdminWithKind.do", function (result) {-->
+<!--if (result.status != 0) {-->
+<!--return layer.msg(result.msg);-->
+<!--}-->
+
+<!--$.each(result.data, function (index, value) {-->
+<!--var fileName = "";-->
+<!--if (value.fileName.indexOf("-") != -1) {-->
+<!--fileName = value.fileName.substring(value.fileName.indexOf("-") + 1);-->
+<!--}-->
+<!--else {-->
+<!--fileName = value.fileName;-->
+<!--}-->
+
+<!--var informList = $("<div class='info_list'></div>");-->
+<!--var informLt = $("<div class='info_lt'></div>");-->
+<!--var $a = $("<a style='font-size: 16px;'></a>");-->
+<!--$a.prop("href", "/downloadFile.do?fileName=" + fileName).prop("title", fileName).text(fileName);-->
+<!--informLt.append($a);-->
+<!--var informDt = $("<div class='info_dt'></div>");-->
+<!--informDt.text(value.updateTime);-->
+
+<!--informList.append(informLt).append(informDt);-->
+
+<!--contentMain.append(informList);-->
+
+<!--});-->
+
+<!--})-->
+
+<!--});-->
+<!--//</script>-->
+
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ieps.mapper.UserMapper">
+
+    <!--
+      collection : 一个复杂的类型关联，许多结果将映射为这种类型
+      property : 这是关联的 JavaBean 中的属性名， 在 RoleModel 中对应 private List<MenuModel> menus;
+      javaType : property 属性对应的集合类型
+      ofType : property 集合中的泛型，在 RoleModel 中是 MenuModel
+      column : RoleModel 的 id ，作为参数传入被调用的 Select 语句
+      select : 另外一个映射语句的 ID
+    -->
+    <resultMap id="BaseResultMap" type="com.ieps.pojo.User">
+        <constructor>
+            <idArg column="user_num" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="user_pwd" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="user_status" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_num, user_pwd, user_status, create_time, update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ieps_user
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from ieps_user
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.ieps.pojo.User">
+        insert into ieps_user (user_num, user_pwd, user_status, create_time, update_time)
+        values (#{userNum,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.ieps.pojo.User">
+        insert into ieps_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                user_num,
+            </if>
+            <if test="userPwd != null">
+                user_pwd,
+            </if>
+            <if test="userStatus != null">
+                user_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userNum != null">
+                #{userNum,jdbcType=VARCHAR},
+            </if>
+            <if test="userPwd != null">
+                #{userPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="userStatus != null">
+                #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ieps.pojo.User">
+        update ieps_user
+        <set>
+            <if test="userPwd != null">
+                user_pwd = #{userPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="userStatus != null">
+                user_status = #{userStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ieps.pojo.User">
+        update ieps_user
+        set user_pwd = #{userPwd,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+
+    <resultMap id="getRoleMap" type="com.ieps.pojo.User">
+        <id column="user_num" property="userNum"/>
+        <collection property="roleList" column="user_num" ofType="com.ieps.pojo.Role" resultMap="getMenuMap"/>
+    </resultMap>
+    <resultMap id="getMenuMap" type="com.ieps.pojo.Role">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <collection property="permList" column="role_id" ofType="com.ieps.pojo.Perm" javaType="java.util.ArrayList">
+            <id column="perm_id" property="permId"/>
+            <result column="perm_name" property="permName"/>
+            <result column="perm_type" property="permType"/>
+            <result column="url" property="url"/>
+            <result column="icon" property="icon"/>
+            <result column="parent_id" property="parentId"/>
+        </collection>
+    </resultMap>
+
+    <select id="login" parameterType="string" resultType="User">
+        SELECT iu.user_num as userNum, iur.role_id as roleId, iu.user_status AS userStatus
+        FROM ieps_user iu
+        INNER JOIN ieps_user_role iur
+        ON iu.user_num=iur.user_num
+        WHERE iu.user_num=#{userNum}
+        AND iu.user_pwd=#{userPwd}
+    </select>
+    
+    <select id="checkUser" parameterType="string" resultType="User">
+        SELECT user_num AS userNum, user_pwd AS userPwd
+        FROM ieps_user
+        WHERE user_num=#{userNum}
+        AND user_pwd=#{userPwd}
+    </select>
+
+    <select id="selectMenu" parameterType="string" resultMap="getRoleMap">
+        SELECT iu.user_num, ir.role_id, ir.role_name, ip.perm_id,
+               ip.perm_name, ip.perm_type, ip.url, ip.icon ,
+               ip.parent_id, ip.perm_code
+        FROM ieps_user iu
+        INNER JOIN ieps_user_role iur
+        ON iu.user_num=iur.user_num
+        INNER JOIN ieps_role ir
+        ON iur.role_id=ir.role_id
+        INNER JOIN ieps_role_perm irp
+        ON ir.role_id=irp.role_id
+        INNER JOIN ieps_perm ip
+        ON irp.perm_id=ip.perm_id
+        WHERE iu.user_num=#{userNum}
+    </select>
+
+    <select id="selectByUserNum" parameterType="string" resultType="User">
+        SELECT user_num AS userNum, user_pwd AS userPwd
+        FROM ieps_user
+        WHERE user_num=#{userNum}
+    </select>
+
+    <select id="selectUserPwdWithUserNum" parameterType="string" resultType="int">
+        SELECT count(1)
+        FROM ieps_user
+        WHERE user_num=#{userNum}
+        AND user_pwd=#{userPwd}
+    </select>
+
+    <update id="updatePwd" parameterType="string">
+        UPDATE ieps_user
+        SET user_pwd = #{userPwd,jdbcType=VARCHAR}
+        WHERE user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+
+    <!--学校管理员查找所有的用户-->
+    <select id="selectAllUser" parameterType="string" resultType="com.ieps.dto.UserAdminDto">
+        SELECT iuf.user_num AS userNum, iuf.user_name AS userName, iuf.user_img AS userImg, iuf.photo_num AS photoNum,
+        iuf.email AS email, iuf.title AS title, iuf.sex AS sex, iuf.academy AS academy, iuf.grade AS grade,
+        iuf.major AS major, iuf.birth_date AS birthDate, iu.user_status AS userStatus
+        FROM ieps_user iu
+        INNER JOIN ieps_user_info iuf
+        ON iu.user_num = iuf.user_num
+        WHERE iuf.user_num != #{userNum}
+        ORDER BY iu.user_num
+    </select>
+
+    <!--学院管理员查找所有的用户-->
+    <select id="selectAllUserByUserNum" parameterType="string" resultType="com.ieps.dto.UserAdminDto">
+        SELECT iuf.user_num AS userNum, iuf.user_name AS userName, iuf.user_img AS userImg, iuf.photo_num AS photoNum,
+        iuf.email AS email, iuf.title AS title, iuf.sex AS sex, iuf.academy AS academy, iuf.grade AS grade,
+        iuf.major AS major, iuf.birth_date AS birthDate, iu.user_status AS userStatus
+        FROM ieps_user iu
+        INNER JOIN
+        (
+        SELECT iuf.user_num, iuf.user_name, iuf.user_img, iuf.photo_num, iuf.email, iuf.title,
+        iuf.sex, iuf.academy, iuf.major, iuf.grade, iuf.birth_date
+        FROM ieps_user_info iuf
+        WHERE iuf.academy IN
+        (
+        SELECT iuf.academy
+        FROM ieps_user_info iuf
+        WHERE iuf.user_num = #{userNumAdmin}
+        )
+        AND iuf.user_num != #{userNumAdmin}
+        ) iuf
+        ON iuf.user_num = iu.user_num
+        ORDER BY iu.user_num
+    </select>
+
+     <!--学校管理员搜索-->
+    <select id="selectAllUserWithCondition" resultType="com.ieps.dto.UserAdminDto">
+        SELECT iuf.userNum, iuf.userName, iuf.userImg, iuf.photoNum,
+        iuf.email, iuf.title, iuf.sex, iuf.academy, iuf.grade,
+        iuf.major, iuf.birthDate, iuf.userStatus
+        FROM
+        (
+        SELECT iuf.user_num AS userNum, iuf.user_name AS userName, iuf.user_img AS userImg, iuf.photo_num AS photoNum,
+        iuf.email AS email, iuf.title AS title, iuf.sex AS sex, iuf.academy AS academy, iuf.grade AS grade,
+        iuf.major AS major, iuf.birth_date AS birthDate, iu.user_status AS userStatus
+        FROM ieps_user iu
+        INNER JOIN ieps_user_info iuf
+        ON iu.user_num = iuf.user_num
+        WHERE iuf.academy != #{academyAdmin}
+        ) iuf
+        <where>
+            <if test="userInfo.userNum != '' || userInfo.userNum != null">
+                OR iuf.userNum LIKE '%${userInfo.userNum}%'
+            </if>
+            <if test="userInfo.userName != '' || userInfo.userName != null">
+                OR iuf.userName LIKE '%${userInfo.userName}%'
+            </if>
+            <if test="userInfo.photoNum != '' || userInfo.photoNum != null">
+                OR iuf.photoNum LIKE '%${userInfo.photoNum}%'
+            </if>
+            <if test="userInfo.email != '' || userInfo.email != null">
+                OR iuf.email LIKE '%${userInfo.email}%'
+            </if>
+            <if test="userInfo.academy != '' || userInfo.academy != null">
+                OR iuf.academy LIKE '%${userInfo.academy}%'
+            </if>
+        </where>
+        ORDER BY iuf.userNum
+    </select>
+
+    <!-- 学院管理员搜素按条件用户 -->
+    <select id="selectAllUserByUserNumWithCondition" resultType="com.ieps.dto.UserAdminDto">
+        SELECT iuf.userNum, iuf.userName, iuf.userImg, iuf.photoNum,
+        iuf.email, iuf.title, iuf.sex, iuf.academy, iuf.grade,
+        iuf.major, iuf.birthDate, iuf.userStatus
+        FROM
+        (
+        SELECT iuf.userNum, iuf.userName, iuf.userImg, iuf.photoNum,
+        iuf.email, iuf.title, iuf.sex, iuf.academy, iuf.grade,
+        iuf.major, iuf.birthDate, iu.user_status AS userStatus
+        FROM ieps_user iu
+        INNER JOIN
+        (
+        SELECT iuf.user_num AS userNum, iuf.user_name AS userName, iuf.user_img AS userImg, iuf.photo_num AS photoNum,
+        iuf.email AS email, iuf.title AS title, iuf.sex AS sex, iuf.academy AS academy, iuf.grade AS grade,
+        iuf.major AS major, iuf.birth_date AS birthDate
+        FROM ieps_user_info iuf
+        WHERE iuf.academy IN
+        (
+        SELECT iuf.academy
+        FROM ieps_user_info iuf
+        WHERE iuf.user_num = #{userNumAdmin}
+        )
+        AND iuf.user_num != #{userNumAdmin}
+        ) iuf
+        ON iuf.userNum = iu.user_num
+        ) iuf
+        <where>
+            <if test="userInfo.userNum != '' || userInfo.userNum != null">
+                OR iuf.userNum LIKE '%${userInfo.userNum}%'
+            </if>
+            <if test="userInfo.userName != '' || userInfo.userName != null">
+                OR iuf.userName LIKE '%${userInfo.userName}%'
+            </if>
+            <if test="userInfo.photoNum != '' || userInfo.photoNum != null">
+                OR iuf.photoNum LIKE '%${userInfo.photoNum}%'
+            </if>
+            <if test="userInfo.email != '' || userInfo.email != null">
+                OR iuf.email LIKE '%${userInfo.email}%'
+            </if>
+            <if test="userInfo.academy != '' || userInfo.academy != null">
+                OR iuf.academy LIKE '%${userInfo.academy}%'
+            </if>
+        </where>
+        ORDER BY iuf.userNum
+    </select>
+
+
+    <select id="selectAllUserWithUserNum" parameterType="string" resultType="com.ieps.dto.UserAdminDto">
+        SELECT iuf.user_name, iuf.user_img, iuf.photo_num, iuf.email, iuf.title,
+        iuf.sex, iuf.academy, iuf.major, iuf.grade, iuf.birth_date, iu.user_status
+        FROM ieps_user iu
+        INNER JOIN
+        (
+        SELECT iuf.user_name, iuf.user_img, iuf.photo_num, iuf.email, iuf.title,
+        iuf.sex, iuf.academy, iuf.major, iuf.grade, iuf.birth_date
+        FROM ieps_user_info iuf
+        WHERE iuf.user_num NOT IN
+        <foreach collection="list" item="userNum" open="(" close=")" separator=",">
+            #{userNum}
+        </foreach>
+        AND iuf.academy = #{academy}
+        ) iuf
+        WHERE iu.user_num NOT IN
+        <foreach collection="list" item="userNum" open="(" close=")" separator=",">
+            #{userNum}
+        </foreach>
+        AND iuf.academy = #{academy}
+        ORDER BY iu.user_num
+    </select>
+
+    <update id="updateStatusByUserNum">
+        UPDATE ieps_user
+        SET user_status = #{userStatus}
+        WHERE user_num = #{userNum}
+    </update>
+
+    <delete id="deleteByUserNum" parameterType="string">
+        DELETE FROM ieps_user
+        WHERE user_num = #{userNum}
+    </delete>
+
+    <delete id="deleteUserByUserNum" parameterType="string">
+        DELETE FROM ieps_user
+        WHERE user_num IN
+        (
+          <foreach collection="array" item="userNum" separator="," open="(" close=")">
+              #{userNum}
+          </foreach>
+        )
+    </delete>
+
+
+</mapper>
