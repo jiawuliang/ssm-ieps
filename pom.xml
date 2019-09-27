@@ -116,9 +116,9 @@
 
         <!-- 邮箱验证码 Start -->
         <dependency>
-            <groupId>activation</groupId>
+            <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -468,15 +468,27 @@
     <build>
         <finalName>ieps</finalName>
 
+        <!--防止ieda加载不到xml或者properties文件开始-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
                     <include>**/*.xml</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
         </resources>
+        <!--防止ieda加载不到xml或者properties文件结束-->
 
         <pluginManagement>
             <plugins>
